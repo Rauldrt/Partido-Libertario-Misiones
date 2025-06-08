@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -12,6 +13,7 @@ interface BannerProps {
   ctaLink?: string;
   variant?: 'default' | 'primary-bg';
   textAlignment?: 'center' | 'left';
+  priority?: boolean;
 }
 
 export function Banner({ 
@@ -22,12 +24,13 @@ export function Banner({
   ctaText, 
   ctaLink, 
   variant = 'default',
-  textAlignment = 'center' 
+  textAlignment = 'center',
+  priority = false,
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground py-16 md:py-24 rounded-lg shadow-xl overflow-hidden",
-      variant === 'primary-bg' ? "bg-primary" : "bg-gradient-to-r from-primary to-blue-600" // A slightly different gradient for default
+      "relative text-primary-foreground py-16 md:py-24 rounded-lg shadow-xl overflow-hidden h-[400px] md:h-[500px] lg:h-[600px] flex flex-col justify-center", // Added height and flex for vertical centering
+      variant === 'primary-bg' ? "bg-primary" : "bg-gradient-to-r from-primary to-blue-600"
     )}>
       <div className="absolute inset-0">
         <Image
@@ -37,7 +40,7 @@ export function Banner({
           objectFit="cover"
           className="opacity-20"
           data-ai-hint={imageHint}
-          priority
+          priority={priority}
         />
       </div>
       <div className={cn(

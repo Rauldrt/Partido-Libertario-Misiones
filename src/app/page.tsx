@@ -1,3 +1,4 @@
+
 import { Banner } from '@/components/Banner';
 import { NewsCard } from '@/components/NewsCard';
 import { Section } from '@/components/ui/Section';
@@ -5,21 +6,74 @@ import { mockNewsItems } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Users, Goal, ArrowRight, Handshake } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+
+const carouselSlides = [
+  {
+    title: "Bienvenidos a Misiones Libertad",
+    description: "Unite al movimiento que defiende tus libertades individuales y promueve un futuro próspero para Misiones.",
+    imageUrl: "https://placehold.co/1200x600.png",
+    imageHint: "flag landscape",
+    ctaText: "Conocé Más",
+    ctaLink: "/about",
+  },
+  {
+    title: "Nuestras Propuestas Claras",
+    description: "Descubrí cómo planeamos transformar la provincia con ideas firmes y acciones concretas.",
+    imageUrl: "https://placehold.co/1200x600.png",
+    imageHint: "planning discussion",
+    ctaText: "Ver Propuestas",
+    ctaLink: "/about#values",
+  },
+  {
+    title: "Sumate al Cambio Real",
+    description: "Tu participación es clave. Afiliate, colaborá o participá en nuestras actividades y sé protagonista.",
+    imageUrl: "https://placehold.co/1200x600.png",
+    imageHint: "community action",
+    ctaText: "Participar Ahora",
+    ctaLink: "/contact",
+  },
+];
 
 export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
 
   return (
     <div>
-      <Banner
-        title="Bienvenidos a Misiones Libertad"
-        description="Unite al movimiento que defiende tus libertades individuales y promueve un futuro próspero para Misiones."
-        imageUrl="https://placehold.co/1200x600.png"
-        imageHint="flag landscape"
-        ctaText="Conocé Más"
-        ctaLink="/about"
-        variant="primary-bg"
-      />
+      <div className="relative"> {/* Wrapper for positioning controls */}
+        <Carousel
+          plugins={[
+            Autoplay({
+              delay: 5000,
+              stopOnInteraction: true,
+            }),
+          ]}
+          className="w-full"
+          opts={{
+            loop: true,
+          }}
+        >
+          <CarouselContent>
+            {carouselSlides.map((slide, index) => (
+              <CarouselItem key={index}>
+                <Banner
+                  title={slide.title}
+                  description={slide.description}
+                  imageUrl={slide.imageUrl}
+                  imageHint={slide.imageHint}
+                  ctaText={slide.ctaText}
+                  ctaLink={slide.ctaLink}
+                  variant="primary-bg"
+                  priority={index === 0}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+          <CarouselNext className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+        </Carousel>
+      </div>
 
       <Section id="about-snippet">
         <div className="text-center max-w-3xl mx-auto">
