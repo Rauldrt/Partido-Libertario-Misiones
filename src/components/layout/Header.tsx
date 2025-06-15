@@ -52,10 +52,10 @@ export function Header() {
           <SheetTrigger asChild>
             <Button
               variant="default" // Uses primary bg and primary-foreground text
-              className="rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-transform"
+              className="group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-transform"
               aria-label="Abrir menú"
             >
-              <Menu className="h-8 w-8" />
+              <Menu className="h-8 w-8 transition-transform duration-150 ease-in-out group-active:rotate-[15deg]" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[280px] sm:w-[320px] bg-card p-0">
@@ -95,4 +95,3 @@ export function Header() {
     </>
   );
 }
-
