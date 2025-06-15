@@ -28,7 +28,7 @@ export function Header() {
       <header className="bg-gradient-to-r from-purple-800 to-orange-500 text-primary-foreground shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={52} height={52} />
+            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={42} height={42} />
             <span className="font-headline text-xl font-semibold">Partido Libertario Misiones</span>
           </Link>
 
@@ -36,7 +36,7 @@ export function Header() {
           <nav className="hidden md:flex gap-6">
             {navItems.map((item) => (
               <Button key={item.label} variant="ghost" asChild>
-                <Link href={item.href} className="font-body text-sm font-medium">
+                <Link href={item.href} className="font-body text-sm font-medium hover:scale-105 transform transition-transform duration-150 ease-in-out">
                   {item.label}
                 </Link>
               </Button>
