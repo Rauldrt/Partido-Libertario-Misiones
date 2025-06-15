@@ -61,11 +61,11 @@ export function Header() {
       </header>
 
       {/* Mobile FAB Menu */}
-      <div className="md:hidden fixed bottom-12 right-8 z-50">
+      <div className="md:hidden fixed bottom-8 right-8 z-50"> {/* Adjusted bottom and right for a bit more space */}
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="bg-gradient-to-br from-purple-900 to-pink-200 text-white hover:from-purple-900 hover:to-cyan-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75"
+              className="bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400 text-white hover:from-purple-800 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75 btn-ripple"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
               {isMobileMenuOpen ? (
@@ -79,13 +79,13 @@ export function Header() {
             side="top" 
             align="end" 
             sideOffset={12}
-            className="w-60 bg-card shadow-xl rounded-lg p-2"
+            className="w-64 bg-[rgba(88,28,135,0.92)] shadow-xl rounded-lg p-2" // Increased width, custom bg
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-3 text-sm font-medium text-foreground hover:bg-muted rounded-md"
+                  className="flex items-center p-3 text-sm font-medium text-primary-foreground hover:bg-white/10 rounded-md" // Adjusted text and hover colors
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.icon}
