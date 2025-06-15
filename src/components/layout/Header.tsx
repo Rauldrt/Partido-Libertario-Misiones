@@ -47,15 +47,15 @@ export function Header() {
       </header>
 
       {/* Mobile FAB Menu */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50"> {/* Changed bottom-4 to bottom-6 */}
+      <div className="md:hidden fixed bottom-6 right-6 z-50">
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button
               variant="default" // Uses primary bg and primary-foreground text
-              className="rounded-full w-14 h-14 shadow-xl hover:scale-105 transition-transform"
+              className="rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-transform"
               aria-label="Abrir menú"
             >
-              <Menu className="h-7 w-7" />
+              <Menu className="h-8 w-8" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-[280px] sm:w-[320px] bg-card p-0">
@@ -95,3 +95,4 @@ export function Header() {
     </>
   );
 }
+
