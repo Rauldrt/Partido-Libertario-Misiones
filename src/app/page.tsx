@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Banner } from '@/components/Banner';
@@ -76,11 +77,18 @@ export default function HomePage() {
         </Carousel>
       </div>
 
-      <Section id="about-snippet">
+      <Section 
+        id="about-snippet"
+        backgroundImage="https://placehold.co/1200x700.png"
+        data-ai-hint="mission statement abstract"
+        parallax
+        className="text-white"
+        backgroundOverlay="bg-black/60"
+      >
         <div className="text-center max-w-3xl mx-auto">
           <Handshake className="h-16 w-16 text-primary mx-auto mb-6" />
           <h2 className="font-headline text-3xl md:text-4xl font-bold mb-6">Somos el Cambio que Misiones Necesita</h2>
-          <p className="font-body text-lg text-muted-foreground mb-8">
+          <p className="font-body text-lg mb-8">
             Creemos en el poder del individuo, la libre empresa y un gobierno limitado. Nuestro compromiso es con la transparencia, la responsabilidad y la construcción de una sociedad más justa y libre para todos los misioneros.
           </p>
           <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
@@ -106,14 +114,21 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section id="join-us">
-         <div className="bg-accent text-accent-foreground p-8 md:p-12 rounded-lg shadow-lg text-center">
-            <Users className="h-16 w-16 mx-auto mb-6" />
+      <Section 
+        id="join-us"
+        backgroundImage="https://placehold.co/1200x800.png"
+        data-ai-hint="community together group"
+        parallax
+        className="text-white"
+        backgroundOverlay="bg-primary/70" 
+      >
+         <div className="text-center">
+            <Users className="h-16 w-16 mx-auto mb-6 text-accent" />
             <h2 className="font-headline text-3xl md:text-4xl font-bold mb-4">Sumate a la Libertad</h2>
             <p className="font-body text-lg mb-8 max-w-xl mx-auto">
               Tu participación es fundamental para construir el futuro que queremos. Afiliate, colaborá o participá en nuestras actividades.
             </p>
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+            <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
               <Link href="/contact">Participar Ahora <Goal className="ml-2 h-5 w-5" /></Link>
             </Button>
           </div>
