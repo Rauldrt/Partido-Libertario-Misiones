@@ -47,7 +47,7 @@ export function Header() {
       </header>
 
       {/* Mobile FAB Menu */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
+      <div className="md:hidden fixed bottom-6 right-6 z-50"> {/* Changed bottom-4 to bottom-6 */}
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button
