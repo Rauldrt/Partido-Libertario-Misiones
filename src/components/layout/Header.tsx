@@ -50,7 +50,7 @@ export function Header() {
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button
-              className="bg-accent text-accent-foreground hover:bg-accent/90 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-transform"
+              className="bg-gradient-to-br from-purple-700 to-orange-500 text-white hover:from-purple-800 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all"
               aria-label="Abrir menú"
             >
               <Menu className="h-8 w-8 transition-transform duration-150 ease-in-out group-active:rotate-[15deg]" />
