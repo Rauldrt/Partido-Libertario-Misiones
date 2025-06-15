@@ -17,8 +17,11 @@ export default function NewsPage() {
   return (
     <>
       <Section id="news-and-events-header" className="overflow-hidden relative">
+        {/* Animated Background and Icons Container */}
         <div className="absolute inset-0 z-0">
+          {/* Gradient Background */}
           <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400 bg-300% animate-animated-gradient" />
+          
           {/* Superimposed Icons */}
           <Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white animate-subtle-pulse" style={{ animationDuration: '7s' }} />
           <CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white animate-subtle-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
@@ -27,8 +30,10 @@ export default function NewsPage() {
            <Newspaper className="absolute bottom-[10%] left-[30%] h-14 w-14 text-white animate-subtle-pulse" style={{ animationDuration: '7.5s', animationDelay: '2s' }} />
           <CalendarDays className="absolute top-[30%] right-[45%] h-10 w-10 text-white animate-subtle-pulse" style={{ animationDuration: '5.5s', animationDelay: '2.5s' }} />
         </div>
+
+        {/* Content Area */}
         <div className="text-center mb-12 relative z-10">
-          <div className="inline-flex items-center justify-center bg-white/20 p-3 rounded-full mb-4 backdrop-blur-sm">
+          <div className="inline-flex items-center justify-center p-3 rounded-full mb-4"> {/* Removed bg-white/20 and backdrop-blur-sm */}
            <Newspaper className="h-12 w-12 text-accent" />
           </div>
           <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary-foreground">Noticias y Eventos</h1>
