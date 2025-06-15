@@ -43,7 +43,7 @@ export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
 
   return (
-    <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 py-8 md:py-12">
+    <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 py-8 md:py-12 bg-gradient-to-br from-purple-900 to-pink-300">
       <div className="relative container mx-auto px-4 md:px-6"> {/* Wrapper for positioning controls and container for carousel */}
         <Carousel
           plugins={[
@@ -99,10 +99,10 @@ export default function HomePage() {
         </Card>
       </Section>
 
-      <Section id="latest-news" className="bg-background py-0"> {/* Changed background to match page */}
+      <Section id="latest-news" className="py-0"> {/* Removed bg-background */}
         <div className="text-center mb-12">
-          <h2 className="font-headline text-3xl md:text-4xl font-bold">Últimas Noticias y Eventos</h2>
-          <p className="font-body text-lg text-muted-foreground mt-2">Mantenete informado sobre nuestras actividades y comunicados.</p>
+          <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary-foreground">Últimas Noticias y Eventos</h2>
+          <p className="font-body text-lg text-primary-foreground/80 mt-2">Mantenete informado sobre nuestras actividades y comunicados.</p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {latestNews.map((item) => (
@@ -110,7 +110,7 @@ export default function HomePage() {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
+          <Button asChild size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:text-primary">
             <Link href="/news">Ver Todas las Noticias <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>

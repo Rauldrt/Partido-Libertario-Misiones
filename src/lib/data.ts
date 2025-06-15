@@ -12,7 +12,7 @@ export const mockNewsItems: NewsCardData[] = [
     imageHint: 'political rally opening',
     linkUrl: '/news/1',
     type: 'event',
-    youtubeVideoId: 'rokGy0huYEA', // Ejemplo: Google I/O Keynote
+    youtubeVideoId: 'k1nq1h29X58', // Ejemplo: Google I/O Keynote
   },
   {
     id: '2',
@@ -57,7 +57,7 @@ export const mockNewsItems: NewsCardData[] = [
     imageHint: 'conference speaker national',
     linkUrl: '/news/5',
     type: 'event',
-    youtubeVideoId: 'dQw4w9WgXcQ', // Ejemplo: Rick Astley
+    youtubeVideoId: 'k1nq1h29X58', // Ejemplo: Rick Astley
   },
   {
     id: '6',
