@@ -28,12 +28,12 @@ export function Header() {
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
         {/* Background Image Layer */}
         <Image 
-          src="/grupo.webp" 
+          src="https://placehold.co/1200x100.png" 
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 
           className="absolute inset-0 z-0 opacity-10"
-          data-ai-hint="subtle texture"
+          data-ai-hint="abstract pattern"
           priority 
         />
 
