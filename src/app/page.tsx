@@ -13,9 +13,9 @@ import Autoplay from "embla-carousel-autoplay";
 
 const carouselSlides = [
   {
-    title: "Bienvenidos a Misiones Libertad",
+    title: "Partido Libertario Misiones",
     description: "Unite al movimiento que defiende tus libertades individuales y promueve un futuro próspero para Misiones.",
-    imageUrl: "https://placehold.co/1200x600.png",
+    imageUrl: "https://i.pinimg.com/736x/dc/3e/41/dc3e4160b4942e685a7be5f6546fb97b.jpg",
     imageHint: "flag landscape",
     ctaText: "Conocé Más",
     ctaLink: "/about",
@@ -23,7 +23,7 @@ const carouselSlides = [
   {
     title: "Nuestras Propuestas Claras",
     description: "Descubrí cómo planeamos transformar la provincia con ideas firmes y acciones concretas.",
-    imageUrl: "https://placehold.co/1200x600.png",
+    imageUrl: "https://i.pinimg.com/736x/dc/3e/41/dc3e4160b4942e685a7be5f6546fb97b.jpg",
     imageHint: "planning discussion",
     ctaText: "Ver Propuestas",
     ctaLink: "/about#values",
@@ -31,7 +31,7 @@ const carouselSlides = [
   {
     title: "Sumate al Cambio Real",
     description: "Tu participación es clave. Afiliate, colaborá o participá en nuestras actividades y sé protagonista.",
-    imageUrl: "https://placehold.co/1200x600.png",
+    imageUrl: "https://i.pinimg.com/736x/dc/3e/41/dc3e4160b4942e685a7be5f6546fb97b.jpg",
     imageHint: "community action",
     ctaText: "Participar Ahora",
     ctaLink: "/contact",

@@ -2,8 +2,9 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image'; // Importar Next Image
 import { Button } from '@/components/ui/button';
-import { Menu, VoteIcon, X } from 'lucide-react'; // VoteIcon as a party symbol, X for close
+import { Menu, X } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -27,7 +28,8 @@ export function Header() {
       <header className="bg-card shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <VoteIcon className="h-8 w-8 text-primary" />
+            {/* Usar next/image para el logo */}
+            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={32} height={32} />
             <span className="font-headline text-xl font-semibold text-primary">Partido Libertario Misiones</span>
           </Link>
 
@@ -41,8 +43,6 @@ export function Header() {
               </Button>
             ))}
           </nav>
-
-          {/* Mobile Navigation Trigger removed from here, will be a FAB */}
         </div>
       </header>
 
@@ -51,7 +51,7 @@ export function Header() {
         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <SheetTrigger asChild>
             <Button
-              variant="default" // Uses primary bg and primary-foreground text
+              variant="default"
               className="group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-transform"
               aria-label="Abrir menú"
             >
@@ -62,7 +62,8 @@ export function Header() {
             <div className="flex flex-col h-full">
               <div className="flex items-center justify-between p-4 border-b">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-                  <VoteIcon className="h-7 w-7 text-primary" />
+                  {/* Usar next/image para el logo en el menú móvil */}
+                  <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={28} height={28} />
                   <span className="font-headline text-lg font-semibold text-primary">Partido Libertario Misiones</span>
                 </Link>
                 <SheetClose asChild>
