@@ -22,16 +22,28 @@ export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, t
   return (
     <Card className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg">
       <CardHeader className="p-0">
-        <div className="relative w-full h-48">
-          <Image 
-            src={imageUrl} 
-            alt={title} 
-            layout="fill" 
-            objectFit="cover" 
-            className="rounded-t-lg"
-            data-ai-hint={imageHint} 
-          />
-        </div>
+        {youtubeVideoId ? (
+          <div className="aspect-video overflow-hidden rounded-t-lg">
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+              title={title}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+          </div>
+        ) : (
+          <div className="relative aspect-video overflow-hidden rounded-t-lg"> {/* Ensure consistent aspect ratio */}
+            <Image 
+              src={imageUrl} 
+              alt={title} 
+              layout="fill" 
+              objectFit="cover" 
+              data-ai-hint={imageHint} 
+            />
+          </div>
+        )}
       </CardHeader>
       <CardContent className="flex-grow p-6">
         <CardTitle className="font-headline text-xl mb-2">{title}</CardTitle>
