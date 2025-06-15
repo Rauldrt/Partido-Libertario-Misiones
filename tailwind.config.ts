@@ -55,6 +55,8 @@ export default {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        'cyan-custom-hover': 'hsl(var(--cyan-color-h) var(--cyan-color-s) var(--cyan-color-l))',
+        'cyan-custom-hover-foreground': 'hsl(var(--cyan-color-h) var(--cyan-color-s) var(--cyan-color-foreground-l))',
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',
