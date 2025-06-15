@@ -12,6 +12,7 @@ export const mockNewsItems: NewsCardData[] = [
     imageHint: 'political rally opening',
     linkUrl: '/news/1',
     type: 'event',
+    youtubeVideoId: 'rokGy0huYEA', // Ejemplo: Google I/O Keynote
   },
   {
     id: '2',
@@ -48,14 +49,15 @@ export const mockNewsItems: NewsCardData[] = [
   },
    {
     id: '5',
-    title: 'Charla con Referentes Nacionales',
+    title: 'Charla con Referentes Nacionales (¡Con Video!)',
     date: 'Próximo: 5 de Agosto, 2024 - 19:30hs',
-    summary: 'Importantes figuras del liberalismo nacional visitarán Misiones para una charla exclusiva. ¡No te la pierdas!',
-    content: 'Confirmada la visita de destacados referentes del liberalismo a nivel nacional. Ofrecerán una charla exclusiva en Posadas donde analizarán la coyuntura actual y compartirán sus perspectivas sobre el futuro del país y la provincia. Será una oportunidad única para interactuar y debatir con ellos. Pronto más detalles sobre la inscripción.',
+    summary: 'Importantes figuras del liberalismo nacional visitarán Misiones para una charla exclusiva. ¡Ahora también disponible en video!',
+    content: 'Confirmada la visita de destacados referentes del liberalismo a nivel nacional. Ofrecerán una charla exclusiva en Posadas donde analizarán la coyuntura actual y compartirán sus perspectivas sobre el futuro del país y la provincia. Será una oportunidad única para interactuar y debatir con ellos. Pronto más detalles sobre la inscripción. El evento principal será transmitido y estará disponible en nuestro canal de YouTube.',
     imageUrl: 'https://placehold.co/600x400.png',
     imageHint: 'conference speaker national',
     linkUrl: '/news/5',
     type: 'event',
+    youtubeVideoId: 'dQw4w9WgXcQ', // Ejemplo: Rick Astley
   },
   {
     id: '6',
