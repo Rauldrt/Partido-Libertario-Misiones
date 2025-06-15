@@ -12,17 +12,20 @@ import { Banner } from '@/components/Banner';
 import React from 'react';
 
 export default function NewsPage() {
-  const carouselNewsItems = mockNewsItems.slice(0, 4); // Tomar los primeros 4 para el carrusel
+  const carouselNewsItems = mockNewsItems.slice(0, 4); 
 
   return (
     <>
-      <Section id="news-and-events-header">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center bg-primary/10 p-3 rounded-full mb-4">
-           <Newspaper className="h-12 w-12 text-primary" />
+      <Section id="news-and-events-header" className="overflow-hidden"> {/* Added overflow-hidden for safety with absolute bg */}
+        <div className="absolute inset-0 z-0">
+          <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400 bg-300% animate-animated-gradient" />
+        </div>
+        <div className="text-center mb-12 relative z-10"> {/* Ensure content is above the animated background */}
+          <div className="inline-flex items-center justify-center bg-white/20 p-3 rounded-full mb-4">
+           <Newspaper className="h-12 w-12 text-accent" />
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl font-bold">Noticias y Eventos</h1>
-          <p className="font-body text-xl text-muted-foreground mt-2">
+          <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary-foreground">Noticias y Eventos</h1>
+          <p className="font-body text-xl text-primary-foreground/90 mt-2">
             Mantenete al tanto de las últimas novedades y próximos encuentros del Partido Libertario de Misiones.
           </p>
         </div>

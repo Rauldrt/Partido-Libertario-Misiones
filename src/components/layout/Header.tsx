@@ -28,7 +28,7 @@ export function Header() {
       <header className="bg-gradient-to-r from-purple-800 to-orange-500 text-primary-foreground shadow-md sticky top-0 z-50">
         <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={42} height={42} />
+            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={52} height={52} />
             <span className="font-headline text-xl font-semibold">Partido Libertario Misiones</span>
           </Link>
 
