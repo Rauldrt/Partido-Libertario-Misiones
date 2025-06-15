@@ -28,7 +28,7 @@ export function Header() {
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
         {/* Background Image Layer */}
         <Image 
-          src="https://placehold.co/1920x100.png" 
+          src="/grupo.webp" 
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 

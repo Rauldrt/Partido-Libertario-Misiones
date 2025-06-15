@@ -19,7 +19,7 @@ interface BannerProps {
 export function Banner({ 
   title, 
   description, 
-  imageUrl, 
+  imageUrl= 'grupo.webp', 
   imageHint, 
   ctaText, 
   ctaLink, 
