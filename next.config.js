@@ -4,6 +4,7 @@ const nextConfig = {
     domains: [
       'i.pinimg.com',
       // Add other hostnames here if needed
+      'encrypted-tbn0.gstatic.com',
       'placehold.co',
     ],
   },

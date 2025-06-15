@@ -32,13 +32,13 @@ export function Header() {
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 
-          className="absolute inset-0 z-0 opacity-10"
+          className="absolute inset-0 z-0 opacity-20"
           data-ai-hint="abstract pattern"
           priority 
         />
 
         {/* Gradient Overlay Layer */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800 to-orange-500"></div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/75 to-orange-500/75"></div>
 
         {/* Content Layer */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
