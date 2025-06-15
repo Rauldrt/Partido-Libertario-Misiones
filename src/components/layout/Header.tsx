@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail } from 'lucide-react';
+import { Menu, Home, Users, Newspaper, MailIcon as Mail, X } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,27 +61,31 @@ export function Header() {
       </header>
 
       {/* Mobile FAB Menu */}
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
+      <div className="md:hidden fixed bottom-12 right-8 z-50">
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="bg-gradient-to-br from-purple-800 to-cyan-500 text-white hover:from-purple-900 hover:to-cyan-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all"
-              aria-label="Abrir menú"
+              className="bg-gradient-to-br from-purple-900 to-pink-200 text-white hover:from-purple-900 hover:to-cyan-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75"
+              aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
-              <Menu className="h-8 w-8 transition-transform duration-150 ease-in-out group-active:rotate-[15deg]" />
+              {isMobileMenuOpen ? (
+                <X className="h-10 w-10 transition-transform duration-150 ease-in-out" />
+              ) : (
+                <Menu className="h-10 w-10 transition-transform duration-150 ease-in-out group-active:rotate-[90deg]" />
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent 
             side="top" 
             align="end" 
-            sideOffset={10}
-            className="w-56 bg-card shadow-xl rounded-lg p-2"
+            sideOffset={12}
+            className="w-60 bg-card shadow-xl rounded-lg p-2"
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-2.5 text-sm font-medium text-foreground hover:bg-muted rounded-md"
+                  className="flex items-center p-3 text-sm font-medium text-foreground hover:bg-muted rounded-md"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.icon}
