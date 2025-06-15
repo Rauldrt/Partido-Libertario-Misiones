@@ -36,7 +36,7 @@ body {
     --input: 0 0% 85%; /* Input background, sync with secondary */
     --ring: 197 71% 52%; /* Ring color, sync with primary */
 
-    --radius: 0.8rem; /* Increased for more rounded corners */
+    --radius: 1.3rem; /* Increased for more rounded corners */
 
     --cyan-color-h: 180;
     --cyan-color-s: 85%;

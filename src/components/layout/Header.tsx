@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail } from 'lucide-react'; // Renamed Mail to MailIcon to avoid conflict
+import { Menu, Home, Users, Newspaper, MailIcon as Mail } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +25,23 @@ export function Header() {
 
   return (
     <>
-      <header className="bg-gradient-to-r from-purple-800 to-orange-500 text-primary-foreground shadow-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+      <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
+        {/* Background Image Layer */}
+        <Image 
+          src="https://placehold.co/1920x100.png" 
+          alt="Navbar background pattern" 
+          layout="fill" 
+          objectFit="cover" 
+          className="absolute inset-0 z-0 opacity-10"
+          data-ai-hint="subtle texture"
+          priority 
+        />
+
+        {/* Gradient Overlay Layer */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800 to-orange-500"></div>
+
+        {/* Content Layer */}
+        <div className="relative z-20 container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={42} height={42} />
             <span className="font-headline text-xl font-semibold">Partido Libertario Misiones</span>
