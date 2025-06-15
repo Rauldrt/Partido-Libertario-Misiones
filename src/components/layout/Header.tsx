@@ -28,7 +28,7 @@ export function Header() {
         <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <VoteIcon className="h-8 w-8 text-primary" />
-            <span className="font-headline text-xl font-semibold text-primary">Misiones Libertad</span>
+            <span className="font-headline text-xl font-semibold text-primary">Partido Libertario Misiones</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -63,7 +63,7 @@ export function Header() {
               <div className="flex items-center justify-between p-4 border-b">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                   <VoteIcon className="h-7 w-7 text-primary" />
-                  <span className="font-headline text-lg font-semibold text-primary">Misiones Libertad</span>
+                  <span className="font-headline text-lg font-semibold text-primary">Partido Libertario Misiones</span>
                 </Link>
                 <SheetClose asChild>
                   <Button variant="ghost" size="icon">
@@ -86,7 +86,7 @@ export function Header() {
                 ))}
               </nav>
               <div className="p-4 border-t mt-auto">
-                <p className="text-xs text-muted-foreground text-center">&copy; {new Date().getFullYear()} Misiones Libertad</p>
+                <p className="text-xs text-muted-foreground text-center">&copy; {new Date().getFullYear()} Partido Libertario Misiones</p>
               </div>
             </div>
           </SheetContent>

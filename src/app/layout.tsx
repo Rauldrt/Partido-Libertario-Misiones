@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -5,7 +6,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Misiones Libertad',
+  title: 'Partido Libertario Misiones',
   description: 'Página oficial del Partido Libertario de Misiones.',
 };
 

@@ -1,3 +1,4 @@
+
 import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
 
@@ -20,7 +21,7 @@ export function Footer() {
           </Link>
         </div>
         <p className="font-body text-sm">
-          &copy; {new Date().getFullYear()} Misiones Libertad. Todos los derechos reservados.
+          &copy; {new Date().getFullYear()} Partido Libertario Misiones. Todos los derechos reservados.
         </p>
         <p className="font-body text-xs mt-2">
           Hecho con <span role="img" aria-label="corazón">💙</span> por la libertad.
