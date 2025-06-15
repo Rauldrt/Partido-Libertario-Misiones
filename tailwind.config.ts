@@ -106,11 +106,16 @@ export default {
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
         },
+        'subtle-pulse': {
+          '0%, 100%': { opacity: '0.05' },
+          '50%': { opacity: '0.2' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'animated-gradient': 'animated-gradient 15s ease infinite',
+        'subtle-pulse': 'subtle-pulse 6s ease-in-out infinite alternate',
       },
     },
   },
