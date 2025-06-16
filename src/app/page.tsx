@@ -8,7 +8,7 @@ import { Section } from '@/components/ui/Section';
 import { mockNewsItems } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Users, Goal, ArrowRight } from 'lucide-react'; // Handshake removed as it's replaced by carousel
+import { Users, Goal, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -41,10 +41,11 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: '/grupo.webp', alt: 'Futuro de Misiones', hint: 'Misiones landscape future' },
-  { src: 'https://placehold.co/600x300.png', alt: 'Progreso Comunitario', hint: 'community progress people' },
-  { src: 'https://placehold.co/600x300.png', alt: 'Innovación y Desarrollo', hint: 'innovation technology' },
-  { src: 'https://placehold.co/600x300.png', alt: 'Participación Ciudadana', hint: 'civic participation' }, // Nueva imagen añadida
+  { src: 'https://placehold.co/600x300/6E2593/FFFFFF.png', alt: 'Futuro de Misiones', hint: 'Misiones landscape future' },
+  { src: 'https://placehold.co/600x300/25936E/FFFFFF.png', alt: 'Progreso Comunitario', hint: 'community progress people' },
+  { src: 'https://placehold.co/600x300/936E25/FFFFFF.png', alt: 'Innovación y Desarrollo', hint: 'innovation technology' },
+  { src: 'https://placehold.co/600x300/256393/FFFFFF.png', alt: 'Participación Ciudadana', hint: 'civic participation' },
+  { src: 'https://placehold.co/600x400/A9A9A9/000000.png', alt: 'Ejemplo Adicional', hint: 'sample example' }
 ];
 
 export default function HomePage() {
@@ -91,8 +92,8 @@ export default function HomePage() {
           <CardHeader className="bg-muted/30 p-0">
             <div className="relative w-full h-[200px] md:h-[250px] group">
               <Carousel
-                opts={{ loop: true }}
-                plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
+                // opts={{ loop: true }} // Temporarily removed for debugging
+                // plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]} // Temporarily removed for debugging
                 className="w-full h-full"
               >
                 <CarouselContent className="h-full">
