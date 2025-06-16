@@ -41,9 +41,10 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/600x300.png', alt: 'Futuro de Misiones', hint: 'Misiones landscape future' },
+  { src: '/grupo.webp', alt: 'Futuro de Misiones', hint: 'Misiones landscape future' },
   { src: 'https://placehold.co/600x300.png', alt: 'Progreso Comunitario', hint: 'community progress people' },
   { src: 'https://placehold.co/600x300.png', alt: 'Innovación y Desarrollo', hint: 'innovation technology' },
+  { src: 'https://placehold.co/600x300.png', alt: 'Participación Ciudadana', hint: 'civic participation' }, // Nueva imagen añadida
 ];
 
 export default function HomePage() {
