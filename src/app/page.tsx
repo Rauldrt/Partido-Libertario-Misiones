@@ -1,13 +1,14 @@
 
 "use client";
 
+import Image from 'next/image';
 import { Banner } from '@/components/Banner';
 import { NewsCard } from '@/components/NewsCard';
 import { Section } from '@/components/ui/Section';
 import { mockNewsItems } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Users, Goal, ArrowRight, Handshake } from 'lucide-react';
+import { Users, Goal, ArrowRight } from 'lucide-react'; // Handshake removed as it's replaced by carousel
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -39,12 +40,18 @@ const carouselSlides = [
   },
 ];
 
+const somosElCambioCarouselImages = [
+  { src: 'https://placehold.co/600x300.png', alt: 'Futuro de Misiones', hint: 'Misiones landscape future' },
+  { src: 'https://placehold.co/600x300.png', alt: 'Progreso Comunitario', hint: 'community progress people' },
+  { src: 'https://placehold.co/600x300.png', alt: 'Innovación y Desarrollo', hint: 'innovation technology' },
+];
+
 export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
 
   return (
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 py-8 md:py-12 bg-gradient-to-br from-purple-900 to-pink-300">
-      <div className="relative container mx-auto px-4 md:px-6"> {/* Wrapper for positioning controls and container for carousel */}
+      <div className="relative container mx-auto px-4 md:px-6">
         <Carousel
           plugins={[
             Autoplay({
@@ -80,9 +87,34 @@ export default function HomePage() {
 
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl overflow-hidden">
-          <CardHeader className="bg-muted/30 p-6">
-            <div className="flex flex-col items-center text-center">
-              <Handshake className="h-16 w-16 text-primary mb-4" />
+          <CardHeader className="bg-muted/30 p-0">
+            <div className="relative w-full h-[200px] md:h-[250px] group">
+              <Carousel
+                opts={{ loop: true }}
+                plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
+                className="w-full h-full"
+              >
+                <CarouselContent className="h-full">
+                  {somosElCambioCarouselImages.map((img, index) => (
+                    <CarouselItem key={index} className="h-full">
+                      <div className="relative w-full h-full">
+                        <Image 
+                          src={img.src} 
+                          alt={img.alt} 
+                          layout="fill" 
+                          objectFit="cover" 
+                          data-ai-hint={img.hint} 
+                          priority={index === 0}
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background/90 text-foreground h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background/90 text-foreground h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </Carousel>
+            </div>
+            <div className="p-6 text-center">
               <CardTitle className="font-headline text-3xl md:text-4xl">Somos el Cambio que Misiones Necesita</CardTitle>
             </div>
           </CardHeader>
@@ -99,7 +131,7 @@ export default function HomePage() {
         </Card>
       </Section>
 
-      <Section id="latest-news" className="py-0"> {/* Removed bg-background */}
+      <Section id="latest-news" className="py-0">
         <div className="text-center mb-12">
           <h2 className="font-headline text-3xl md:text-4xl font-bold text-primary-foreground">Últimas Noticias y Eventos</h2>
           <p className="font-body text-lg text-primary-foreground/80 mt-2">Mantenete informado sobre nuestras actividades y comunicados.</p>

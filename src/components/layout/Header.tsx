@@ -28,7 +28,7 @@ export function Header() {
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
         {/* Background Image Layer */}
         <Image 
-          src="https://placehold.co/1200x100.png" 
+          src="https://www.shutterstock.com/image-photo/african-lion-moon-night-africa-260nw-1483113782.jpg" 
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 
