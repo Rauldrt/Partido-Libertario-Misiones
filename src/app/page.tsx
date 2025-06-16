@@ -41,11 +41,10 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/600x300/6E2593/FFFFFF.png', alt: 'Futuro de Misiones', hint: 'Misiones landscape future' },
-  { src: 'https://placehold.co/600x300/25936E/FFFFFF.png', alt: 'Progreso Comunitario', hint: 'community progress people' },
-  { src: 'https://placehold.co/600x300/936E25/FFFFFF.png', alt: 'Innovación y Desarrollo', hint: 'innovation technology' },
-  { src: 'https://placehold.co/600x300/256393/FFFFFF.png', alt: 'Participación Ciudadana', hint: 'civic participation' },
-  { src: 'https://placehold.co/600x400/A9A9A9/000000.png', alt: 'Ejemplo Adicional', hint: 'sample example' }
+  { src: 'https://placehold.co/600x300/EBEBEB/333333.png', alt: 'Placeholder 1', hint: 'abstract pattern' },
+  { src: 'https://placehold.co/600x300/D4D4D4/333333.png', alt: 'Placeholder 2', hint: 'geometric design' },
+  { src: 'https://placehold.co/600x300/C0C0C0/333333.png', alt: 'Placeholder 3', hint: 'modern texture' },
+  { src: 'https://placehold.co/600x300/ACACAC/333333.png', alt: 'Placeholder 4', hint: 'minimalist background' },
 ];
 
 export default function HomePage() {
@@ -92,8 +91,8 @@ export default function HomePage() {
           <CardHeader className="bg-muted/30 p-0">
             <div className="relative w-full h-[200px] md:h-[250px] group">
               <Carousel
-                // opts={{ loop: true }} // Temporarily removed for debugging
-                // plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]} // Temporarily removed for debugging
+                // opts={{ loop: true }} // Loop disabled for debugging
+                // plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]} // Autoplay disabled for debugging
                 className="w-full h-full"
               >
                 <CarouselContent className="h-full">
@@ -103,8 +102,9 @@ export default function HomePage() {
                         <Image 
                           src={img.src} 
                           alt={img.alt} 
-                          layout="fill" 
-                          objectFit="cover" 
+                          fill
+                          sizes="(max-width: 640px) 100vw, 600px"
+                          style={{ objectFit: 'cover' }}
                           data-ai-hint={img.hint} 
                           priority={index === 0}
                         />
