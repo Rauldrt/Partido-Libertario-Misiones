@@ -41,10 +41,10 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/600x300.png', alt: 'Test Image Placeholder', hint: 'abstract placeholder', width: 600, height: 300 },
-  // Add more images here with src, alt, hint, width, and height
-  // Example:
-  // { src: '/images/my-image.jpg', alt: 'My Image', hint: 'custom image', width: 800, height: 600 },
+  { src: 'https://placehold.co/600x400.png', alt: 'Placeholder 1', hint: 'abstract placeholder one', width: 600, height: 400 },
+  { src: '/grupo.webp', alt: 'Grupo de personas', hint: 'community people', width: 800, height: 533 },
+  { src: 'https://placehold.co/600x400.png', alt: 'Placeholder 2', hint: 'abstract placeholder two', width: 600, height: 400 },
+  { src: '/afilia1.webp', alt: 'Formulario de Afiliación', hint: 'affiliation form', width: 720, height: 480 },
 ];
 
 
@@ -94,8 +94,8 @@ export default function HomePage() {
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
-                   // opts={{ loop: true }} // Keep loop disabled for now if debugging
-                  // plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]} // Keep autoplay disabled for now
+                  opts={{ loop: true }}
+                  plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]}
                 >
                   <CarouselContent className="h-full">
                     {somosElCambioCarouselImages.map((img, index) => (
@@ -178,3 +178,4 @@ export default function HomePage() {
     </div>
   );
 }
+
