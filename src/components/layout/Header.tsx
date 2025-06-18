@@ -34,20 +34,20 @@ export function Header() {
   return (
     <>
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
-        {/* Background Image Layer */}
+        {/* Background Image Layer (z-0) - Full Opacity */}
         <Image 
           src="https://placehold.co/1200x100.png" 
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 
-          className="absolute inset-0 z-0 opacity-20"
+          className="absolute inset-0 z-0"
           data-ai-hint="abstract pattern"
           priority
         />
-        {/* Gradient Overlay Layer */}
+        {/* Gradient Overlay Layer (z-10) - Slight Opacity */}
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/70 to-orange-500/70"></div>
 
-        {/* Content Layer */}
+        {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={42} height={42} />
