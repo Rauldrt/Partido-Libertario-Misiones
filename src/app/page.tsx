@@ -41,11 +41,10 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/600x300/FF0000/FFFFFF.png', alt: 'Test Image Red', hint: 'test red' },
-  // { src: 'https://placehold.co/600x300/D4D4D4/333333.png', alt: 'Placeholder 2', hint: 'geometric design' },
-  // { src: 'https://placehold.co/600x300/C0C0C0/333333.png', alt: 'Placeholder 3', hint: 'modern texture' },
-  // { src: 'https://placehold.co/600x300/ACACAC/333333.png', alt: 'Placeholder 4', hint: 'minimalist background' },
-  // { src: 'https://placehold.co/600x300.png', alt: 'Debate Político', hint: 'political debate' }
+  { src: 'https://placehold.co/600x300.png', alt: 'Test Image Placeholder', hint: 'abstract placeholder', width: 600, height: 300 },
+  // Add more images here with src, alt, hint, width, and height
+  // Example:
+  // { src: '/images/my-image.jpg', alt: 'My Image', hint: 'custom image', width: 800, height: 600 },
 ];
 
 
@@ -91,30 +90,36 @@ export default function HomePage() {
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl overflow-hidden">
           <CardHeader className="bg-muted/30 p-0">
-            <div className="relative w-full h-[200px] md:h-[250px] group">
-              <Carousel
-                // opts={{ loop: true }} // Loop disabled for debugging
-                // plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]} // Autoplay disabled for debugging
-                className="w-full h-full"
-              >
-                <CarouselContent className="h-full">
-                  {somosElCambioCarouselImages.map((img, index) => (
-                    <CarouselItem key={index} className="h-full relative border-4 border-green-500">
-                      <Image 
-                        src={img.src} 
-                        alt={img.alt} 
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        style={{ objectFit: 'cover' }}
-                        data-ai-hint={img.hint} 
-                        priority={index === 0}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background/90 text-foreground h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background/90 text-foreground h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </Carousel>
+            <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden">
+              {somosElCambioCarouselImages.length > 0 ? (
+                <Carousel
+                  className="w-full h-full"
+                   // opts={{ loop: true }} // Keep loop disabled for now if debugging
+                  // plugins={[Autoplay({ delay: 4500, stopOnInteraction: true })]} // Keep autoplay disabled for now
+                >
+                  <CarouselContent className="h-full">
+                    {somosElCambioCarouselImages.map((img, index) => (
+                      <CarouselItem key={index} className="h-full">
+                        <Image 
+                          src={img.src} 
+                          alt={img.alt}
+                          width={img.width}
+                          height={img.height}
+                          className="w-full h-full object-cover"
+                          data-ai-hint={img.hint} 
+                          priority={index === 0}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background/90 text-foreground h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <CarouselNext className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-background/60 hover:bg-background/90 text-foreground h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </Carousel>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <p className="text-muted-foreground">No images to display.</p>
+                </div>
+              )}
             </div>
             <div className="p-6 text-center">
               <CardTitle className="font-headline text-3xl md:text-4xl">Somos el Cambio que Misiones Necesita</CardTitle>
