@@ -34,8 +34,18 @@ export function Header() {
   return (
     <>
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
-        {/* Gradient Background Layer */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800 to-orange-500"></div>
+        {/* Background Image Layer */}
+        <Image 
+          src="https://placehold.co/1200x100.png" 
+          alt="Navbar background pattern" 
+          layout="fill" 
+          objectFit="cover" 
+          className="absolute inset-0 z-0 opacity-20"
+          data-ai-hint="abstract pattern"
+          priority
+        />
+        {/* Gradient Overlay Layer */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/70 to-orange-500/70"></div>
 
         {/* Content Layer */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
@@ -58,7 +68,7 @@ export function Header() {
       </header>
 
       {/* Mobile FAB Menu */}
-      <div className="md:hidden fixed bottom-8 right-8 z-50"> {/* Adjusted bottom and right for a bit more space */}
+      <div className="md:hidden fixed bottom-8 right-8 z-50">
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
@@ -85,7 +95,7 @@ export function Header() {
                   className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-white/10 rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {item.icon}
+                  {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}
                   {item.label}
                 </Link>
               </DropdownMenuItem>
