@@ -36,7 +36,7 @@ export function Header() {
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
         {/* Background Image Layer (z-0) - Full Opacity */}
         <Image 
-          src="https://placehold.co/1200x100.png" 
+          src="https://placehold.co/1200x100.png"
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 
@@ -48,7 +48,7 @@ export function Header() {
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/70 to-orange-500/70"></div>
 
         {/* Content Layer (z-20) */}
-        <div className="relative z-20 container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={42} height={42} />
             <span className="font-headline text-xl font-semibold">Partido Libertario Misiones</span>
@@ -58,7 +58,7 @@ export function Header() {
           <nav className="hidden md:flex gap-6">
             {navItems.map((item) => (
               <Button key={item.label} variant="ghost" asChild>
-                <Link href={item.href} className="font-body text-sm font-medium hover:scale-105 transform transition-transform duration-150 ease-in-out">
+                <Link href={item.href} className="font-body text-base font-medium hover:scale-105 transform transition-transform duration-150 ease-in-out">
                   {item.label}
                 </Link>
               </Button>
