@@ -4,12 +4,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail, X } from 'lucide-react';
+import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import React from 'react';
 
@@ -20,6 +21,13 @@ const navItems = [
   { label: 'Contacto', href: '/contact', icon: <Mail className="mr-2 h-5 w-5" /> },
 ];
 
+const socialLinks = [
+  { label: 'Facebook', href: '#', icon: <Facebook className="h-6 w-6" /> },
+  { label: 'Twitter', href: '#', icon: <Twitter className="h-6 w-6" /> },
+  { label: 'Instagram', href: '#', icon: <Instagram className="h-6 w-6" /> },
+  { label: 'YouTube', href: '#', icon: <Youtube className="h-6 w-6" /> },
+];
+
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
@@ -28,7 +36,7 @@ export function Header() {
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
         {/* Background Image Layer */}
         <Image 
-          src="https://www.shutterstock.com/image-photo/african-lion-moon-night-africa-260nw-1483113782.jpg" 
+          src="https://placehold.co/1200x100.png" 
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 
@@ -79,13 +87,13 @@ export function Header() {
             side="top" 
             align="end" 
             sideOffset={12}
-            className="w-64 bg-[rgba(88,28,135,0.92)] shadow-xl rounded-lg p-2" // Increased width, custom bg
+            className="w-72 bg-[rgba(88,28,135,0.95)] shadow-xl rounded-lg p-2" 
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-3 text-sm font-medium text-primary-foreground hover:bg-white/10 rounded-md" // Adjusted text and hover colors
+                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-white/10 rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.icon}
@@ -93,9 +101,24 @@ export function Header() {
                 </Link>
               </DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator className="my-2 bg-white/20" />
+            <div className="flex justify-around items-center py-2 px-2">
+              {socialLinks.map((social) => (
+                <Link 
+                  key={social.label} 
+                  href={social.href} 
+                  aria-label={social.label}
+                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {React.cloneElement(social.icon, { className: "h-7 w-7" })}
+                </Link>
+              ))}
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </>
   );
 }
+
