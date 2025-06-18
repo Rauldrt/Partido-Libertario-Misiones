@@ -41,11 +41,13 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/600x300/EBEBEB/333333.png', alt: 'Placeholder 1', hint: 'abstract pattern' },
-  { src: 'https://placehold.co/600x300/D4D4D4/333333.png', alt: 'Placeholder 2', hint: 'geometric design' },
-  { src: 'https://placehold.co/600x300/C0C0C0/333333.png', alt: 'Placeholder 3', hint: 'modern texture' },
-  { src: 'https://placehold.co/600x300/ACACAC/333333.png', alt: 'Placeholder 4', hint: 'minimalist background' },
+  { src: 'https://placehold.co/600x300/FF0000/FFFFFF.png', alt: 'Test Image Red', hint: 'test red' },
+  // { src: 'https://placehold.co/600x300/D4D4D4/333333.png', alt: 'Placeholder 2', hint: 'geometric design' },
+  // { src: 'https://placehold.co/600x300/C0C0C0/333333.png', alt: 'Placeholder 3', hint: 'modern texture' },
+  // { src: 'https://placehold.co/600x300/ACACAC/333333.png', alt: 'Placeholder 4', hint: 'minimalist background' },
+  // { src: 'https://placehold.co/600x300.png', alt: 'Debate Político', hint: 'political debate' }
 ];
+
 
 export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
@@ -97,18 +99,16 @@ export default function HomePage() {
               >
                 <CarouselContent className="h-full">
                   {somosElCambioCarouselImages.map((img, index) => (
-                    <CarouselItem key={index} className="h-full">
-                      <div className="relative w-full h-full">
-                        <Image 
-                          src={img.src} 
-                          alt={img.alt} 
-                          fill
-                          sizes="(max-width: 640px) 100vw, 600px"
-                          style={{ objectFit: 'cover' }}
-                          data-ai-hint={img.hint} 
-                          priority={index === 0}
-                        />
-                      </div>
+                    <CarouselItem key={index} className="h-full relative border-4 border-green-500">
+                      <Image 
+                        src={img.src} 
+                        alt={img.alt} 
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        style={{ objectFit: 'cover' }}
+                        data-ai-hint={img.hint} 
+                        priority={index === 0}
+                      />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
