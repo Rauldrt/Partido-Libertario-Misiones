@@ -36,7 +36,7 @@ export function Header() {
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
         {/* Background Image Layer (z-0) - Full Opacity */}
         <Image 
-          src="https://placehold.co/1200x100.png"
+          src="/banner3.jpg"
           alt="Navbar background pattern" 
           layout="fill" 
           objectFit="cover" 

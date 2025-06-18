@@ -90,7 +90,7 @@ export default function HomePage() {
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl overflow-hidden">
           <CardHeader className="bg-muted/30 p-0">
-            <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden">
+            <div className="relative w-full h-[300px] md:h-[350px] group overflow-hidden">
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
