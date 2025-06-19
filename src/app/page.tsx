@@ -124,12 +124,12 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            <div className="p-6 text-center">
-              <CardTitle className="font-headline text-3xl md:text-4xl">Somos el Cambio que Misiones Necesita</CardTitle>
-            </div>
           </CardHeader>
           <CardContent className="p-6 text-center">
-            <p className="font-body text-lg mb-6 text-foreground/90">
+            <CardTitle className="font-headline text-3xl md:text-4xl mb-6">
+              Somos el Cambio que Misiones Necesita
+            </CardTitle>
+            <p className="font-body text-lg text-foreground/90">
               Creemos en el poder del individuo, la libre empresa y un gobierno limitado. Nuestro compromiso es con la transparencia, la responsabilidad y la construcción de una sociedad más justa y libre para todos los misioneros.
             </p>
           </CardContent>
