@@ -159,7 +159,7 @@ export default function HomePage() {
       </Section>
 
       <Section id="join-us-card" className="py-0">
-         <Card className="max-w-3xl mx-auto shadow-xl"> {/* Removed overflow-hidden */}
+         <Card className="max-w-3xl mx-auto shadow-xl">
             <CardHeader className="bg-primary p-6">
                 <div className="flex flex-col items-center text-center">
                     <Users className="h-16 w-16 mx-auto mb-4 text-accent" />
@@ -215,7 +215,6 @@ export default function HomePage() {
                   </AccordionItem>
                 </Accordion>
             </CardContent>
-            {/* CardFooter removed as its content is now part of the AccordionTrigger */}
          </Card>
       </Section>
     </div>
