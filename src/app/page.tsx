@@ -8,10 +8,12 @@ import { Section } from '@/components/ui/Section';
 import { mockNewsItems } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Users, Goal, ArrowRight } from 'lucide-react';
+import { Users, Goal, ArrowRight, Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ContactForm } from '@/components/ContactForm';
 
 const carouselSlides = [
   {
@@ -88,9 +90,9 @@ export default function HomePage() {
       </div>
 
       <Section id="about-snippet-card" className="py-0">
-        <Card className="max-w-3xl mx-auto shadow-xl overflow-hidden">
+        <Card className="max-w-3xl mx-auto shadow-xl">
           <CardHeader className="bg-muted/30 p-0">
-            <div className="relative w-full h-[300px] md:h-[350px] group overflow-hidden">
+            <div className="relative w-full h-[200px] md:h-[250px] group">
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
@@ -108,6 +110,7 @@ export default function HomePage() {
                           className="w-full h-full object-cover"
                           data-ai-hint={img.hint} 
                           priority={index === 0}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         />
                       </CarouselItem>
                     ))}
@@ -156,26 +159,65 @@ export default function HomePage() {
       </Section>
 
       <Section id="join-us-card" className="py-0">
-         <Card className="max-w-3xl mx-auto shadow-xl overflow-hidden">
+         <Card className="max-w-3xl mx-auto shadow-xl"> {/* Removed overflow-hidden */}
             <CardHeader className="bg-primary p-6">
                 <div className="flex flex-col items-center text-center">
                     <Users className="h-16 w-16 mx-auto mb-4 text-accent" />
                     <CardTitle className="font-headline text-3xl md:text-4xl text-primary-foreground">Sumate a la Libertad</CardTitle>
                 </div>
             </CardHeader>
-            <CardContent className="p-6 text-center">
-                <p className="font-body text-lg mb-8 text-foreground/90">
+            <CardContent className="p-6">
+                <p className="font-body text-lg mb-8 text-foreground/90 text-center">
                 Tu participación es fundamental para construir el futuro que queremos. Afiliate, colaborá o participá en nuestras actividades.
                 </p>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="contact-details" className="border-0">
+                    <AccordionTrigger className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-md p-3 text-lg font-medium flex justify-center items-center hover:no-underline">
+                       <MessageSquare className="mr-2 h-6 w-6" /> Contactanos / Participá Ahora
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-6">
+                      <div className="grid md:grid-cols-2 gap-10 items-start">
+                        <div className="space-y-4">
+                          <h3 className="font-headline text-2xl font-semibold text-primary">Envianos un Mensaje</h3>
+                          <ContactForm />
+                        </div>
+                        <div className="space-y-6">
+                          <h3 className="font-headline text-2xl font-semibold text-primary">Información Adicional</h3>
+                          <div className="flex items-start">
+                            <MapPin className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
+                            <div>
+                              <h4 className="font-headline text-lg font-semibold">Nuestra Sede</h4>
+                              <p className="font-body text-muted-foreground">Calle Falsa 123, Posadas, Misiones</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start">
+                            <Mail className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
+                            <div>
+                              <h4 className="font-headline text-lg font-semibold">Correo Electrónico</h4>
+                              <p className="font-body text-muted-foreground">info@misioneslibertad.com.ar</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start">
+                            <Phone className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
+                            <div>
+                              <h4 className="font-headline text-lg font-semibold">Teléfono</h4>
+                              <p className="font-body text-muted-foreground">(0376) 4XXXXXX</p>
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="font-headline text-lg font-semibold">Horarios de Atención</h4>
+                            <p className="font-body text-muted-foreground">Lunes a Viernes: 9:00 - 18:00 hs</p>
+                            <p className="font-body text-muted-foreground">Sábados: 9:00 - 13:00 hs (Consultar previamente)</p>
+                          </div>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
             </CardContent>
-            <CardFooter className="flex justify-center p-6 bg-muted/30">
-                <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Link href="/contact">Participar Ahora <Goal className="ml-2 h-5 w-5" /></Link>
-                </Button>
-            </CardFooter>
+            {/* CardFooter removed as its content is now part of the AccordionTrigger */}
          </Card>
       </Section>
     </div>
   );
 }
-
