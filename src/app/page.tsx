@@ -43,10 +43,10 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/600x400.png', alt: 'Placeholder 1', hint: 'abstract placeholder one', width: 600, height: 400 },
-  { src: '/grupo.webp', alt: 'Grupo de personas', hint: 'community people', width: 800, height: 533 },
-  { src: 'https://placehold.co/600x400.png', alt: 'Placeholder 2', hint: 'abstract placeholder two', width: 600, height: 400 },
-  { src: '/afilia1.webp', alt: 'Formulario de Afiliación', hint: 'affiliation form', width: 720, height: 480 },
+  { src: 'https://placehold.co/800x533.png', alt: 'Grupo de personas unidas', hint: 'community people', width: 800, height: 533 },
+  { src: 'https://placehold.co/720x480.png', alt: 'Formulario de Afiliación simbólico', hint: 'affiliation form', width: 720, height: 480 },
+  { src: 'https://placehold.co/600x400.png', alt: 'Paisaje Misionero', hint: 'Misiones landscape', width: 600, height: 400 },
+  { src: 'https://placehold.co/800x600.png', alt: 'Debate de ideas constructivo', hint: 'ideas debate', width: 800, height: 600 },
 ];
 
 
@@ -92,7 +92,7 @@ export default function HomePage() {
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl">
           <CardHeader className="bg-muted/30 p-0">
-            <div className="relative w-full h-[200px] md:h-[250px] group">
+            <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden"> {/* Added overflow-hidden here */}
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
