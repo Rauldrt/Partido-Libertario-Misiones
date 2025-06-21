@@ -19,7 +19,7 @@ interface BannerProps {
 export function Banner({ 
   title, 
   description, 
-  imageUrl= 'grupo.webp', 
+  imageUrl, 
   imageHint, 
   ctaText, 
   ctaLink, 
@@ -29,22 +29,24 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground py-16 md:py-24 overflow-hidden h-[400px] md:h-[500px] lg:h-[600px] flex flex-col justify-center",
-      variant === 'primary-bg' ? "bg-primary" : "bg-gradient-to-br from-purple-900 to-pink-300"
+      "relative text-primary-foreground py-16 md:py-24 overflow-hidden h-[400px] md:h-[500px] lg:h-[600px] flex flex-col justify-center"
     )}>
-      <div className="absolute inset-0">
-        <Image
-          src={imageUrl}
-          alt={title}
-          layout="fill"
-          objectFit="cover"
-          className="opacity-20"
-          data-ai-hint={imageHint}
-          priority={priority}
-        />
-      </div>
+      <Image
+        src={imageUrl}
+        alt={title}
+        layout="fill"
+        objectFit="cover"
+        className="absolute inset-0 z-0"
+        data-ai-hint={imageHint}
+        priority={priority}
+      />
       <div className={cn(
-        "container mx-auto px-4 md:px-6 relative z-10",
+        "absolute inset-0 z-10",
+        variant === 'primary-bg' ? "bg-primary/40" : "bg-black/60"
+      )} />
+      
+      <div className={cn(
+        "container mx-auto px-4 md:px-6 relative z-20",
         textAlignment === 'center' ? 'text-center' : 'text-left'
       )}>
         <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold mb-6">{title}</h1>
