@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -19,7 +20,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground py-12 md:py-24 h-[350px] md:h-[500px] lg:h-[600px] flex flex-col justify-center",
+      "relative text-primary-foreground py-12 md:py-24 h-[300px] md:h-[500px] lg:h-[600px] flex flex-col justify-center",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left'
     )}>
       
