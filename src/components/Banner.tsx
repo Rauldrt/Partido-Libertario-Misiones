@@ -39,7 +39,7 @@ export function Banner({
         {description}
       </p>
       {ctaText && ctaLink && (
-        <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-md transition-transform hover:scale-105">
+        <Button asChild size="lg" className="bg-gradient-to-r from-orange-500 to-fuchsia-500 text-primary-foreground hover:from-orange-600 hover:to-fuchsia-600 shadow-md transition-transform hover:scale-105">
           <Link href={ctaLink}>{ctaText}</Link>
         </Button>
       )}
