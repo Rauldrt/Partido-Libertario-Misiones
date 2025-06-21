@@ -23,7 +23,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-b from-purple-900 to-fuchsia-800">
+      <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-b from-[#1c032f] to-fuchsia-800">
         <Header />
         <div className="flex-grow flex flex-col perspective-container">
           <main className="flex-grow">
