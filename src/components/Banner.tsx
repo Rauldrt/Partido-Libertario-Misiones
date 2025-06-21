@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 interface BannerProps {
@@ -30,14 +29,14 @@ export function Banner({
         "flex flex-col"
       )}>
         <h1 
-          className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+          className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in-up"
           style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
         >
           {title}
         </h1>
         <p 
           className={cn(
-            "font-body text-lg md:text-xl mb-8",
+            "font-body text-lg md:text-xl mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms]",
             textAlignment === 'center' ? 'max-w-2xl mx-auto' : 'max-w-2xl'
           )}
           style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
@@ -45,9 +44,11 @@ export function Banner({
           {description}
         </p>
         {ctaText && ctaLink && (
-          <Button asChild size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
-            <Link href={ctaLink}>{ctaText}</Link>
-          </Button>
+           <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
+            <Button asChild size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
+              <Link href={ctaLink}>{ctaText}</Link>
+            </Button>
+          </div>
         )}
       </div>
     </div>
