@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from 'next/image';
@@ -51,8 +50,11 @@ export default function HomePage() {
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12">
       <Section
         id="banner-carousel"
-        className="py-0 bg-gradient-to-r from-purple-800 to-orange-500 bg-300% animate-animated-gradient"
+        className="py-0 bg-[length:150%_auto] md:bg-cover animate-ken-burns-in"
         containerClassName="px-0 md:px-0 max-w-full"
+        backgroundImage="/banner1.jpg"
+        backgroundOverlay="bg-gradient-to-r from-purple-800/70 to-orange-500/70"
+        parallax
       >
         <div className="relative container mx-auto px-4 md:px-6">
           <Carousel

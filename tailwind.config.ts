@@ -84,7 +84,6 @@ export default {
         'auto': 'auto',
         'cover': 'cover',
         'contain': 'contain',
-        '300%': '300% 300%',
         '150%': '150% auto',
       },
       keyframes: {
@@ -103,11 +102,6 @@ export default {
           to: {
             height: '0',
           },
-        },
-        'animated-gradient': {
-          '0%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-          '100%': { backgroundPosition: '0% 50%' },
         },
         'subtle-pulse': {
           '0%, 100%': { opacity: '0.1' },
@@ -137,7 +131,6 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'animated-gradient': 'animated-gradient 15s ease infinite',
         'subtle-pulse': 'subtle-pulse 6s ease-in-out infinite alternate',
         'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
         'ken-burns-in': 'ken-burns-in 1.2s ease-out forwards',
