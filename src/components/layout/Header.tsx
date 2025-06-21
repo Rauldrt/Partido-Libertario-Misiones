@@ -101,16 +101,17 @@ export function Header() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator className="my-1 bg-white/20" />
-            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link
-                href="/afiliacion"
-                className="flex items-center p-4 text-base font-semibold text-accent hover:bg-white/10 rounded-md"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <UserPlus className="mr-3 h-6 w-6" />
-                Afiliate
-              </Link>
-            </DropdownMenuItem>
+            <div className="px-2 py-1.5">
+                <Button asChild className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md">
+                    <Link
+                        href="/afiliacion"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <UserPlus className="mr-2 h-5 w-5" />
+                        <span>Afiliate</span>
+                    </Link>
+                </Button>
+            </div>
             <DropdownMenuSeparator className="my-1 bg-white/20" />
             <div className="flex justify-around items-center py-2 px-2">
               {socialLinks.map((social) => (
