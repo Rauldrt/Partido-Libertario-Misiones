@@ -165,9 +165,9 @@ export default function HomePage() {
 
       <Section id="join-us-card" className="py-0">
          <Card className="max-w-3xl mx-auto shadow-xl">
-            <CardHeader className="bg-primary p-6">
+            <CardHeader className="bg-gradient-to-br from-purple-800 to-purple-600 p-6 rounded-t-lg">
                 <div className="flex flex-col items-center text-center">
-                    <Users className="h-16 w-16 mx-auto mb-4 text-accent" />
+                    <Users className="h-16 w-16 mx-auto mb-4 text-cyan-400" />
                     <CardTitle className="font-headline text-3xl md:text-4xl text-primary-foreground">Sumate a la Libertad</CardTitle>
                 </div>
             </CardHeader>
@@ -177,7 +177,7 @@ export default function HomePage() {
                 </p>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="contact-details" className="border-0">
-                    <AccordionTrigger className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-md p-3 text-lg font-medium flex justify-center items-center hover:no-underline">
+                    <AccordionTrigger className="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 text-primary-foreground hover:from-cyan-600 hover:to-cyan-700 transition-colors rounded-md p-3 text-lg font-medium flex justify-center items-center hover:no-underline">
                        <MessageSquare className="mr-2 h-6 w-6" /> Contactanos / Participá Ahora
                     </AccordionTrigger>
                     <AccordionContent className="pt-6">

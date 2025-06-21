@@ -68,7 +68,7 @@ export function Header() {
       </header>
 
       {/* Mobile FAB Menu */}
-      <div className="md:hidden fixed bottom-8 right-8 z-50">
+      <div className="md:hidden fixed bottom-12 right-12 z-50">
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
