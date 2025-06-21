@@ -85,6 +85,7 @@ export default {
         'cover': 'cover',
         'contain': 'contain',
         '300%': '300% 300%',
+        '150%': '150% auto',
       },
       keyframes: {
         'accordion-down': {

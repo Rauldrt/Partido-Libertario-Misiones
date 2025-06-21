@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import type { StaticImageData } from 'next/image';
+import Image from 'next/image';
 
 interface BannerProps {
   title: string;
@@ -9,6 +11,7 @@ interface BannerProps {
   ctaText?: string;
   ctaLink?: string;
   textAlignment?: 'center' | 'left';
+  priority?: boolean;
 }
 
 export function Banner({ 
@@ -20,7 +23,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground py-24 h-[500px] lg:h-[600px] flex flex-col justify-center",
+      "relative text-primary-foreground py-20 md:py-24 h-[500px] flex flex-col justify-center",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left'
     )}>
       

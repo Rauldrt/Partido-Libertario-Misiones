@@ -48,14 +48,11 @@ export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
 
   return (
-    <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12 bg-gradient-to-br from-purple-900 to-pink-300">
+    <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12">
       <Section
         id="banner-carousel"
-        className="py-0 animate-ken-burns-in md:bg-cover bg-[length:150%_auto]"
+        className="py-0 bg-gradient-to-r from-purple-800 to-orange-500 bg-300% animate-animated-gradient"
         containerClassName="px-0 md:px-0 max-w-full"
-        backgroundImage="/banner3.jpg"
-        parallax={true}
-        backgroundOverlay="bg-gradient-to-r from-purple-800/70 to-orange-500/70"
       >
         <div className="relative container mx-auto px-4 md:px-6">
           <Carousel
