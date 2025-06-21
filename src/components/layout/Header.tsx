@@ -45,7 +45,7 @@ export function Header() {
           priority
         />
         {/* Gradient Overlay Layer (z-10) - Slight Opacity */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/70 to-orange-500/70"></div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-950/80 to-orange-500/70"></div>
 
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
@@ -78,7 +78,7 @@ export function Header() {
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400 text-white hover:from-purple-800 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75 btn-ripple"
+              className="bg-gradient-to-br from-purple-900 via-orange-500 to-yellow-400 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75 btn-ripple"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
               {isMobileMenuOpen ? (
@@ -92,7 +92,7 @@ export function Header() {
             side="top" 
             align="end" 
             sideOffset={12}
-            className="w-72 bg-[rgba(88,28,135,0.95)] shadow-xl rounded-lg p-2" 
+            className="w-72 bg-[rgba(59,7,100,0.95)] shadow-xl rounded-lg p-2" 
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
