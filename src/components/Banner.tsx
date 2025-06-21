@@ -30,7 +30,7 @@ export function Banner({
   return (
     <div className={cn(
       "relative text-primary-foreground py-16 md:py-24 overflow-hidden h-[400px] md:h-[500px] lg:h-[600px] flex flex-col justify-center",
-      variant === 'primary-bg' ? "bg-primary" : "bg-gradient-to-r from-orange-400 via-orange-500 to-red-500"
+      variant === 'primary-bg' ? "bg-primary" : "bg-gradient-to-br from-purple-900 to-pink-300"
     )}>
       <div className="absolute inset-0">
         <Image
