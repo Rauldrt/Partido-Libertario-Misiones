@@ -55,7 +55,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6">
+          <nav className="hidden md:flex items-center gap-4">
             {navItems.map((item) => (
               <Button key={item.label} variant="ghost" asChild>
                 <Link href={item.href} className="font-body text-base font-medium hover:scale-105 transform transition-transform duration-150 ease-in-out">
@@ -63,6 +63,12 @@ export function Header() {
                 </Link>
               </Button>
             ))}
+             <Button asChild className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105 ml-4">
+               <Link href="/afiliacion">
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  <span>Afiliate</span>
+               </Link>
+            </Button>
           </nav>
         </div>
       </header>
