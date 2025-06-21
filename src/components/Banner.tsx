@@ -23,7 +23,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground py-20 md:py-24 h-[500px] flex flex-col justify-center",
+      "relative text-primary-foreground h-full flex flex-col justify-center",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left'
     )}>
       
