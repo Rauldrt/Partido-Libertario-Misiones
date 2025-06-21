@@ -19,24 +19,18 @@ const carouselSlides = [
   {
     title: "Partido Libertario Misiones",
     description: "Unite al movimiento que defiende tus libertades individuales y promueve un futuro próspero para Misiones.",
-    imageUrl: "https://i.pinimg.com/736x/dc/3e/41/dc3e4160b4942e685a7be5f6546fb97b.jpg",
-    imageHint: "flag landscape",
     ctaText: "Conocé Más",
     ctaLink: "/about",
   },
   {
     title: "Nuestras Propuestas Claras",
     description: "Descubrí cómo planeamos transformar la provincia con ideas firmes y acciones concretas.",
-    imageUrl: "https://i.pinimg.com/736x/dc/3e/41/dc3e4160b4942e685a7be5f6546fb97b.jpg",
-    imageHint: "planning discussion",
     ctaText: "Ver Propuestas",
     ctaLink: "/about#values",
   },
   {
     title: "Sumate al Cambio Real",
     description: "Tu participación es clave. Afiliate, colaborá o participá en nuestras actividades y sé protagonista.",
-    imageUrl: "https://i.pinimg.com/736x/dc/3e/41/dc3e4160b4942e685a7be5f6546fb97b.jpg",
-    imageHint: "community action",
     ctaText: "Participar Ahora",
     ctaLink: "/contact",
   },
@@ -55,44 +49,48 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 py-8 md:py-12 bg-gradient-to-br from-purple-900 to-pink-300">
-      <div className="relative container mx-auto px-4 md:px-6">
-        <Carousel
-          plugins={[
-            Autoplay({
-              delay: 5000,
-              stopOnInteraction: true,
-            }),
-          ]}
-          className="w-full"
-          opts={{
-            loop: true,
-          }}
-        >
-          <CarouselContent>
-            {carouselSlides.map((slide, index) => (
-              <CarouselItem key={index}>
-                <Banner
-                  title={slide.title}
-                  description={slide.description}
-                  imageUrl={slide.imageUrl}
-                  imageHint={slide.imageHint}
-                  ctaText={slide.ctaText}
-                  ctaLink={slide.ctaLink}
-                  variant="primary-bg"
-                  priority={index === 0}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-          <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-        </Carousel>
-      </div>
+      <Section
+        className="py-0"
+        containerClassName="px-0 md:px-0 max-w-full"
+        backgroundImage="/banner1.jpg"
+        parallax={true}
+        backgroundOverlay="bg-black/50"
+      >
+        <div className="relative container mx-auto px-4 md:px-6">
+          <Carousel
+            plugins={[
+              Autoplay({
+                delay: 5000,
+                stopOnInteraction: true,
+              }),
+            ]}
+            className="w-full"
+            opts={{
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {carouselSlides.map((slide, index) => (
+                <CarouselItem key={index}>
+                  <Banner
+                    title={slide.title}
+                    description={slide.description}
+                    ctaText={slide.ctaText}
+                    ctaLink={slide.ctaLink}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+          </Carousel>
+        </div>
+      </Section>
 
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl">
           <CardHeader className="bg-muted/30 p-0">
-            <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden"> {/* Added overflow-hidden here */}
+            <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden">
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
