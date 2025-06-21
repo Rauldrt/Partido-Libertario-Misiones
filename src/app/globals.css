@@ -1,6 +1,13 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media (min-width: 768px) {
+  section[data-parallax='true'] {
+    background-attachment: fixed;
+  }
+}
 
 body {
   font-family: var(--font-pt-sans), sans-serif; /* Fallback, primarily handled by tailwind config */
