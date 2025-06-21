@@ -26,14 +26,12 @@ export function Section({
     sectionStyle.backgroundPosition = 'center';
     sectionStyle.backgroundRepeat = 'no-repeat';
     sectionStyle.backgroundSize = 'cover';
-    if (parallax) {
-      sectionStyle.backgroundAttachment = 'fixed';
-    }
   }
 
   return (
     <section 
       id={id} 
+      data-parallax={parallax}
       className={cn('relative py-12 md:py-16 lg:py-20', className)} // Ensure 'relative' for z-indexing children
       style={sectionStyle}
     >
