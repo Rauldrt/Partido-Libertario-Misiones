@@ -1,0 +1,1 @@
+Please replace this file with your actual `background.mp4` video file. The application is now configured to use it as the banner background.

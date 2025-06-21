@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -48,44 +49,49 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12">
-      <Section
-        id="banner-carousel"
-        className="py-0 bg-[length:150%_auto] md:bg-cover animate-ken-burns-in"
-        containerClassName="px-0 md:px-0 max-w-full"
-        backgroundImage="/banner1.jpg"
-        backgroundOverlay="bg-gradient-to-r from-purple-800/70 to-orange-500/70"
-        parallax
-      >
-        <div className="relative container mx-auto px-4 md:px-6">
-          <Carousel
-            plugins={[
-              Autoplay({
-                delay: 5000,
-                stopOnInteraction: true,
-              }),
-            ]}
-            className="w-full"
-            opts={{
-              loop: true,
-            }}
-          >
-            <CarouselContent>
-              {carouselSlides.map((slide, index) => (
-                <CarouselItem key={index}>
-                  <Banner
-                    title={slide.title}
-                    description={slide.description}
-                    ctaText={slide.ctaText}
-                    ctaLink={slide.ctaLink}
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-            <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-          </Carousel>
+      <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        >
+          <source src="/background.mp4" type="video/mp4" />
+          Tu navegador no soporta la etiqueta de video.
+        </video>
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/70 to-orange-500/70" />
+
+        <div className="relative z-20 container mx-auto px-4 md:px-6 w-full">
+            <Carousel
+                plugins={[
+                Autoplay({
+                    delay: 5000,
+                    stopOnInteraction: true,
+                }),
+                ]}
+                className="w-full"
+                opts={{
+                loop: true,
+                }}
+            >
+                <CarouselContent>
+                {carouselSlides.map((slide, index) => (
+                    <CarouselItem key={index}>
+                    <Banner
+                        title={slide.title}
+                        description={slide.description}
+                        ctaText={slide.ctaText}
+                        ctaLink={slide.ctaLink}
+                    />
+                    </CarouselItem>
+                ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+                <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            </Carousel>
         </div>
-      </Section>
+      </section>
 
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl">
