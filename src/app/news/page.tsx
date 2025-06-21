@@ -43,7 +43,7 @@ export default function NewsPage() {
         </div>
       </Section>
 
-      <div className="bg-gradient-to-b from-background to-secondary py-12">
+      <div className="py-12">
         {carouselNewsItems.length > 0 && (
           <div className="container mx-auto px-4 md:px-6 relative mb-12">
             <Carousel

@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="bg-secondary text-secondary-foreground py-8 mt-auto">
+    <footer className="bg-black/30 text-primary-foreground py-8 mt-auto backdrop-blur-sm">
       <div className="container mx-auto px-4 md:px-6 text-center">
         <div className="flex justify-center gap-6 mb-4">
           <Link href="#" aria-label="Facebook" className="hover:text-primary transition-colors">
