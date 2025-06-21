@@ -50,7 +50,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12 bg-gradient-to-br from-purple-900 to-pink-300">
       <Section
-        className="py-0"
+        className="py-0 animate-ken-burns-in"
         containerClassName="px-0 md:px-0 max-w-full"
         backgroundImage="/banner3.jpg"
         parallax={true}

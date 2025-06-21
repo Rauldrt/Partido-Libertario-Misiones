@@ -122,6 +122,16 @@ export default {
             transform: 'translateY(0)',
           },
         },
+        'ken-burns-in': {
+          '0%': {
+            backgroundSize: '115% 115%',
+            opacity: '0.5'
+          },
+          '100%': {
+            backgroundSize: '100% 100%',
+            opacity: '1'
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -129,6 +139,7 @@ export default {
         'animated-gradient': 'animated-gradient 15s ease infinite',
         'subtle-pulse': 'subtle-pulse 6s ease-in-out infinite alternate',
         'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
+        'ken-burns-in': 'ken-burns-in 1.2s ease-out forwards',
       },
     },
   },
