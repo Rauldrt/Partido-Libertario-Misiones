@@ -3,10 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@media (min-width: 768px) {
-  section[data-parallax='true'] {
-    background-attachment: fixed;
-  }
+section[data-parallax='true'] {
+  background-attachment: fixed;
 }
 
 body {
