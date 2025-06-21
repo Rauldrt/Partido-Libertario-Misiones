@@ -48,11 +48,11 @@ export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
 
   return (
-    <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 py-8 md:py-12 bg-gradient-to-br from-purple-900 to-pink-300">
+    <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12 bg-gradient-to-br from-purple-900 to-pink-300">
       <Section
         className="py-0"
         containerClassName="px-0 md:px-0 max-w-full"
-        backgroundImage="/banner1.jpg"
+        backgroundImage="/banner3.jpg"
         parallax={true}
         backgroundOverlay="bg-black/50"
       >
@@ -89,7 +89,7 @@ export default function HomePage() {
 
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl">
-          <CardHeader className="bg-muted/30 p-0">
+          <CardHeader className="p-0">
             <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden">
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
