@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,7 +100,18 @@ export function Header() {
                 </Link>
               </DropdownMenuItem>
             ))}
-            <DropdownMenuSeparator className="my-2 bg-white/20" />
+            <DropdownMenuSeparator className="my-1 bg-white/20" />
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link
+                href="/afiliacion"
+                className="flex items-center p-4 text-base font-semibold text-accent hover:bg-white/10 rounded-md"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <UserPlus className="mr-3 h-6 w-6" />
+                Afiliate
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="my-1 bg-white/20" />
             <div className="flex justify-around items-center py-2 px-2">
               {socialLinks.map((social) => (
                 <Link 
