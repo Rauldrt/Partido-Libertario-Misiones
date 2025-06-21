@@ -111,13 +111,6 @@ body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
-
-  /* Responsive parallax effect */
-  @media (min-width: 768px) {
-    section[data-parallax='true'] {
-      background-attachment: fixed;
-    }
-  }
 }
 
 @layer components {
