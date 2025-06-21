@@ -43,10 +43,10 @@ const carouselSlides = [
 ];
 
 const somosElCambioCarouselImages = [
-  { src: 'https://placehold.co/800x533.png', alt: 'Grupo de personas unidas', hint: 'community people', width: 800, height: 533 },
-  { src: 'https://placehold.co/720x480.png', alt: 'Formulario de Afiliación simbólico', hint: 'affiliation form', width: 720, height: 480 },
-  { src: 'https://placehold.co/600x400.png', alt: 'Paisaje Misionero', hint: 'Misiones landscape', width: 600, height: 400 },
-  { src: 'https://placehold.co/800x600.png', alt: 'Debate de ideas constructivo', hint: 'ideas debate', width: 800, height: 600 },
+  { src: '/afilia1.webp', alt: 'Grupo de personas unidas', hint: 'community people', width: 800, height: 533 },
+  { src: '/banner1.jpg', alt: 'Formulario de Afiliación simbólico', hint: 'affiliation form', width: 720, height: 480 },
+  { src: '/grupo.webp', alt: 'Paisaje Misionero', hint: 'Misiones landscape', width: 600, height: 400 },
+  { src: '/banner2.jpg', alt: 'Debate de ideas constructivo', hint: 'ideas debate', width: 800, height: 600 },
 ];
 
 
