@@ -54,7 +54,7 @@ export default function HomePage() {
         containerClassName="px-0 md:px-0 max-w-full"
         backgroundImage="/banner3.jpg"
         parallax={true}
-        backgroundOverlay="bg-gradient-to-r from-orange-500/70 to-red-600/70"
+        backgroundOverlay="bg-gradient-to-r from-purple-800/70 to-orange-500/70"
       >
         <div className="relative container mx-auto px-4 md:px-6">
           <Carousel
