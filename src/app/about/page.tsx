@@ -41,7 +41,7 @@ export default function AboutPage() {
         backgroundImage="/grupo.webp"
         backgroundOverlay="bg-black/60"
         parallax={true}
-        className="pt-20 pb-10"
+        className="pt-20 pb-10 bg-cover"
       >
         <div className="text-center">
           <Users className="h-20 w-20 text-accent mx-auto mb-6" />

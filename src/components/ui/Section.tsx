@@ -19,23 +19,19 @@ export function Section({
   parallax,
   backgroundOverlay
 }: SectionProps) {
-  const sectionStyle: React.CSSProperties = {};
-  
-  if (backgroundImage) {
-    sectionStyle.backgroundImage = `url(${backgroundImage})`;
-    sectionStyle.backgroundPosition = 'center';
-    sectionStyle.backgroundRepeat = 'no-repeat';
-    sectionStyle.backgroundSize = 'cover';
-  }
-
-  if (parallax) {
-    sectionStyle.backgroundAttachment = 'fixed';
-  }
+  const sectionStyle: React.CSSProperties = backgroundImage 
+    ? { '--bg-image': `url(${backgroundImage})` } as React.CSSProperties
+    : {};
 
   return (
     <section 
       id={id} 
-      className={cn('relative py-12 md:py-16 lg:py-20', className)} // Ensure 'relative' for z-indexing children
+      className={cn(
+        'relative py-12 md:py-16 lg:py-20', // Base styles
+        backgroundImage && 'bg-[image:var(--bg-image)] bg-center bg-no-repeat', // Apply image using CSS var
+        parallax && 'bg-fixed', // Apply parallax if enabled
+        className
+      )}
       style={sectionStyle}
     >
       {backgroundImage && backgroundOverlay && (
