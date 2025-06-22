@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,9 +62,16 @@ export function ContactForm() {
         });
         form.reset();
       } else {
+        form.clearErrors();
+        result.errors?.forEach((error) => {
+          form.setError(error.path[0] as keyof ContactFormValues, {
+            type: "manual",
+            message: error.message,
+          });
+        });
         toast({
           title: "Error al Enviar",
-          description: result.error || "Hubo un problema al enviar su mensaje. Por favor, inténtelo de nuevo.",
+          description: result.message || "Hubo un problema al enviar su mensaje. Por favor, inténtelo de nuevo.",
           variant: "destructive",
         });
       }

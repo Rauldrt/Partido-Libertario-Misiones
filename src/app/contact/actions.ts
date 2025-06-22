@@ -1,24 +1,19 @@
+
 "use server";
 
 import * as z from "zod";
 
 const contactFormSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  subject: z.string().min(5),
-  message: z.string().min(10).max(500),
+  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres." }),
+  email: z.string().email({ message: "Por favor, ingrese un correo electrónico válido." }),
+  subject: z.string().min(5, { message: "El asunto debe tener al menos 5 caracteres." }),
+  message: z.string().min(10, { message: "El mensaje debe tener al menos 10 caracteres." }).max(500, { message: "El mensaje no puede exceder los 500 caracteres." }),
 });
 
 export type ContactFormState = {
   success: boolean;
   message?: string;
-  error?: string | null;
-  errors?: {
-    name?: string[];
-    email?: string[];
-    subject?: string[];
-    message?: string[];
-  };
+  errors?: z.ZodIssue[];
 };
 
 export async function submitContactForm(
@@ -29,7 +24,7 @@ export async function submitContactForm(
   if (!validatedFields.success) {
     return {
       success: false,
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: validatedFields.error.issues,
       message: "Por favor corrija los errores en el formulario.",
     };
   }
