@@ -19,20 +19,36 @@ const carouselSlides = [
   {
     title: "Partido Libertario Misiones",
     description: "Unite al movimiento que defiende tus libertades individuales y promueve un futuro próspero para Misiones.",
-    ctaText: "Conocé Más",
-    ctaLink: "/about",
+    ctas: [{
+      text: "Conocé Más",
+      link: "/about",
+      className: "bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600"
+    }]
   },
   {
     title: "Nuestras Propuestas Claras",
     description: "Descubrí cómo planeamos transformar la provincia con ideas firmes y acciones concretas.",
-    ctaText: "Ver Propuestas",
-    ctaLink: "/about#values",
+    ctas: [{
+      text: "Ver Propuestas",
+      link: "/about#values",
+      className: "bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600"
+    }]
   },
   {
     title: "Sumate al Cambio Real",
     description: "Tu participación es clave. Afiliate, colaborá o participá en nuestras actividades y sé protagonista.",
-    ctaText: "Afiliate Ahora",
-    ctaLink: "/afiliacion",
+    ctas: [
+      {
+        text: "Afiliate Ahora",
+        link: "/afiliacion",
+        className: "bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600"
+      },
+      {
+        text: "Fiscalizá",
+        link: "/fiscalizacion",
+        className: "bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600"
+      }
+    ]
   },
 ];
 
@@ -81,8 +97,7 @@ export default function HomePage() {
                     <Banner
                         title={slide.title}
                         description={slide.description}
-                        ctaText={slide.ctaText}
-                        ctaLink={slide.ctaLink}
+                        ctas={slide.ctas}
                     />
                     </CarouselItem>
                 ))}

@@ -5,11 +5,16 @@ import { cn } from '@/lib/utils';
 import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 
+interface Cta {
+  text: string;
+  link: string;
+  className?: string;
+}
+
 interface BannerProps {
   title: string;
   description: string;
-  ctaText?: string;
-  ctaLink?: string;
+  ctas?: Cta[];
   textAlignment?: 'center' | 'left';
   priority?: boolean;
 }
@@ -17,8 +22,7 @@ interface BannerProps {
 export function Banner({ 
   title, 
   description, 
-  ctaText, 
-  ctaLink, 
+  ctas,
   textAlignment = 'center',
 }: BannerProps) {
   return (
@@ -47,11 +51,19 @@ export function Banner({
         >
           {description}
         </p>
-        {ctaText && ctaLink && (
-           <div className="opacity-0 animate-fade-in-up [animation-delay:400ms]">
-            <Button asChild size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
-              <Link href={ctaLink}>{ctaText}</Link>
-            </Button>
+        {ctas && ctas.length > 0 && (
+           <div className={cn(
+                "opacity-0 animate-fade-in-up [animation-delay:400ms] flex flex-wrap items-center gap-4",
+                textAlignment === 'center' ? 'justify-center' : 'justify-start'
+            )}>
+            {ctas.map((cta, index) => (
+              <Button key={index} asChild size="lg" className={cn(
+                "shadow-md transition-transform hover:scale-105", 
+                cta.className
+              )}>
+                <Link href={cta.link}>{cta.text}</Link>
+              </Button>
+            ))}
           </div>
         )}
       </div>

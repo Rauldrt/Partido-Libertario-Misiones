@@ -64,11 +64,11 @@ export default function NewsPage() {
                     <Banner
                       title={item.title}
                       description={item.summary}
-                      imageUrl={item.imageUrl}
-                      imageHint={item.imageHint}
-                      ctaText="Leer Más"
-                      ctaLink={item.linkUrl}
-                      variant="default"
+                      ctas={[{
+                        text: "Leer Más",
+                        link: item.linkUrl,
+                        className: "bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600"
+                      }]}
                       textAlignment="left"
                       priority={index === 0}
                     />
