@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus } from 'lucide-react';
+import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus, ShieldCheck } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +55,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-4">
+          <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => (
               <Button key={item.label} variant="ghost" asChild>
                 <Link href={item.href} className="font-body text-base font-medium hover:scale-105 transform transition-transform duration-150 ease-in-out">
@@ -63,7 +63,13 @@ export function Header() {
                 </Link>
               </Button>
             ))}
-             <Button asChild className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105 ml-4">
+             <Button asChild className="bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105 ml-4">
+               <Link href="/fiscalizacion">
+                  <ShieldCheck className="mr-2 h-5 w-5" />
+                  <span>Fiscalizá</span>
+               </Link>
+            </Button>
+             <Button asChild className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105 ml-2">
                <Link href="/afiliacion">
                   <UserPlus className="mr-2 h-5 w-5" />
                   <span>Afiliate</span>
@@ -78,7 +84,7 @@ export function Header() {
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="bg-gradient-to-br from-purple-900 via-orange-500 to-yellow-400 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75 btn-ripple"
+              className="bg-gradient-to-br from-purple-950 to-orange-600 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75 btn-ripple"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
               {isMobileMenuOpen ? (
@@ -107,7 +113,16 @@ export function Header() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator className="my-1 bg-white/20" />
-            <div className="px-2 py-1.5">
+            <div className="px-2 py-1.5 space-y-2">
+                <Button asChild className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md">
+                    <Link
+                        href="/fiscalizacion"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <ShieldCheck className="mr-2 h-5 w-5" />
+                        <span>Fiscalizá</span>
+                    </Link>
+                </Button>
                 <Button asChild className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md">
                     <Link
                         href="/afiliacion"

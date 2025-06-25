@@ -160,7 +160,7 @@ export default function AboutPage() {
       
       <Section id="image-divider" className="py-8 md:py-12">
         <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-xl max-w-5xl mx-auto">
-          <Image src="https://placehold.co/1200x400.png" alt="Misiones Landscape" layout="fill" objectFit="cover" data-ai-hint="Misiones landscape" />
+          <Image src="/grupo.webp" alt="Misiones Landscape" layout="fill" objectFit="cover" data-ai-hint="Misiones landscape" />
           <div className="absolute inset-0 bg-primary/30 flex items-center justify-center">
             <h2 className="font-headline text-4xl text-white font-bold text-center p-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>
               Un Futuro Libre para Misiones
