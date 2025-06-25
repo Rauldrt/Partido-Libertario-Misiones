@@ -31,8 +31,8 @@ const carouselSlides = [
   {
     title: "Sumate al Cambio Real",
     description: "Tu participación es clave. Afiliate, colaborá o participá en nuestras actividades y sé protagonista.",
-    ctaText: "Participar Ahora",
-    ctaLink: "/contact",
+    ctaText: "Afiliate Ahora",
+    ctaLink: "/afiliacion",
   },
 ];
 
