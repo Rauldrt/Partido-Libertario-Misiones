@@ -18,7 +18,7 @@ import { ContactForm } from '@/components/ContactForm';
 const carouselSlides = [
   {
     title: "Partido Libertario Misiones",
-    description: "Unite al movimiento que defiende tus libertades individuales y promueve un futuro próspero para Misiones.",
+    description: "EL único espacio libertario Misionero. Defendemos las libertades individuales y promovemos un futuro sin política obsoleta y vacía. Somos la banguardia de la batalla cultural, contra el estado opresor y corrupto de nuestra tierra colorada.",
     ctas: [{
       text: "Conocé Más",
       link: "/about",
@@ -27,7 +27,7 @@ const carouselSlides = [
   },
   {
     title: "Nuestras Propuestas Claras",
-    description: "Descubrí cómo planeamos transformar la provincia con ideas firmes y acciones concretas.",
+    description: "Defendemos ideas, no personas. Materializamos los ideales en pos del bienestar de nuestra provincia.",
     ctas: [{
       text: "Ver Propuestas",
       link: "/about#values",
@@ -35,7 +35,7 @@ const carouselSlides = [
     }]
   },
   {
-    title: "Sumate al Cambio Real",
+    title: "El cambio está en tus manos",
     description: "Tu participación es clave. Afiliate, colaborá o participá en nuestras actividades y sé protagonista.",
     ctas: [
       {
@@ -147,10 +147,10 @@ export default function HomePage() {
           </CardHeader>
           <CardContent className="p-6 text-center">
             <CardTitle className="font-headline text-3xl md:text-4xl mb-6">
-              Somos el Cambio que Misiones Necesita
+              El camino de la Libertad
             </CardTitle>
             <p className="font-body text-lg text-foreground/90">
-              Creemos en el poder del individuo, la libre empresa y un gobierno limitado. Nuestro compromiso es con la transparencia, la responsabilidad y la construcción de una sociedad más justa y libre para todos los misioneros.
+              "El precio de la libertad es su eterna vigilancia". Defendemos nuestros valores sobre todas las cosas, resultado de esto fue lograr un Partido sin negociar convicciones ni doblegarnos ante el poder corrupto.
             </p>
           </CardContent>
           <CardFooter className="flex justify-center p-6 bg-muted/30">

@@ -1,11 +1,12 @@
-
-import { AffiliationForm } from '@/components/AffiliationForm';
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { UserPlus } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AfiliacionPage() {
+  // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
+  const googleFormUrl = "https://docs.google.com/forms/d/e/YOUR_FORM_ID_HERE/viewform?embedded=true";
+
   return (
     <>
       <Section id="afiliacion-header" className="py-12 md:py-16 bg-gradient-to-br from-purple-800 to-cyan-700 text-white">
@@ -20,15 +21,31 @@ export default function AfiliacionPage() {
 
       <Section id="afiliacion-form-section" className="py-10">
         <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
-          <Card className="shadow-2xl w-full">
+          <Card className="shadow-2xl w-full flex flex-col">
             <CardHeader>
               <CardTitle className="font-headline text-2xl md:text-3xl">Formulario de Afiliación</CardTitle>
               <CardDescription className="font-body text-md">
-                Completá tus datos para unirte oficialmente al Partido Libertario de Misiones.
+                Por favor, completá el siguiente formulario para unirte oficialmente al Partido Libertario de Misiones.
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <AffiliationForm />
+            <CardContent className="flex-grow flex flex-col">
+              <div className="relative w-full flex-grow h-[700px] rounded-md overflow-hidden border">
+                 <iframe 
+                  src={googleFormUrl}
+                  width="100%" 
+                  height="100%" 
+                  frameBorder="0" 
+                  marginHeight={0} 
+                  marginWidth={0}
+                  className="absolute top-0 left-0"
+                  title="Formulario de Afiliación de Google"
+                >
+                  Cargando formulario...
+                </iframe>
+              </div>
+               <p className="text-xs text-muted-foreground mt-2">
+                <span className="font-bold">Nota:</span> Para obtener el enlace, andá a tu Google Form, hacé clic en "Enviar", seleccioná la pestaña "&lt; &gt;" y copiá la URL del atributo <code className="bg-muted px-1 rounded-sm">src</code>.
+              </p>
             </CardContent>
           </Card>
           
