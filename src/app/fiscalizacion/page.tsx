@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 export default function FiscalizacionPage() {
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
-  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdfakeformurl/viewform?embedded=true";
+  const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Fiscales+2025&view=fiscales+2025";
 
   return (
     <>
