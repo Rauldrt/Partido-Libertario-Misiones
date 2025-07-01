@@ -1,9 +1,12 @@
-import { ContactForm } from '@/components/ContactForm';
+
 import { Section } from '@/components/ui/Section';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 
 export default function ContactPage() {
+  // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
+  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc_y1Y-i0J-0i3q5F_1J2k3L4M5N6O7P8Q9R0S1T2U3V4W5X6/viewform?embedded=true"; // URL de ejemplo
+
   return (
     <Section id="contact">
       <div className="text-center mb-12">
@@ -15,12 +18,31 @@ export default function ContactPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-12 items-start">
-        <Card className="shadow-xl">
+        <Card className="shadow-xl flex flex-col">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Envianos un Mensaje</CardTitle>
+            <CardDescription className="font-body text-md">
+              Por favor, completá el siguiente formulario para contactarnos.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <ContactForm />
+          <CardContent className="flex-grow flex flex-col">
+            <div className="relative w-full flex-grow h-[600px] rounded-md overflow-hidden border">
+              <iframe
+                src={googleFormUrl}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                marginHeight={0}
+                marginWidth={0}
+                className="absolute top-0 left-0"
+                title="Formulario de Contacto de Google"
+              >
+                Cargando formulario...
+              </iframe>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              <span className="font-bold">Nota:</span> Para obtener el enlace, andá a tu Google Form, hacé clic en "Enviar", seleccioná la pestaña "&lt; &gt;" y copiá la URL del atributo <code className="bg-muted px-1 rounded-sm">src</code>.
+            </p>
           </CardContent>
         </Card>
 

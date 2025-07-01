@@ -13,7 +13,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ContactForm } from '@/components/ContactForm';
 
 const carouselSlides = [
   {
@@ -63,6 +62,8 @@ const somosElCambioCarouselImages = [
 
 export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
+  // URL para el formulario de contacto de Google. Reemplázala por la tuya.
+  const contactGoogleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc_y1Y-i0J-0i3q5F_1J2k3L4M5N6O7P8Q9R0S1T2U3V4W5X6/viewform?embedded=true";
 
   return (
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12">
@@ -78,7 +79,7 @@ export default function HomePage() {
           Tu navegador no soporta el tag de video.
         </video>
         <div className="parallax-content-layer h-full">
-          <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-800/70 to-orange-500/70" />
+          <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-950/80 to-orange-500/70" />
           <div className="relative z-20 h-full">
             <Carousel
                 plugins={[
@@ -113,7 +114,7 @@ export default function HomePage() {
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl">
           <CardHeader className="p-0">
-            <div className="relative w-full h-[250px] md:h-[300px] group overflow-hidden rounded-t-lg">
+            <div className="relative w-full h-[300px] md:h-[350px] group overflow-hidden rounded-t-lg">
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
@@ -181,7 +182,7 @@ export default function HomePage() {
 
       <Section id="join-us-card" className="py-0">
          <Card className="max-w-3xl mx-auto shadow-xl">
-            <CardHeader className="bg-gradient-to-br from-purple-800 to-purple-600 p-6 rounded-t-lg">
+            <CardHeader className="bg-gradient-to-br from-purple-950 to-purple-600 p-6 rounded-t-lg">
                 <div className="flex flex-col items-center text-center">
                     <Users className="h-16 w-16 mx-auto mb-4 text-cyan-400" />
                     <CardTitle className="font-headline text-3xl md:text-4xl text-primary-foreground">Sumate a la Libertad</CardTitle>
@@ -200,7 +201,23 @@ export default function HomePage() {
                       <div className="grid md:grid-cols-2 gap-10 items-start">
                         <div className="space-y-4">
                           <h3 className="font-headline text-2xl font-semibold text-primary">Envianos un Mensaje</h3>
-                          <ContactForm />
+                          <div className="relative w-full h-[500px] rounded-md overflow-hidden border">
+                              <iframe
+                                src={contactGoogleFormUrl}
+                                width="100%"
+                                height="100%"
+                                frameBorder="0"
+                                marginHeight={0}
+                                marginWidth={0}
+                                className="absolute top-0 left-0"
+                                title="Formulario de Contacto de Google"
+                              >
+                                Cargando formulario...
+                              </iframe>
+                          </div>
+                           <p className="text-xs text-muted-foreground">
+                              <span className="font-bold">Nota:</span> Reemplaza la URL en el código de la página para usar tu propio formulario.
+                           </p>
                         </div>
                         <div className="space-y-6">
                           <h3 className="font-headline text-2xl font-semibold text-primary">Información Adicional</h3>
