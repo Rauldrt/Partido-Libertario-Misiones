@@ -12,7 +12,7 @@ export default function AfiliacionPage() {
       <Section id="afiliacion-header" className="py-12 md:py-16 bg-gradient-to-br from-purple-800 to-cyan-700 text-white">
         <div className="text-center">
           <UserPlus className="h-20 w-20 text-accent mx-auto mb-6" />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">Sumate a las Fuerzas del Cielo</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">Sumate Libertario</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
             Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.
           </p>

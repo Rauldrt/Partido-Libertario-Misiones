@@ -34,7 +34,7 @@ export default function ContactPage() {
                 <MapPin className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
                 <div>
                   <h3 className="font-headline text-lg font-semibold">Nuestra Sede</h3>
-                  <p className="font-body text-muted-foreground">Calle Falsa 123, Posadas, Misiones</p>
+                  <p className="font-body text-muted-foreground">Calle 123, Posadas, Misiones</p>
                 </div>
               </div>
               <div className="flex items-start">

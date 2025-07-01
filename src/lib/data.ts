@@ -4,15 +4,15 @@ import type { NewsCardData } from '@/components/NewsCard';
 export const mockNewsItems: NewsCardData[] = [
   {
     id: '1',
-    title: 'Gran Convocatoria en el Acto de Apertura',
-    date: '15 de Julio, 2024',
-    summary: 'El Partido Libertario de Misiones inauguró su sede con un masivo acto que congregó a simpatizantes de toda la provincia.',
-    content: 'El Partido Libertario de Misiones inauguró su sede con un masivo acto que congregó a simpatizantes de toda la provincia. El evento contó con discursos de los principales referentes del partido, quienes destacaron la importancia de las ideas de la libertad para el futuro de Misiones. Hubo un ambiente de entusiasmo y esperanza entre los asistentes.',
+    title: 'Nueva emisión de Ágora Libertaria',
+    date: '28 de Junio, 2025',
+    summary: 'Ágora radio, nueva edición del streaming libertario de la tierra colorada',
+    content: 'Hoy debatimos los temas que otros medios callan. Acompañanos, participá en el chat en vivo y sumate a esta comunidad que defiende la libertad, la propiedad privada y el mercado libre',
     imageUrl: 'https://placehold.co/600x400.png',
     imageHint: 'political rally opening',
     linkUrl: '/news/1',
     type: 'event',
-    youtubeVideoId: 'k1nq1h29X58', // Ejemplo: Google I/O Keynote
+    youtubeVideoId: 'YXlz1K6o_ps', // Ejemplo: Google I/O Keynote
   },
   {
     id: '2',

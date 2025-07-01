@@ -54,9 +54,10 @@ const carouselSlides = [
 
 const somosElCambioCarouselImages = [
   { src: '/afilia1.webp', alt: 'Grupo de personas unidas', hint: 'community people', width: 800, height: 533 },
-  { src: '/banner1.jpg', alt: 'Formulario de Afiliación simbólico', hint: 'affiliation form', width: 720, height: 480 },
+  { src: '/afiliando.webp', alt: 'Formulario de Afiliación simbólico', hint: 'affiliation form', width: 720, height: 480 },
   { src: '/grupo.webp', alt: 'Paisaje Misionero', hint: 'Misiones landscape', width: 600, height: 400 },
-  { src: '/banner2.jpg', alt: 'Debate de ideas constructivo', hint: 'ideas debate', width: 800, height: 600 },
+  { src: '/Ninfa.webp', alt: 'Debate de ideas constructivo', hint: 'ideas debate', width: 800, height: 600 },
+  { src: '/Ninfa y Julio.webp', alt: 'Debate de ideas constructivo', hint: 'ideas debate', width: 800, height: 600 },
 ];
 
 
@@ -112,7 +113,7 @@ export default function HomePage() {
       <Section id="about-snippet-card" className="py-0">
         <Card className="max-w-3xl mx-auto shadow-xl">
           <CardHeader className="p-0">
-            <div className="relative w-full h-[200px] md:h-[250px] group overflow-hidden rounded-t-lg">
+            <div className="relative w-full h-[250px] md:h-[300px] group overflow-hidden rounded-t-lg">
               {somosElCambioCarouselImages.length > 0 ? (
                 <Carousel
                   className="w-full h-full"
@@ -207,7 +208,7 @@ export default function HomePage() {
                             <MapPin className="h-6 w-6 text-primary mr-3 mt-1 flex-shrink-0" />
                             <div>
                               <h4 className="font-headline text-lg font-semibold">Nuestra Sede</h4>
-                              <p className="font-body text-muted-foreground">Calle Falsa 123, Posadas, Misiones</p>
+                              <p className="font-body text-muted-foreground">Calle 123, Posadas, Misiones</p>
                             </div>
                           </div>
                           <div className="flex items-start">
