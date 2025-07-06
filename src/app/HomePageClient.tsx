@@ -136,40 +136,37 @@ export default function HomePageClient({ children }: PropsWithChildren) {
             <p className="font-body text-lg text-muted-foreground mt-2">Nuestros principios y cómo podés participar.</p>
         </div>
 
-        <div className="max-w-4xl mx-auto mb-16">
-            <Carousel 
-                className="w-full" 
-                opts={{ loop: true }}
-                plugins={[
-                    Autoplay({
-                        delay: 4000,
-                        stopOnInteraction: true,
-                    }),
-                ]}
-            >
-                <CarouselContent>
-                    {infoCarouselImages.map((image, index) => (
-                    <CarouselItem key={index}>
-                        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg shadow-xl">
-                        <Image
-                            src={image.src}
-                            alt={image.alt}
-                            layout="fill"
-                            objectFit="cover"
-                            data-ai-hint={image.hint}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-                            <p className="font-body text-lg font-semibold text-white" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
-                            {image.caption}
-                            </p>
+        <div className="max-w-5xl mx-auto mb-16 px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] gap-4">
+                {infoCarouselImages.map((image, index) => {
+                    const tileLayouts = [
+                        'col-span-2 row-span-2', // Large main tile
+                        'col-span-1 row-span-1', // Small square
+                        'col-span-1 row-span-1', // Small square
+                        'col-span-2 row-span-1', // Wide tile
+                    ];
+                    const layoutClass = tileLayouts[index % tileLayouts.length];
+
+                    return (
+                        <div key={index} className={`group relative rounded-lg overflow-hidden shadow-lg ${layoutClass}`}>
+                            <Image
+                                src={image.src}
+                                alt={image.alt}
+                                layout="fill"
+                                objectFit="cover"
+                                data-ai-hint={image.hint}
+                                className="transition-transform duration-500 ease-in-out group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                            <div className="absolute bottom-0 left-0 p-4">
+                                <p className="font-body text-lg font-semibold text-white" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+                                    {image.caption}
+                                </p>
+                            </div>
                         </div>
-                        </div>
-                    </CarouselItem>
-                    ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-                <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-            </Carousel>
+                    );
+                })}
+            </div>
         </div>
 
         <div className="max-w-4xl mx-auto">
