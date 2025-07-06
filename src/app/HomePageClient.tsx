@@ -67,8 +67,8 @@ export default function HomePageClient({ children }: PropsWithChildren) {
     <>
       <Section 
         id="hero" 
-        className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
-        videoSrc="/background.mp4"
+        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center text-center p-0"
+        videoSrc="/banner.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
       >
@@ -93,7 +93,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                             ctas={[{ text: slide.cta.text, link: slide.cta.link, className: 'bg-primary text-primary-foreground hover:bg-primary/90' }]}
                             textAlignment="center"
                             priority={index === 0}
-                            className="mx-4"
+                            className="mx-5"
                         />
                     </CarouselItem>
                 ))}
