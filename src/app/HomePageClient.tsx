@@ -67,7 +67,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
     <>
       <Section 
         id="hero" 
-        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center text-center p-0"
+        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
         videoSrc="/banner.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
