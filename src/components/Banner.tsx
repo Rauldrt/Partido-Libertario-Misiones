@@ -32,7 +32,7 @@ export function Banner({
     )}>
       
       <div className={cn(
-        "relative z-10",
+        "relative z-10 w-full",
         textAlignment === 'center' ? 'items-center' : 'items-start',
         "flex flex-col"
       )}>
