@@ -79,7 +79,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-11/12 max-w-5xl mx-auto"
+            className="w-5/6 max-w-5xl mx-auto"
             opts={{
                 loop: true,
             }}
@@ -93,7 +93,6 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                             ctas={[{ text: slide.cta.text, link: slide.cta.link, className: 'bg-primary text-primary-foreground hover:bg-primary/90' }]}
                             textAlignment="center"
                             priority={index === 0}
-                            className=""
                         />
                     </CarouselItem>
                 ))}
