@@ -49,13 +49,17 @@ const newsGeneratorPrompt = ai.definePrompt({
   name: 'newsGeneratorPrompt',
   input: { schema: z.object({ articleContent: z.string() }) },
   output: { schema: GenerateNewsOutputSchema },
-  prompt: `You are an expert news editor for a political party's website. Your task is to analyze the provided article content and generate a compelling news summary from it.
+  prompt: `You are an expert news editor for a political party's website. Your task is to analyze the provided text content and generate a compelling news summary from it.
 
-You must extract the key information and present it clearly and concisely.
+The content could be from a full news article or a social media post (e.g., from X/Twitter, Facebook, Instagram).
 
-Based on the following article content, generate a response in the required JSON format.
+- If the content is from a full article, summarize its key points.
+- If the content is from a social media post, interpret its meaning and expand it into a proper news-style summary.
+- In both cases, generate a catchy title and suggest one or two keywords for a stock photo.
 
-Article Content:
+Based on the following content, generate a response in the required JSON format.
+
+Content:
 {{{articleContent}}}
 `,
 });
@@ -80,21 +84,28 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     }
     const html = await response.text();
 
-    // 2. Parse HTML and extract readable content using Mozilla's Readability
-    const dom = new JSDOM(html, { url: input.url }); // Pass URL for better relative link resolution
+    // 2. Parse HTML and extract content
+    const dom = new JSDOM(html, { url: input.url });
     const reader = new Readability(dom.window.document);
     const article = reader.parse();
+    
+    let articleContent = '';
 
-    // Check if Readability was able to extract content
-    if (!article || !article.textContent) {
+    // Prioritize Readability's parsed content for articles
+    if (article && article.textContent) {
+      articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
+    } else {
+      // Fallback for social media or JS-heavy sites: get text from the body
+      articleContent = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
+    }
+
+    // Check if we were able to extract any content at all
+    if (!articleContent) {
       throw new Error(
-        'Could not extract article content. The URL might not be a news article, or the site may be protected.'
+        'Could not extract any meaningful content from the URL. The site may be protected or heavily reliant on JavaScript.'
       );
     }
     
-    // Clean up the extracted text
-    const articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
-
     // 3. Call the LLM with the extracted content, limiting to avoid excessive token usage
     const { output } = await newsGeneratorPrompt({ articleContent: articleContent.substring(0, 15000) }); 
 
@@ -102,8 +113,8 @@ const generateNewsFromUrlFlow = ai.defineFlow(
       throw new Error('The AI failed to generate a response.');
     }
 
-    // Use the title from Readability as a fallback if the AI's is empty
-    if (!output.title && article.title) {
+    // Use the title from Readability as a fallback if the AI's is empty and one was parsed
+    if (!output.title && article && article.title) {
         output.title = article.title;
     }
 
