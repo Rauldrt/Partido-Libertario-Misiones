@@ -45,17 +45,17 @@ const carouselSlides = [
     {
         title: "Nuestra Misión",
         description: "Promover y defender los principios de una sociedad libre, impulsando políticas que garanticen los derechos individuales, la propiedad privada, el libre mercado y un gobierno limitado.",
-        cta: { text: "Conocer Más", link: "#info", accordionTarget: "mission" }
+        cta: { text: "Conocer Más", link: "#accordion-info", accordionTarget: "mission" }
     },
     {
         title: "Nuestra Visión",
         description: "Ser la fuerza política que lidere la transformación hacia una provincia donde la libertad sea el motor del progreso, la innovación y la calidad de vida.",
-        cta: { text: "Ver Detalles", link: "#info", accordionTarget: "vision" }
+        cta: { text: "Ver Detalles", link: "#accordion-info", accordionTarget: "vision" }
     },
     {
         title: "Nuestros Valores",
         description: "Creemos en la Libertad Individual, la Propiedad Privada, el Libre Mercado y un Gobierno Limitado como pilares para la prosperidad.",
-        cta: { text: "Explorar Principios", link: "#info", accordionTarget: "values" }
+        cta: { text: "Explorar Principios", link: "#accordion-info", accordionTarget: "values" }
     },
     {
         title: "Últimas Noticias",
@@ -222,12 +222,12 @@ export default function HomePageClient({ children }: PropsWithChildren) {
             </div>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div id="accordion-info" className="max-w-4xl mx-auto">
              <Accordion 
                 type="single" 
                 collapsible 
                 value={openAccordionItem} 
-                onValueChange={(value) => setOpenAccordionItem(value)} 
+                onValueChange={(value) => setOpenAccordionItem(value || '')} 
                 className="w-full space-y-4"
               >
                  <AccordionItem value="mission" className="border-b-0">
