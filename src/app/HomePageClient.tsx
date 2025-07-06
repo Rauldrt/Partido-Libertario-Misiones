@@ -71,6 +71,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
         videoSrc="/banner.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
+        containerClassName="w-full px-4"
       >
         <Carousel
             plugins={[
@@ -79,7 +80,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-5/6 max-w-5xl mx-auto"
+            className="w-full max-w-5xl mx-auto"
             opts={{
                 loop: true,
             }}
@@ -97,8 +98,8 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-            <CarouselNext className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
       </Section>
       
