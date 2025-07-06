@@ -27,7 +27,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-4 md:p-8",
+      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-6 md:p-8",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left'
     )}>
       
