@@ -84,9 +84,9 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                 loop: true,
             }}
         >
-            <CarouselContent>
+            <CarouselContent className="ml-0">
                 {carouselSlides.map((slide, index) => (
-                    <CarouselItem key={index}>
+                    <CarouselItem key={index} className="pl-0">
                         <Banner
                             title={slide.title}
                             description={slide.description}
