@@ -80,6 +80,7 @@ export default function NewsGeneratorPage() {
         content: result.summary,
         imageHint: result.imageHint,
         linkUrl: aiUrl,
+        imageUrl: result.imageUrl || EMPTY_NEWS_ITEM.imageUrl,
       }));
        toast({
         title: '¡Noticia Generada!',
@@ -111,7 +112,7 @@ export default function NewsGeneratorPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle>Editor de Noticias</CardTitle>
-            <CardDescription>Usá las pestañas para crear una noticia manualmente o con ayuda de la IA.</CardDescription>
+            <CardDescription>Usá las pestañas para crear una noticia manually o con ayuda de la IA.</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="manual">
@@ -173,7 +174,7 @@ export default function NewsGeneratorPage() {
                       <span className="ml-2 hidden sm:inline">Generar</span>
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Pegá el link de una noticia y la IA generará un título, resumen y sugerencia de imagen.</p>
+                  <p className="text-xs text-muted-foreground">Pegá el link de una noticia y la IA generará un título, resumen, imagen y sugerencia de imagen.</p>
                 </div>
                  <p className="font-body text-sm text-center bg-accent/20 p-3 rounded-md border border-accent">
                     La IA completará los campos de la pestaña "Manual". ¡Revisalos y ajústalos antes de usar!

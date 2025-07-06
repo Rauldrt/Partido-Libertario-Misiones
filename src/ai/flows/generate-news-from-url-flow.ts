@@ -34,6 +34,7 @@ const GenerateNewsOutputSchema = z.object({
     .describe(
       'Una o dos palabras clave en español para una foto de archivo que represente visualmente el artículo. Por ejemplo: "debate político" o "crecimiento económico".'
     ),
+  imageUrl: z.string().url().optional().describe('URL de la imagen principal extraída del artículo.'),
 });
 export type GenerateNewsOutput = z.infer<typeof GenerateNewsOutputSchema>;
 
@@ -48,7 +49,7 @@ export async function generateNewsFromUrl(
 const newsGeneratorPrompt = ai.definePrompt({
   name: 'newsGeneratorPrompt',
   input: { schema: z.object({ articleContent: z.string() }) },
-  output: { schema: GenerateNewsOutputSchema },
+  output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true }) }, // The LLM doesn't generate the URL
   prompt: `Eres un experto editor de noticias para un sitio web político. Tu tarea es analizar el contenido proporcionado y generar un resumen de noticias en ESPAÑOL.
 
 El contenido puede ser un artículo completo o una publicación de redes sociales. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
@@ -90,10 +91,25 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     const article = reader.parse();
     
     let articleContent = '';
+    let imageUrl: string | undefined = undefined;
 
     // Prioritize Readability's parsed content for articles
-    if (article && article.textContent) {
+    if (article && article.content) {
       articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
+      
+      // Attempt to extract the main image from the parsed article content
+      const contentDom = new JSDOM(article.content, { url: input.url });
+      const mainImage = contentDom.window.document.querySelector('img');
+      if (mainImage?.src) {
+        try {
+          const resolvedUrl = new URL(mainImage.src, input.url).href;
+          if (resolvedUrl.startsWith('http')) {
+            imageUrl = resolvedUrl;
+          }
+        } catch (e) {
+          console.warn(`Could not resolve image URL: ${mainImage.src}`);
+        }
+      }
     } else {
       // Fallback for social media or JS-heavy sites: get text from the body
       articleContent = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
@@ -118,6 +134,7 @@ const generateNewsFromUrlFlow = ai.defineFlow(
         output.title = article.title;
     }
 
-    return output;
+    // Combine LLM output with programmatically extracted image URL
+    return { ...output, imageUrl };
   }
 );
