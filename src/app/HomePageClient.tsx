@@ -68,7 +68,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
       <Section 
         id="hero" 
         className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
-        videoSrc="/background.mp4"
+        videoSrc="/banner.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
       >
@@ -79,7 +79,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-full max-w-5xl"
+            className="w-full max-w-5xl px-6"
             opts={{
                 loop: true,
             }}
