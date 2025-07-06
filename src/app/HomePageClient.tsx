@@ -67,22 +67,28 @@ const carouselSlides = [
 const mosaicTiles = [
   {
     layout: 'col-span-2 row-span-2',
+    duration: 5000,
+    animation: 'animate-fade-in-up',
     images: [
-      { src: "https://placehold.co/800x600.png", alt: "Militantes en un evento", hint: "political rally", caption: "Participá en nuestros eventos." },
-      { src: "https://placehold.co/800x600.png", alt: "Candidato dando un discurso", hint: "political speech", caption: "Nuevas ideas para el futuro." },
-      { src: "https://placehold.co/800x600.png", alt: "Voluntarios del partido", hint: "volunteers community", caption: "Sumate como voluntario." },
+      { src: "/grupo.webp", alt: "Militantes en un evento", hint: "political rally", caption: "Participá en nuestros eventos." },
+      { src: "/afilia1.webp", alt: "Candidato dando un discurso", hint: "political speech", caption: "Nuevas ideas para el futuro." },
+      { src: "/afiliando.webp", alt: "Voluntarios del partido", hint: "volunteers community", caption: "Sumate como voluntario." },
     ]
   },
   {
     layout: 'col-span-1 row-span-1',
+    duration: 3500,
+    animation: 'animate-zoom-in-gentle',
     images: [
-      { src: "https://placehold.co/600x600.png", alt: "Ciudadanos debatiendo", hint: "community discussion", caption: "Debate ciudadano." },
-      { src: "https://placehold.co/600x600.png", alt: "Mesa de afiliación", hint: "people joining", caption: "Afiliate al partido." },
-      { src: "https://placehold.co/600x600.png", alt: "Plaza pública", hint: "public square", caption: "Estamos en tu ciudad." },
+      { src: "/banner1.jpg", alt: "Ciudadanos debatiendo", hint: "community discussion", caption: "Debate ciudadano." },
+      { src: "/Ninfa y Julio.webp", alt: "Mesa de afiliación", hint: "people joining", caption: "Afiliate al partido." },
+      { src: "/Ninfa.webp", alt: "Plaza pública", hint: "public square", caption: "Estamos en tu ciudad." },
     ]
   },
   {
     layout: 'col-span-1 row-span-1',
+    duration: 6000,
+    animation: 'animate-crossfade-in',
     images: [
       { src: "https://placehold.co/600x600.png", alt: "Paisaje de Misiones", hint: "Misiones landscape", caption: "Por una Misiones libre." },
       { src: "https://placehold.co/600x600.png", alt: "Cataratas del Iguazú", hint: "Iguazu falls", caption: "Belleza natural." },
@@ -91,6 +97,8 @@ const mosaicTiles = [
   },
   {
     layout: 'col-span-2 row-span-1',
+    duration: 4500,
+    animation: 'animate-fade-in-up',
     images: [
       { src: "https://placehold.co/800x400.png", alt: "Grupo de jóvenes libertarios", hint: "young people group", caption: "La juventud se activa." },
       { src: "https://placehold.co/800x400.png", alt: "Manifestación por la libertad", hint: "freedom protest", caption: "Defendemos tus derechos." },
@@ -109,10 +117,10 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 
     const slideshowInterval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % tile.images.length);
-    }, 4000); // Change image every 4 seconds
+    }, tile.duration);
 
     return () => clearInterval(slideshowInterval);
-  }, [tile.images]);
+  }, [tile.images, tile.duration]);
 
   const currentImage = tile.images[currentIndex];
 
@@ -120,8 +128,9 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
     <div
       key={currentImage.src} // Key helps React re-render, triggering the animation
       className={cn(
-        'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer animate-crossfade-in',
-        tile.layout
+        'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer',
+        tile.layout,
+        tile.animation
       )}
       onClick={() => onImageClick(currentImage.src)}
     >
