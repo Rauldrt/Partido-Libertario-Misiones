@@ -11,6 +11,7 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { JSDOM } from 'jsdom';
+import { Readability } from '@mozilla/readability';
 
 // Input Schema
 const GenerateNewsInputSchema = z.object({
@@ -70,7 +71,8 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     // 1. Fetch the HTML content from the URL
     const response = await fetch(input.url, { 
         headers: { 
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         }
     });
     if (!response.ok) {
@@ -78,23 +80,31 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     }
     const html = await response.text();
 
-    // 2. Parse HTML and extract readable text content
-    const dom = new JSDOM(html);
-    
-    // Remove script and style elements to clean up content
-    dom.window.document.querySelectorAll('script, style, nav, footer, header').forEach((el) => el.remove());
-    
-    const articleContent = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
+    // 2. Parse HTML and extract readable content using Mozilla's Readability
+    const dom = new JSDOM(html, { url: input.url }); // Pass URL for better relative link resolution
+    const reader = new Readability(dom.window.document);
+    const article = reader.parse();
 
-    if (!articleContent) {
-      throw new Error('Could not extract text content from the URL.');
+    // Check if Readability was able to extract content
+    if (!article || !article.textContent) {
+      throw new Error(
+        'Could not extract article content. The URL might not be a news article, or the site may be protected.'
+      );
     }
+    
+    // Clean up the extracted text
+    const articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
 
     // 3. Call the LLM with the extracted content, limiting to avoid excessive token usage
     const { output } = await newsGeneratorPrompt({ articleContent: articleContent.substring(0, 15000) }); 
 
     if (!output) {
       throw new Error('The AI failed to generate a response.');
+    }
+
+    // Use the title from Readability as a fallback if the AI's is empty
+    if (!output.title && article.title) {
+        output.title = article.title;
     }
 
     return output;
