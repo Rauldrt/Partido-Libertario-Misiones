@@ -1,5 +1,5 @@
 
-import { mockNewsItems } from '@/lib/data';
+import { getNewsItems } from '@/lib/news-service';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
@@ -8,19 +8,14 @@ import { ArrowLeft, CalendarDays, YoutubeIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export async function generateStaticParams() {
-  return mockNewsItems.map((item) => ({
-    id: item.id,
-  }));
-}
-
 interface NewsArticlePageProps {
   params: { id: string };
 }
 
-export default function NewsArticlePage({ params }: NewsArticlePageProps) {
+export default async function NewsArticlePage({ params }: NewsArticlePageProps) {
   const { id } = params;
-  const article = mockNewsItems.find((item) => item.id === id);
+  const allItems = await getNewsItems();
+  const article = allItems.find((item) => item.id === id);
 
   if (!article) {
     notFound(); 

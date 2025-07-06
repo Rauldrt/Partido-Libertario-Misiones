@@ -2,7 +2,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import { NewsCard, type NewsCardData } from '@/components/NewsCard';
+import { NewsCard } from '@/components/NewsCard';
+import type { NewsCardData } from '@/lib/news-service';
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,10 +12,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Clipboard, Dna, FileText, Link as LinkIcon, Loader2 } from 'lucide-react';
+import { Dna, FileText, Loader2, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateNewsFromUrl } from '@/ai/flows/generate-news-from-url-flow';
 import { format } from 'date-fns';
+import { saveNewsItemAction } from './actions';
 
 const EMPTY_NEWS_ITEM: Partial<NewsCardData> = {
   id: 'new-id',
@@ -33,6 +35,7 @@ export default function NewsGeneratorPage() {
   const [newsData, setNewsData] = useState<Partial<NewsCardData>>(EMPTY_NEWS_ITEM);
   const [aiUrl, setAiUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -44,20 +47,25 @@ export default function NewsGeneratorPage() {
     setNewsData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCopyToClipboard = () => {
-    const cleanData = { ...newsData };
-    // Ensure required fields are not empty
-    for (const key in cleanData) {
-        if (cleanData[key as keyof NewsCardData] === '') {
-            delete cleanData[key as keyof NewsCardData];
-        }
+  const handleSave = async () => {
+    setIsSaving(true);
+    const result = await saveNewsItemAction(newsData);
+    if (result.success) {
+      toast({
+        title: '¡Noticia Guardada!',
+        description: result.message,
+      });
+      // Optionally reset form
+      // setNewsData(EMPTY_NEWS_ITEM);
+      // setAiUrl('');
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Error al Guardar',
+        description: result.message || 'No se pudo guardar la noticia.',
+      });
     }
-    const dataString = JSON.stringify(cleanData, null, 2);
-    navigator.clipboard.writeText(dataString);
-    toast({
-      title: '¡Copiado!',
-      description: 'Los datos de la noticia se han copiado al portapapeles.',
-    });
+    setIsSaving(false);
   };
   
   const handleAiGenerate = async () => {
@@ -79,7 +87,7 @@ export default function NewsGeneratorPage() {
         summary: result.summary,
         content: result.summary,
         imageHint: result.imageHint,
-        linkUrl: aiUrl,
+        linkUrl: aiUrl, // This is temporary for display, will be replaced on save
         imageUrl: result.imageUrl || EMPTY_NEWS_ITEM.imageUrl,
       }));
        toast({
@@ -112,7 +120,7 @@ export default function NewsGeneratorPage() {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle>Editor de Noticias</CardTitle>
-            <CardDescription>Usá las pestañas para crear una noticia manually o con ayuda de la IA.</CardDescription>
+            <CardDescription>Usá las pestañas para crear una noticia manualmente o con ayuda de la IA.</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="manual">
@@ -194,17 +202,16 @@ export default function NewsGeneratorPage() {
                  <NewsCard {...newsData as NewsCardData} />
               </CardContent>
            </Card>
-           <Button className="w-full" onClick={handleCopyToClipboard}>
-             <Clipboard className="mr-2 h-4 w-4" />
-             Copiar Datos para `data.ts`
+           <Button className="w-full" onClick={handleSave} disabled={isSaving}>
+             {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+             Guardar Noticia
            </Button>
            <div className="text-sm text-muted-foreground p-4 border rounded-md bg-card">
                 <p className="font-bold text-card-foreground">¿Cómo agregar la noticia?</p>
-                <p>1. Ajustá los datos usando el editor.</p>
-                <p>2. Hacé clic en el botón "Copiar Datos".</p>
-                <p>3. Abrí el archivo <code className="bg-muted px-1 rounded-sm text-card-foreground">src/lib/data.ts</code>.</p>
-                <p>4. Pegá el objeto copiado dentro del array <code className="bg-muted px-1 rounded-sm text-card-foreground">mockNewsItems</code>.</p>
-                <p>5. Asegurate de que el <code className="bg-muted px-1 rounded-sm text-card-foreground">id</code> y <code className="bg-muted px-1 rounded-sm text-card-foreground">linkUrl</code> sean únicos.</p>
+                <p>1. Ajustá los datos usando el editor o la IA.</p>
+                <p>2. Hacé clic en el botón "Guardar Noticia".</p>
+                <p>3. La noticia se agregará automáticamente al sitio.</p>
+                <p>4. La página de inicio y de noticias se actualizarán para mostrar el nuevo contenido.</p>
            </div>
         </div>
       </div>

@@ -4,19 +4,11 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CalendarDays, Youtube } from 'lucide-react';
+import type { NewsCardData } from '@/lib/news-service';
 
-export interface NewsCardData {
-  id: string;
-  title: string;
-  date: string;
-  summary: string;
-  content?: string;
-  imageUrl: string;
-  imageHint: string;
-  linkUrl: string;
-  type: 'news' | 'event';
-  youtubeVideoId?: string;
-}
+// The NewsCardData interface has been moved to src/lib/news-service.ts
+// to be shared between the component and the data service.
+export type { NewsCardData };
 
 export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, type, youtubeVideoId }: NewsCardData) {
   return (
