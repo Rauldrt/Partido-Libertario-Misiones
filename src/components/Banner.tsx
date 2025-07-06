@@ -40,14 +40,14 @@ export function Banner({
         "flex flex-col"
       )}>
         <h1 
-          className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up"
+          className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up break-words"
           style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
         >
           {title}
         </h1>
         <p 
           className={cn(
-            "font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms]",
+            "font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms] break-words",
             textAlignment === 'center' ? 'md:max-w-2xl mx-auto' : 'md:max-w-2xl'
           )}
           style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
