@@ -155,7 +155,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 
 export default function HomePageClient({ children }: PropsWithChildren) {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
-  const [openAccordionItem, setOpenAccordionItem] = useState('mission');
+  const [openAccordionItem, setOpenAccordionItem] = useState('');
 
   const handleBannerCtaClick = (accordionTarget?: string) => {
     if (accordionTarget) {
