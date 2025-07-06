@@ -29,47 +29,40 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-6 md:p-8",
+      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-6 md:p-8 z-10",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left',
       className
     )}>
-      
-      <div className={cn(
-        "relative z-10 w-full",
-        textAlignment === 'center' ? 'items-center' : 'items-start',
-        "flex flex-col"
-      )}>
-        <h1 
-          className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up break-words"
-          style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
-        >
-          {title}
-        </h1>
-        <p 
-          className={cn(
-            "font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms] break-words",
-            textAlignment === 'center' ? 'md:max-w-2xl mx-auto' : 'md:max-w-2xl'
-          )}
-          style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
-        >
-          {description}
-        </p>
-        {ctas && ctas.length > 0 && (
-           <div className={cn(
-                "opacity-0 animate-fade-in-up [animation-delay:400ms] flex flex-wrap items-center gap-4",
-                textAlignment === 'center' ? 'justify-center' : 'justify-start'
-            )}>
-            {ctas.map((cta, index) => (
-              <Button key={index} asChild size="lg" className={cn(
-                "shadow-md transition-transform hover:scale-105", 
-                cta.className
-              )}>
-                <Link href={cta.link}>{cta.text}</Link>
-              </Button>
-            ))}
-          </div>
+      <h1 
+        className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up break-words"
+        style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
+      >
+        {title}
+      </h1>
+      <p 
+        className={cn(
+          "font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms] break-words",
+          textAlignment === 'center' ? 'md:max-w-2xl mx-auto' : 'md:max-w-2xl'
         )}
-      </div>
+        style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
+      >
+        {description}
+      </p>
+      {ctas && ctas.length > 0 && (
+          <div className={cn(
+              "opacity-0 animate-fade-in-up [animation-delay:400ms] flex flex-wrap items-center gap-4",
+              textAlignment === 'center' ? 'justify-center' : 'justify-start'
+          )}>
+          {ctas.map((cta, index) => (
+            <Button key={index} asChild size="lg" className={cn(
+              "shadow-md transition-transform hover:scale-105", 
+              cta.className
+            )}>
+              <Link href={cta.link}>{cta.text}</Link>
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
