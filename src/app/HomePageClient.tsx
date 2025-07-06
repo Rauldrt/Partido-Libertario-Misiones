@@ -45,17 +45,17 @@ const carouselSlides = [
     {
         title: "Nuestra Misión",
         description: "Promover y defender los principios de una sociedad libre, impulsando políticas que garanticen los derechos individuales, la propiedad privada, el libre mercado y un gobierno limitado.",
-        cta: { text: "Conocer Más", link: "#info" }
+        cta: { text: "Conocer Más", link: "#info", accordionTarget: "mission" }
     },
     {
         title: "Nuestra Visión",
         description: "Ser la fuerza política que lidere la transformación hacia una provincia donde la libertad sea el motor del progreso, la innovación y la calidad de vida.",
-        cta: { text: "Ver Detalles", link: "#info" }
+        cta: { text: "Ver Detalles", link: "#info", accordionTarget: "vision" }
     },
     {
         title: "Nuestros Valores",
         description: "Creemos en la Libertad Individual, la Propiedad Privada, el Libre Mercado y un Gobierno Limitado como pilares para la prosperidad.",
-        cta: { text: "Explorar Principios", link: "#info" }
+        cta: { text: "Explorar Principios", link: "#info", accordionTarget: "values" }
     },
     {
         title: "Últimas Noticias",
@@ -155,12 +155,19 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 
 export default function HomePageClient({ children }: PropsWithChildren) {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [openAccordionItem, setOpenAccordionItem] = useState('mission');
+
+  const handleBannerCtaClick = (accordionTarget?: string) => {
+    if (accordionTarget) {
+      setOpenAccordionItem(accordionTarget);
+    }
+  };
 
   return (
     <>
       <Section 
         id="hero" 
-        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
+        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center p-0"
         videoSrc="/background.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
@@ -184,7 +191,12 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                         <Banner
                             title={slide.title}
                             description={slide.description}
-                            ctas={[{ text: slide.cta.text, link: slide.cta.link, className: 'bg-primary text-primary-foreground hover:bg-primary/90' }]}
+                            ctas={[{ 
+                                text: slide.cta.text, 
+                                link: slide.cta.link, 
+                                className: 'bg-primary text-primary-foreground hover:bg-primary/90',
+                                onClick: () => handleBannerCtaClick(slide.cta.accordionTarget) 
+                            }]}
                             textAlignment="center"
                             priority={index === 0}
                         />
@@ -211,7 +223,13 @@ export default function HomePageClient({ children }: PropsWithChildren) {
         </div>
 
         <div className="max-w-4xl mx-auto">
-             <Accordion type="single" collapsible defaultValue='mission' className="w-full space-y-4">
+             <Accordion 
+                type="single" 
+                collapsible 
+                value={openAccordionItem} 
+                onValueChange={(value) => setOpenAccordionItem(value)} 
+                className="w-full space-y-4"
+              >
                  <AccordionItem value="mission" className="border-b-0">
                      <Card className="shadow-lg w-full">
                          <AccordionTrigger className="p-6 hover:no-underline">

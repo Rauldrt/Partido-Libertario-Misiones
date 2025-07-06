@@ -8,6 +8,10 @@ body {
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   :root {
     --background: 0 0% 94%; /* #F0F0F0 Light Gray */
     --foreground: 0 0% 3.9%; /* Dark Gray for text on light background */

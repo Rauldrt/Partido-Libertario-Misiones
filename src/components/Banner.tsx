@@ -9,6 +9,7 @@ interface Cta {
   text: string;
   link: string;
   className?: string;
+  onClick?: () => void;
 }
 
 interface BannerProps {
@@ -34,7 +35,7 @@ export function Banner({
       className
     )}>
       <h1 
-        className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up break-words"
+        className="w-full font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up break-words"
         style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
       >
         {title}
@@ -42,7 +43,8 @@ export function Banner({
       <p 
         className={cn(
           "w-full font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms] break-words",
-          textAlignment === 'center' ? 'md:max-w-2xl mx-auto' : 'md:max-w-2xl'
+           "md:max-w-2xl",
+           textAlignment === 'center' ? 'mx-auto' : ''
         )}
         style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
       >
@@ -54,10 +56,16 @@ export function Banner({
               textAlignment === 'center' ? 'justify-center' : 'justify-start'
           )}>
           {ctas.map((cta, index) => (
-            <Button key={index} asChild size="lg" className={cn(
-              "shadow-md transition-transform hover:scale-105", 
-              cta.className
-            )}>
+            <Button 
+              key={index} 
+              asChild 
+              size="lg" 
+              className={cn(
+                "shadow-md transition-transform hover:scale-105", 
+                cta.className
+              )}
+              onClick={cta.onClick}
+            >
               <Link href={cta.link}>{cta.text}</Link>
             </Button>
           ))}
