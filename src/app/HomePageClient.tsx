@@ -79,7 +79,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-11/12 max-w-5xl"
+            className="w-11/12 max-w-5xl mx-auto"
             opts={{
                 loop: true,
             }}
