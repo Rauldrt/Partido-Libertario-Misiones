@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
-import { ShieldCheck, UserPlus } from 'lucide-react';
 
 interface Cta {
   text: string;
@@ -72,21 +71,6 @@ export function Banner({
               <Link href={cta.link}>{cta.text}</Link>
             </Button>
           ))}
-
-          <div className="grid w-full grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
-              <Button asChild size="lg" className="bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105">
-                <Link href="/fiscalizacion">
-                    <ShieldCheck className="mr-2 h-5 w-5" />
-                    <span>Fiscalizá</span>
-                </Link>
-              </Button>
-              <Button asChild size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
-                <Link href="/afiliacion">
-                    <UserPlus className="mr-2 h-5 w-5" />
-                    <span>Afiliate</span>
-                </Link>
-              </Button>
-          </div>
 
         </div>
       )}

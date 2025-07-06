@@ -11,12 +11,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb } from 'lucide-react';
+import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 
 const values = [
@@ -167,11 +169,11 @@ export default function HomePageClient({ children }: PropsWithChildren) {
     <>
       <Section 
         id="hero" 
-        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center p-0"
+        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
         videoSrc="/background.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
-        containerClassName="w-full px-4"
+        containerClassName="w-full h-full px-4 relative flex items-center justify-center"
       >
         <Carousel
             plugins={[
@@ -180,7 +182,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-full max-w-5xl mx-auto"
+            className="w-full max-w-5xl"
             opts={{
                 loop: true,
             }}
@@ -206,6 +208,21 @@ export default function HomePageClient({ children }: PropsWithChildren) {
             <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
             <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
+
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col sm:flex-row gap-4 w-full max-w-md px-4 sm:px-0">
+            <Button asChild size="lg" className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
+              <Link href="/fiscalizacion">
+                  <ShieldCheck className="mr-2 h-5 w-5" />
+                  <span>Fiscalizá</span>
+              </Link>
+            </Button>
+            <Button asChild size="lg" className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-lg transition-transform hover:scale-105">
+              <Link href="/afiliacion">
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  <span>Afiliate</span>
+              </Link>
+            </Button>
+        </div>
       </Section>
       
       <Section id="info" className="py-16 md:py-24">
