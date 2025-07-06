@@ -23,16 +23,16 @@ export type GenerateNewsInput = z.infer<typeof GenerateNewsInputSchema>;
 const GenerateNewsOutputSchema = z.object({
   title: z
     .string()
-    .describe('A catchy and informative title for the news article.'),
+    .describe('Un título pegadizo e informativo para el artículo de noticias.'),
   summary: z
     .string()
     .describe(
-      'A concise summary of the article content, written as a single paragraph.'
+      'Un resumen conciso del contenido del artículo, escrito como un solo párrafo.'
     ),
   imageHint: z
     .string()
     .describe(
-      'One or two keywords for a stock photo that visually represents the article. For example: "political debate" or "economic growth".'
+      'Una o dos palabras clave en español para una foto de archivo que represente visualmente el artículo. Por ejemplo: "debate político" o "crecimiento económico".'
     ),
 });
 export type GenerateNewsOutput = z.infer<typeof GenerateNewsOutputSchema>;
@@ -49,17 +49,17 @@ const newsGeneratorPrompt = ai.definePrompt({
   name: 'newsGeneratorPrompt',
   input: { schema: z.object({ articleContent: z.string() }) },
   output: { schema: GenerateNewsOutputSchema },
-  prompt: `You are an expert news editor for a political party's website. Your task is to analyze the provided text content and generate a compelling news summary from it.
+  prompt: `Eres un experto editor de noticias para un sitio web político. Tu tarea es analizar el contenido proporcionado y generar un resumen de noticias en ESPAÑOL.
 
-The content could be from a full news article or a social media post (e.g., from X/Twitter, Facebook, Instagram).
+El contenido puede ser un artículo completo o una publicación de redes sociales. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
 
-- If the content is from a full article, summarize its key points.
-- If the content is from a social media post, interpret its meaning and expand it into a proper news-style summary.
-- In both cases, generate a catchy title and suggest one or two keywords for a stock photo.
+- Genera un título llamativo en español.
+- Escribe un resumen conciso en español.
+- Proporciona una o dos palabras clave en español para una imagen de archivo.
 
-Based on the following content, generate a response in the required JSON format.
+Genera una respuesta en el formato JSON requerido.
 
-Content:
+Contenido:
 {{{articleContent}}}
 `,
 });
