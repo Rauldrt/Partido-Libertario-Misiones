@@ -13,6 +13,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb } from 'lucide-react';
 import Image from 'next/image';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const values = [
   {
@@ -36,24 +38,67 @@ const values = [
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
 
+const carouselSlides = [
+    {
+        title: "Nuestra Misión",
+        description: "Promover y defender los principios de una sociedad libre, impulsando políticas que garanticen los derechos individuales, la propiedad privada, el libre mercado y un gobierno limitado.",
+        cta: { text: "Conocer Más", link: "#info" }
+    },
+    {
+        title: "Nuestra Visión",
+        description: "Ser la fuerza política que lidere la transformación hacia una provincia donde la libertad sea el motor del progreso, la innovación y la calidad de vida.",
+        cta: { text: "Ver Detalles", link: "#info" }
+    },
+    {
+        title: "Nuestros Valores",
+        description: "Creemos en la Libertad Individual, la Propiedad Privada, el Libre Mercado y un Gobierno Limitado como pilares para la prosperidad.",
+        cta: { text: "Explorar Principios", link: "#info" }
+    },
+    {
+        title: "Últimas Noticias",
+        description: "Mantenete al día con nuestras actividades, comunicados y los próximos eventos en Misiones.",
+        cta: { text: "Ir a Noticias", link: "#latest-news" }
+    }
+];
+
+
 export default function HomePageClient({ children }: PropsWithChildren) {
   return (
     <>
       <Section 
         id="hero" 
         className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
-        parallax
-        videoSrc="/banner.mp4"
-        backgroundOverlay="bg-black/50"
+        backgroundImage="/banner3.jpg"
+        backgroundOverlay="bg-black/60"
       >
-        <Banner
-            title="La Libertad Avanza en Misiones"
-            description="Somos un grupo de ciudadanos comprometidos con las ideas de la libertad. Uníte para construir un futuro más próspero para nuestra provincia."
-            ctas={[
-                { text: 'Conocé Nuestras Propuestas', link: '/about', className: 'bg-primary text-primary-foreground hover:bg-primary/90' },
-                { text: 'Afiliate', link: '/afiliacion', className: 'bg-accent text-accent-foreground hover:bg-accent/90' },
+        <Carousel
+            plugins={[
+                Autoplay({
+                    delay: 5000,
+                    stopOnInteraction: true,
+                }),
             ]}
-        />
+            className="w-full max-w-5xl"
+            opts={{
+                loop: true,
+            }}
+        >
+            <CarouselContent>
+                {carouselSlides.map((slide, index) => (
+                    <CarouselItem key={index}>
+                        <Banner
+                            title={slide.title}
+                            description={slide.description}
+                            ctas={[{ text: slide.cta.text, link: slide.cta.link, className: 'bg-primary text-primary-foreground hover:bg-primary/90' }]}
+                            textAlignment="center"
+                            priority={index === 0}
+                        />
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselNext className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+        </Carousel>
       </Section>
       
       <Section id="info" className="py-16 md:py-24">
