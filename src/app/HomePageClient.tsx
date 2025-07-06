@@ -68,7 +68,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
       <Section 
         id="hero" 
         className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
-        videoSrc="/banner.mp4"
+        videoSrc="/background.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
       >
@@ -97,8 +97,8 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-0 sm:left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-            <CarouselNext className="absolute right-0 sm:right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
       </Section>
       

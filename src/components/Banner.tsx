@@ -27,7 +27,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-8",
+      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-4 md:p-8",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left'
     )}>
       
@@ -37,14 +37,14 @@ export function Banner({
         "flex flex-col"
       )}>
         <h1 
-          className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold mb-6 opacity-0 animate-fade-in-up"
+          className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up"
           style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
         >
           {title}
         </h1>
         <p 
           className={cn(
-            "font-body text-lg md:text-xl mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms]",
+            "font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms]",
             textAlignment === 'center' ? 'max-w-2xl mx-auto' : 'max-w-2xl'
           )}
           style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
