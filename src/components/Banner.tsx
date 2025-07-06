@@ -48,7 +48,7 @@ export function Banner({
         <p 
           className={cn(
             "font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms]",
-            textAlignment === 'center' ? 'max-w-2xl mx-auto' : 'max-w-2xl'
+            textAlignment === 'center' ? 'md:max-w-2xl mx-auto' : 'md:max-w-2xl'
           )}
           style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}
         >
