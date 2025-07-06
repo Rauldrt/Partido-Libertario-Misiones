@@ -26,6 +26,11 @@ export function Footer() {
         <p className="font-body text-xs mt-2">
           Hecho con <span role="img" aria-label="corazón">💙</span> por la libertad.
         </p>
+        <div className="mt-6 border-t border-white/10 pt-4">
+           <Link href="/admin/news-generator" className="text-xs text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors">
+            News Generator
+          </Link>
+        </div>
       </div>
     </footer>
   );

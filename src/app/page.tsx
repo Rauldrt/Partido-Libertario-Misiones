@@ -63,7 +63,7 @@ const somosElCambioCarouselImages = [
 export default function HomePage() {
   const latestNews = mockNewsItems.slice(0, 3);
   // URL para el formulario de contacto de Google. Reemplázala por la tuya.
-  const contactGoogleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc_y1Y-i0J-0i3q5F_1J2k3L4M5N6O7P8Q9R0S1T2U3V4W5X6/viewform?embedded=true";
+  const contactGoogleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
 
   return (
     <div className="flex flex-col gap-8 md:gap-12 lg:gap-16 pb-8 md:pb-12">

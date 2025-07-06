@@ -5,7 +5,7 @@ import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 
 export default function ContactPage() {
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
-  const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc_y1Y-i0J-0i3q5F_1J2k3L4M5N6O7P8Q9R0S1T2U3V4W5X6/viewform?embedded=true"; // URL de ejemplo
+  const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2"; // URL de ejemplo
 
   return (
     <Section id="contact">
