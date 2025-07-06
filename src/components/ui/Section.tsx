@@ -2,12 +2,13 @@ import type { PropsWithChildren } from 'react';
 import { cn } from '@/lib/utils';
 
 interface SectionProps extends PropsWithChildren {
-  className?: string; // For the <section> element itself
-  containerClassName?: string; // For the inner <div class="container...">
+  className?: string;
+  containerClassName?: string;
   id?: string;
   backgroundImage?: string;
+  videoSrc?: string;
   parallax?: boolean;
-  backgroundOverlay?: string; // e.g. 'bg-black/50' for a dark overlay
+  backgroundOverlay?: string;
 }
 
 export function Section({ 
@@ -16,28 +17,62 @@ export function Section({
   containerClassName,
   id, 
   backgroundImage, 
+  videoSrc,
   parallax,
   backgroundOverlay
 }: SectionProps) {
-  const sectionStyle: React.CSSProperties = backgroundImage 
+  const sectionStyle: React.CSSProperties = backgroundImage && !videoSrc
     ? { '--bg-image': `url(${backgroundImage})` } as React.CSSProperties
     : {};
+  
+  const hasBackground = backgroundImage || videoSrc;
 
+  // With parallax, the section becomes a positioning context for the layers
+  if (parallax) {
+    return (
+      <section
+        id={id}
+        className={cn(
+          'relative parallax-wrapper', // This handles the transform-style
+          backgroundImage && !videoSrc && 'bg-[image:var(--bg-image)] bg-center bg-no-repeat', // image can be here too
+          className)}
+        style={sectionStyle}
+      >
+        {videoSrc && (
+          <video className="parallax-video-bg" autoPlay loop muted playsInline>
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        )}
+        {hasBackground && backgroundOverlay && (
+          <div className={cn("absolute inset-0 z-10", backgroundOverlay)} />
+        )}
+        <div className={cn('parallax-content-layer relative z-20', containerClassName)}>
+          {children}
+        </div>
+      </section>
+    );
+  }
+
+  // Non-parallax logic
   return (
     <section 
       id={id} 
       className={cn(
-        'relative py-12 md:py-16 lg:py-20', // Base styles
-        backgroundImage && 'bg-[image:var(--bg-image)] bg-center bg-no-repeat', // Apply image using CSS var
-        parallax && 'bg-fixed', // Apply parallax if enabled
+        'relative py-12 md:py-16 lg:py-20',
+        backgroundImage && !videoSrc && 'bg-[image:var(--bg-image)] bg-center bg-no-repeat',
         className
       )}
       style={sectionStyle}
     >
-      {backgroundImage && backgroundOverlay && (
-        <div className={cn("absolute inset-0 z-0", backgroundOverlay)} />
+      {videoSrc && (
+        <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
+            <source src={videoSrc} type="video/mp4" />
+        </video>
       )}
-      <div className={cn('container mx-auto px-4 md:px-6 relative z-10', containerClassName)}> {/* Content needs to be above overlay */}
+      {hasBackground && backgroundOverlay && (
+        <div className={cn("absolute inset-0 z-10", backgroundOverlay)} />
+      )}
+      <div className={cn('container mx-auto px-4 md:px-6 relative z-20', containerClassName)}>
         {children}
       </div>
     </section>

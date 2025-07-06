@@ -43,7 +43,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
         id="hero" 
         className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
         parallax
-        backgroundImage="/banner.jpg"
+        videoSrc="/banner.mp4"
         backgroundOverlay="bg-black/50"
       >
         <Banner
