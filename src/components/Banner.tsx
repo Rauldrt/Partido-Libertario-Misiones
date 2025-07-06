@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
+import { ShieldCheck, UserPlus } from 'lucide-react';
 
 interface Cta {
   text: string;
@@ -30,7 +31,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div className={cn(
-      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-6 md:p-8 z-10",
+      "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-6 md:p-8 z-10 w-full",
       textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left',
       className
     )}>
@@ -52,16 +53,18 @@ export function Banner({
       </p>
       {ctas && ctas.length > 0 && (
           <div className={cn(
-              "opacity-0 animate-fade-in-up [animation-delay:400ms] flex flex-wrap items-center gap-4",
-              textAlignment === 'center' ? 'justify-center' : 'justify-start'
+              "opacity-0 animate-fade-in-up [animation-delay:400ms] flex flex-col items-center gap-4 w-full",
+               textAlignment === 'center' ? 'md:justify-center' : 'md:justify-start',
+               'md:flex-row md:flex-wrap'
           )}>
+          
           {ctas.map((cta, index) => (
             <Button 
               key={index} 
               asChild 
               size="lg" 
               className={cn(
-                "shadow-md transition-transform hover:scale-105", 
+                "shadow-md transition-transform hover:scale-105 w-full md:w-auto", 
                 cta.className
               )}
               onClick={cta.onClick}
@@ -69,6 +72,22 @@ export function Banner({
               <Link href={cta.link}>{cta.text}</Link>
             </Button>
           ))}
+
+          <div className="flex w-full flex-col sm:flex-row gap-4 md:hidden">
+              <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105">
+                <Link href="/fiscalizacion">
+                    <ShieldCheck className="mr-2 h-5 w-5" />
+                    <span>Fiscalizá</span>
+                </Link>
+              </Button>
+              <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
+                <Link href="/afiliacion">
+                    <UserPlus className="mr-2 h-5 w-5" />
+                    <span>Afiliate</span>
+                </Link>
+              </Button>
+          </div>
+
         </div>
       )}
     </div>
