@@ -61,6 +61,33 @@ const carouselSlides = [
     }
 ];
 
+const infoCarouselImages = [
+  {
+    src: "https://placehold.co/800x600.png",
+    alt: "Militantes en un evento del partido",
+    hint: "political rally",
+    caption: "Participá en nuestros eventos y sé parte del cambio."
+  },
+  {
+    src: "https://placehold.co/800x600.png",
+    alt: "Ciudadanos debatiendo ideas",
+    hint: "community discussion",
+    caption: "Debatimos para construir un futuro mejor para Misiones."
+  },
+  {
+    src: "https://placehold.co/800x600.png",
+    alt: "Voluntarios trabajando juntos",
+    hint: "volunteers community",
+    caption: "El voluntariado es la fuerza que impulsa nuestras ideas."
+  },
+  {
+    src: "https://placehold.co/800x600.png",
+    alt: "Paisaje de Misiones con sol naciente",
+    hint: "Misiones landscape",
+    caption: "Una nueva esperanza para nuestra provincia."
+  }
+];
+
 
 export default function HomePageClient({ children }: PropsWithChildren) {
   return (
@@ -68,7 +95,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
       <Section 
         id="hero" 
         className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
-        videoSrc="/banner.mp4"
+        videoSrc="/background.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
         containerClassName="w-full px-4"
@@ -109,7 +136,43 @@ export default function HomePageClient({ children }: PropsWithChildren) {
             <p className="font-body text-lg text-muted-foreground mt-2">Nuestros principios y cómo podés participar.</p>
         </div>
 
-        <div className="max-w-4xl mx-auto h-[600px] overflow-hidden">
+        <div className="max-w-4xl mx-auto mb-16">
+            <Carousel 
+                className="w-full" 
+                opts={{ loop: true }}
+                plugins={[
+                    Autoplay({
+                        delay: 4000,
+                        stopOnInteraction: true,
+                    }),
+                ]}
+            >
+                <CarouselContent>
+                    {infoCarouselImages.map((image, index) => (
+                    <CarouselItem key={index}>
+                        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg shadow-xl">
+                        <Image
+                            src={image.src}
+                            alt={image.alt}
+                            layout="fill"
+                            objectFit="cover"
+                            data-ai-hint={image.hint}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                            <p className="font-body text-lg font-semibold text-white" style={{textShadow: '1px 1px 3px rgba(0,0,0,0.7)'}}>
+                            {image.caption}
+                            </p>
+                        </div>
+                        </div>
+                    </CarouselItem>
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+                <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            </Carousel>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
              <Accordion type="single" collapsible defaultValue='mission' className="w-full space-y-4">
                  <AccordionItem value="mission" className="border-b-0">
                      <Card className="shadow-lg w-full">
