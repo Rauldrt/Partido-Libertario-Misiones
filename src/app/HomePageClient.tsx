@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { type PropsWithChildren } from 'react';
@@ -55,7 +56,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
         />
       </Section>
       
-      <Section id="info" className="py-16 md:py-24 bg-background">
+      <Section id="info" className="py-16 md:py-24">
         <div className="text-center mb-12">
             <h2 className="font-headline text-4xl font-bold">El Camino de la Libertad</h2>
             <p className="font-body text-lg text-muted-foreground mt-2">Nuestros principios y cómo podés participar.</p>
