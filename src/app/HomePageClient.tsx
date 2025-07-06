@@ -68,7 +68,8 @@ export default function HomePageClient({ children }: PropsWithChildren) {
       <Section 
         id="hero" 
         className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
-        backgroundImage="/banner3.jpg"
+        videoSrc="/banner.mp4"
+        parallax={true}
         backgroundOverlay="bg-black/60"
       >
         <Carousel
