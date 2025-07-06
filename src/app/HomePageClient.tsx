@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { type PropsWithChildren } from 'react';
+import React, { type PropsWithChildren, useState, useEffect } from 'react';
 import { Section } from '@/components/ui/Section';
 import { Banner } from '@/components/Banner';
 import {
@@ -15,6 +15,9 @@ import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Light
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { cn } from '@/lib/utils';
+
 
 const values = [
   {
@@ -61,35 +64,89 @@ const carouselSlides = [
     }
 ];
 
-const infoCarouselImages = [
+const mosaicTiles = [
   {
-    src: "https://placehold.co/800x600.png",
-    alt: "Militantes en un evento del partido",
-    hint: "political rally",
-    caption: "Participá en nuestros eventos y sé parte del cambio."
+    layout: 'col-span-2 row-span-2',
+    images: [
+      { src: "https://placehold.co/800x600.png", alt: "Militantes en un evento", hint: "political rally", caption: "Participá en nuestros eventos." },
+      { src: "https://placehold.co/800x600.png", alt: "Candidato dando un discurso", hint: "political speech", caption: "Nuevas ideas para el futuro." },
+      { src: "https://placehold.co/800x600.png", alt: "Voluntarios del partido", hint: "volunteers community", caption: "Sumate como voluntario." },
+    ]
   },
   {
-    src: "https://placehold.co/800x600.png",
-    alt: "Ciudadanos debatiendo ideas",
-    hint: "community discussion",
-    caption: "Debatimos para construir un futuro mejor para Misiones."
+    layout: 'col-span-1 row-span-1',
+    images: [
+      { src: "https://placehold.co/600x600.png", alt: "Ciudadanos debatiendo", hint: "community discussion", caption: "Debate ciudadano." },
+      { src: "https://placehold.co/600x600.png", alt: "Mesa de afiliación", hint: "people joining", caption: "Afiliate al partido." },
+      { src: "https://placehold.co/600x600.png", alt: "Plaza pública", hint: "public square", caption: "Estamos en tu ciudad." },
+    ]
   },
   {
-    src: "https://placehold.co/800x600.png",
-    alt: "Voluntarios trabajando juntos",
-    hint: "volunteers community",
-    caption: "El voluntariado es la fuerza que impulsa nuestras ideas."
+    layout: 'col-span-1 row-span-1',
+    images: [
+      { src: "https://placehold.co/600x600.png", alt: "Paisaje de Misiones", hint: "Misiones landscape", caption: "Por una Misiones libre." },
+      { src: "https://placehold.co/600x600.png", alt: "Cataratas del Iguazú", hint: "Iguazu falls", caption: "Belleza natural." },
+      { src: "https://placehold.co/600x600.png", alt: "Cultivo de yerba mate", hint: "yerba mate", caption: "Apoyo al productor." },
+    ]
   },
   {
-    src: "https://placehold.co/800x600.png",
-    alt: "Paisaje de Misiones con sol naciente",
-    hint: "Misiones landscape",
-    caption: "Una nueva esperanza para nuestra provincia."
+    layout: 'col-span-2 row-span-1',
+    images: [
+      { src: "https://placehold.co/800x400.png", alt: "Grupo de jóvenes libertarios", hint: "young people group", caption: "La juventud se activa." },
+      { src: "https://placehold.co/800x400.png", alt: "Manifestación por la libertad", hint: "freedom protest", caption: "Defendemos tus derechos." },
+      { src: "https://placehold.co/800x400.png", alt: "Bandera Argentina ondeando", hint: "Argentina flag", caption: "Un nuevo rumbo para el país." },
+    ]
   }
 ];
 
+type MosaicTileData = (typeof mosaicTiles)[0];
+
+const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (src: string) => void }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (tile.images.length <= 1) return;
+
+    const slideshowInterval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % tile.images.length);
+    }, 4000); // Change image every 4 seconds
+
+    return () => clearInterval(slideshowInterval);
+  }, [tile.images]);
+
+  const currentImage = tile.images[currentIndex];
+
+  return (
+    <div
+      key={currentImage.src} // Key helps React re-render, triggering the animation
+      className={cn(
+        'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer animate-crossfade-in',
+        tile.layout
+      )}
+      onClick={() => onImageClick(currentImage.src)}
+    >
+      <Image
+        src={currentImage.src}
+        alt={currentImage.alt}
+        layout="fill"
+        objectFit="cover"
+        data-ai-hint={currentImage.hint}
+        className="transition-transform duration-500 ease-in-out group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 p-4">
+        <p className="font-body text-lg font-semibold text-white" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+          {currentImage.caption}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 
 export default function HomePageClient({ children }: PropsWithChildren) {
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+
   return (
     <>
       <Section 
@@ -137,35 +194,10 @@ export default function HomePageClient({ children }: PropsWithChildren) {
         </div>
 
         <div className="max-w-5xl mx-auto mb-16 px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] gap-4">
-                {infoCarouselImages.map((image, index) => {
-                    const tileLayouts = [
-                        'col-span-2 row-span-2', // Large main tile
-                        'col-span-1 row-span-1', // Small square
-                        'col-span-1 row-span-1', // Small square
-                        'col-span-2 row-span-1', // Wide tile
-                    ];
-                    const layoutClass = tileLayouts[index % tileLayouts.length];
-
-                    return (
-                        <div key={index} className={`group relative rounded-lg overflow-hidden shadow-lg ${layoutClass}`}>
-                            <Image
-                                src={image.src}
-                                alt={image.alt}
-                                layout="fill"
-                                objectFit="cover"
-                                data-ai-hint={image.hint}
-                                className="transition-transform duration-500 ease-in-out group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                            <div className="absolute bottom-0 left-0 p-4">
-                                <p className="font-body text-lg font-semibold text-white" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
-                                    {image.caption}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                })}
+             <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] gap-4">
+                {mosaicTiles.map((tile, index) => (
+                    <MosaicTile key={index} tile={tile} onImageClick={setLightboxImage} />
+                ))}
             </div>
         </div>
 
@@ -276,6 +308,18 @@ export default function HomePageClient({ children }: PropsWithChildren) {
         </div>
         {children}
       </Section>
+
+      <Dialog open={!!lightboxImage} onOpenChange={(isOpen) => !isOpen && setLightboxImage(null)}>
+        <DialogContent className="max-w-5xl w-full p-0 bg-transparent border-0 shadow-none">
+          <Image
+            src={lightboxImage || "https://placehold.co/1200x800.png"}
+            alt="Vista a pantalla completa"
+            width={1200}
+            height={800}
+            className="rounded-lg object-contain w-full h-auto"
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
