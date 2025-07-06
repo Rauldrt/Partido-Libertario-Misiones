@@ -68,7 +68,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
       <Section 
         id="hero" 
         className="relative h-screen min-h-[700px] flex items-center justify-center text-center p-0"
-        videoSrc="/banner.mp4"
+        videoSrc="/background.mp4"
         parallax={true}
         backgroundOverlay="bg-black/60"
       >
@@ -79,7 +79,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-full max-w-5xl px-6"
+            className="w-full max-w-5xl"
             opts={{
                 loop: true,
             }}
@@ -93,12 +93,13 @@ export default function HomePageClient({ children }: PropsWithChildren) {
                             ctas={[{ text: slide.cta.text, link: slide.cta.link, className: 'bg-primary text-primary-foreground hover:bg-primary/90' }]}
                             textAlignment="center"
                             priority={index === 0}
+                            className="mx-4"
                         />
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselPrevious className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselNext className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
       </Section>
       

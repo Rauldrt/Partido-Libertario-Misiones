@@ -17,6 +17,7 @@ interface BannerProps {
   ctas?: Cta[];
   textAlignment?: 'center' | 'left';
   priority?: boolean;
+  className?: string;
 }
 
 export function Banner({ 
@@ -24,11 +25,13 @@ export function Banner({
   description, 
   ctas,
   textAlignment = 'center',
+  className
 }: BannerProps) {
   return (
     <div className={cn(
       "relative text-primary-foreground min-h-[450px] flex flex-col justify-center p-6 md:p-8",
-      textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left'
+      textAlignment === 'center' ? 'items-center text-center' : 'items-start text-left',
+      className
     )}>
       
       <div className={cn(
