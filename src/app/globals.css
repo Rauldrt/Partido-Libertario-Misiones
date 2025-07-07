@@ -160,6 +160,7 @@ body {
   .parallax-wrapper {
     position: relative;
     transform-style: preserve-3d;
+    overflow: hidden; /* This will clip the scaled video background */
   }
 
   .parallax-video-bg {
