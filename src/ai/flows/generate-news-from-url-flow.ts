@@ -3,7 +3,7 @@
 /**
  * @fileOverview A Genkit flow for generating news article data from a URL.
  *
- * - generateNewsFromUrl - A function that takes a URL, scrapes its content, and uses an LLM to generate a title, summary, and image hint.
+ * - generateNewsFromUrl - A function that takes a URL (article or YouTube), gets its content, and uses an LLM to generate a title, summary, and image hint.
  * - GenerateNewsInput - The input type for the generateNewsFromUrl function.
  * - GenerateNewsOutput - The return type for the generateNewsFromUrl function.
  */
@@ -12,10 +12,11 @@ import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { JSDOM } from 'jsdom';
 import { Readability } from '@mozilla/readability';
+import { YoutubeTranscript } from 'youtube-transcript';
 
 // Input Schema
 const GenerateNewsInputSchema = z.object({
-  url: z.string().url().describe('The URL of the news article to process.'),
+  url: z.string().url().describe('The URL of the article or YouTube video to process.'),
 });
 export type GenerateNewsInput = z.infer<typeof GenerateNewsInputSchema>;
 
@@ -34,9 +35,11 @@ const GenerateNewsOutputSchema = z.object({
     .describe(
       'Una o dos palabras clave en español para una foto de archivo que represente visualmente el artículo. Por ejemplo: "debate político" o "crecimiento económico".'
     ),
-  imageUrl: z.string().url().optional().describe('URL de la imagen principal extraída del artículo.'),
+  imageUrl: z.string().url().optional().describe('URL de la imagen principal extraída del artículo o video.'),
+  youtubeVideoId: z.string().optional().describe('El ID del video de YouTube, si la URL es de YouTube.'),
 });
 export type GenerateNewsOutput = z.infer<typeof GenerateNewsOutputSchema>;
+
 
 // The main exported function to be called from the client
 export async function generateNewsFromUrl(
@@ -49,21 +52,28 @@ export async function generateNewsFromUrl(
 const newsGeneratorPrompt = ai.definePrompt({
   name: 'newsGeneratorPrompt',
   input: { schema: z.object({ articleContent: z.string() }) },
-  output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true }) }, // The LLM doesn't generate the URL
+  output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true, youtubeVideoId: true }) }, // The LLM doesn't generate these
   prompt: `Eres un experto editor de noticias para un sitio web político. Tu tarea es analizar el contenido proporcionado y generar un resumen de noticias en ESPAÑOL.
 
-El contenido puede ser un artículo completo o una publicación de redes sociales. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
+El contenido puede ser un artículo completo, una publicación de redes sociales o la TRANSCRIPCIÓN DE UN VIDEO. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
 
 - Genera un título llamativo en español.
-- Escribe un resumen conciso en español.
+- Escribe un resumen conciso en español que capture la esencia del contenido.
 - Proporciona una o dos palabras clave en español para una imagen de archivo.
 
 Genera una respuesta en el formato JSON requerido.
 
-Contenido:
+Contenido a analizar:
 {{{articleContent}}}
 `,
 });
+
+function getYoutubeVideoId(url: string): string | null {
+  const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(youtubeRegex);
+  return match ? match[1] : null;
+}
+
 
 // Genkit Flow
 const generateNewsFromUrlFlow = ai.defineFlow(
@@ -73,68 +83,80 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     outputSchema: GenerateNewsOutputSchema,
   },
   async (input) => {
-    // 1. Fetch the HTML content from the URL
-    const response = await fetch(input.url, { 
-        headers: { 
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-        }
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch URL: ${response.statusText}`);
-    }
-    const html = await response.text();
-
-    // 2. Parse HTML and extract content
-    const dom = new JSDOM(html, { url: input.url });
-    const reader = new Readability(dom.window.document);
-    const article = reader.parse();
-    
     let articleContent = '';
     let imageUrl: string | undefined = undefined;
+    let youtubeVideoId: string | undefined = undefined;
+    
+    const videoId = getYoutubeVideoId(input.url);
 
-    // Prioritize Readability's parsed content for articles
-    if (article && article.content) {
-      articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
-      
-      // Attempt to extract the main image from the parsed article content
-      const contentDom = new JSDOM(article.content, { url: input.url });
-      const mainImage = contentDom.window.document.querySelector('img');
-      if (mainImage?.src) {
+    if (videoId) {
+        youtubeVideoId = videoId;
+        // Get the highest quality thumbnail for the video.
+        imageUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
         try {
-          const resolvedUrl = new URL(mainImage.src, input.url).href;
-          if (resolvedUrl.startsWith('http')) {
-            imageUrl = resolvedUrl;
-          }
-        } catch (e) {
-          console.warn(`Could not resolve image URL: ${mainImage.src}`);
+            const transcript = await YoutubeTranscript.fetchTranscript(videoId);
+            articleContent = transcript.map((t) => t.text).join(' ').trim();
+            if (!articleContent) {
+                throw new Error('Empty transcript returned.');
+            }
+        } catch (error) {
+            console.error('Error fetching YouTube transcript:', error);
+            throw new Error(
+                'No se pudo obtener la transcripción para este video. Es posible que las transcripciones estén deshabilitadas o que el video no sea válido.'
+            );
         }
-      }
+
     } else {
-      // Fallback for social media or JS-heavy sites: get text from the body
-      articleContent = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
+        // Fallback to existing logic for scraping web pages
+        const response = await fetch(input.url, {
+            headers: {
+                'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch URL: ${response.statusText}`);
+        }
+        const html = await response.text();
+
+        const dom = new JSDOM(html, { url: input.url });
+        const reader = new Readability(dom.window.document);
+        const article = reader.parse();
+
+        if (article && article.content) {
+            articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
+            const contentDom = new JSDOM(article.content, { url: input.url });
+            const mainImage = contentDom.window.document.querySelector('img');
+            if (mainImage?.src) {
+                try {
+                const resolvedUrl = new URL(mainImage.src, input.url).href;
+                if (resolvedUrl.startsWith('http')) {
+                    imageUrl = resolvedUrl;
+                }
+                } catch (e) {
+                console.warn(`Could not resolve image URL: ${mainImage.src}`);
+                }
+            }
+        } else {
+            articleContent = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
+        }
     }
 
-    // Check if we were able to extract any content at all
+
     if (!articleContent) {
       throw new Error(
-        'Could not extract any meaningful content from the URL. The site may be protected or heavily reliant on JavaScript.'
+        'Could not extract any meaningful content from the URL. The site may be protected, heavily reliant on JavaScript, or the video may lack a transcript.'
       );
     }
     
-    // 3. Call the LLM with the extracted content, limiting to avoid excessive token usage
     const { output } = await newsGeneratorPrompt({ articleContent: articleContent.substring(0, 15000) }); 
 
     if (!output) {
       throw new Error('The AI failed to generate a response.');
     }
-
-    // Use the title from Readability as a fallback if the AI's is empty and one was parsed
-    if (!output.title && article && article.title) {
-        output.title = article.title;
-    }
-
-    // Combine LLM output with programmatically extracted image URL
-    return { ...output, imageUrl };
+    
+    // Combine LLM output with programmatically extracted data
+    return { ...output, imageUrl, youtubeVideoId };
   }
 );

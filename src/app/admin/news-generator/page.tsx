@@ -83,8 +83,9 @@ export default function NewsGeneratorPage() {
         summary: result.summary,
         content: result.summary,
         imageHint: result.imageHint,
-        linkUrl: aiUrl, 
         imageUrl: result.imageUrl || EMPTY_NEWS_ITEM.imageUrl,
+        youtubeVideoId: result.youtubeVideoId || '',
+        type: result.youtubeVideoId ? 'event' : 'news',
       }));
        toast({
         title: '¡Contenido Generado!',
@@ -107,7 +108,7 @@ export default function NewsGeneratorPage() {
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle>Editor de Contenido</CardTitle>
-          <CardDescription>Usá las pestañas para crear una noticia o evento manualmente o con ayuda de la IA.</CardDescription>
+          <CardDescription>Usá las pestañas para crear una noticia o evento manually o con ayuda de la IA.</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="manual">
@@ -161,7 +162,7 @@ export default function NewsGeneratorPage() {
             </TabsContent>
             <TabsContent value="ai" className="space-y-4 pt-4">
               <div className="space-y-2">
-                <Label htmlFor="ai-url">URL del Artículo</Label>
+                <Label htmlFor="ai-url">URL del Artículo o Video de YouTube</Label>
                 <div className="flex gap-2">
                   <Input id="ai-url" placeholder="https://ejemplo.com/noticia" value={aiUrl} onChange={(e) => setAiUrl(e.target.value)} />
                   <Button onClick={handleAiGenerate} disabled={isGenerating}>
@@ -169,7 +170,7 @@ export default function NewsGeneratorPage() {
                     <span className="ml-2 hidden sm:inline">Generar</span>
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">Pegá el link de un artículo y la IA generará un título, resumen y sugerencia de imagen.</p>
+                <p className="text-xs text-muted-foreground">Pegá el link de un artículo o video de YouTube y la IA generará un título, resumen y sugerencia de imagen.</p>
               </div>
                <p className="font-body text-sm text-center bg-accent/20 p-3 rounded-md border border-accent">
                   La IA completará los campos de la pestaña "Manual". ¡Revisalos y ajústalos antes de guardar!
