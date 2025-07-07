@@ -19,7 +19,7 @@ export default function AfiliacionPage() {
         </div>
       </Section>
 
-      <Section id="afiliacion-form-section" className="py-10 bg-background">
+      <Section id="afiliacion-form-section" className="py-10">
         <div className="grid lg:grid-cols-2 gap-12 items-start max-w-6xl mx-auto">
           <Card className="shadow-2xl w-full flex flex-col">
             <CardHeader>

@@ -8,7 +8,7 @@ export default function ContactPage() {
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2"; // URL de ejemplo
 
   return (
-    <Section id="contact" className="bg-background">
+    <Section id="contact" className="">
       <div className="text-center mb-12">
         <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
         <h1 className="font-headline text-4xl md:text-5xl font-bold">Ponete en Contacto</h1>

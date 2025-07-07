@@ -24,7 +24,7 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
   const articleContent = article.content || article.summary;
 
   return (
-    <Section id={`news-article-${article.id}`} className="py-10 md:py-16 bg-background">
+    <Section id={`news-article-${article.id}`} className="py-10 md:py-16">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <Button variant="outline" asChild className="text-sm">

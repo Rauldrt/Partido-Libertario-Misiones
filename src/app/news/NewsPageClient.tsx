@@ -42,7 +42,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
         </div>
       </Section>
 
-      <div className="py-12 bg-background">
+      <div className="py-12">
         {carouselNewsItems.length > 0 && (
           <div className="container mx-auto px-4 md:px-6 relative mb-12">
             <Carousel
@@ -97,7 +97,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
           </div>
         </Section>
         
-        <Section id="social-media" className="py-12 bg-background">
+        <Section id="social-media" className="py-12">
             <div className="grid lg:grid-cols-2 gap-8 items-center">
                 <div>
                      <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center text-foreground">
