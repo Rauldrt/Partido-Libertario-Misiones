@@ -1,0 +1,189 @@
+
+"use client";
+
+import React, { useState, useTransition } from 'react';
+import type { MosaicTileData, MosaicImageData } from '@/lib/homepage-service';
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { GripVertical, Loader2, Plus, Save, Trash2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { saveMosaicAction } from './actions';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const SortableImageItem = ({ image, tileId, setTiles, isPending }: { image: MosaicImageData, tileId: string, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean }) => {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id });
+    const style = { transform: CSS.Transform.toString(transform), transition };
+
+    const handleImageChange = (field: keyof MosaicImageData, value: string) => {
+        setTiles(prev => prev.map(tile => {
+            if (tile.id === tileId) {
+                return {
+                    ...tile,
+                    images: tile.images.map(img => img.id === image.id ? { ...img, [field]: value } : img)
+                };
+            }
+            return tile;
+        }));
+    };
+
+    const handleImageDelete = () => {
+        setTiles(prev => prev.map(tile => {
+            if (tile.id === tileId) {
+                return { ...tile, images: tile.images.filter(img => img.id !== image.id) };
+            }
+            return tile;
+        }));
+    };
+
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} className="w-full">
+            <Card className="p-3 bg-background relative">
+                <Button variant="ghost" size="icon" {...listeners} className="cursor-grab absolute top-1 left-1 h-6 w-6"><GripVertical /></Button>
+                 <Button variant="destructive" size="icon" onClick={handleImageDelete} disabled={isPending} className="absolute top-1 right-1 h-6 w-6"><Trash2 className="h-4 w-4"/></Button>
+                <div className="grid gap-2 mt-8">
+                     <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
+                    <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} />
+                    <Label htmlFor={`img-caption-${image.id}`}>Leyenda</Label>
+                    <Input id={`img-caption-${image.id}`} value={image.caption} onChange={e => handleImageChange('caption', e.target.value)} />
+                    <Label htmlFor={`img-alt-${image.id}`}>Texto Alt</Label>
+                    <Input id={`img-alt-${image.id}`} value={image.alt} onChange={e => handleImageChange('alt', e.target.value)} />
+                    <Label htmlFor={`img-hint-${image.id}`}>Hint IA</Label>
+                    <Input id={`img-hint-${image.id}`} value={image.hint} onChange={e => handleImageChange('hint', e.target.value)} />
+                </div>
+            </Card>
+        </div>
+    );
+};
+
+const SortableTileItem = ({ tile, setTiles, isPending }: { tile: MosaicTileData, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean }) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: tile.id });
+  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
+
+  const handleTileChange = (field: keyof MosaicTileData, value: string | number) => {
+    setTiles(prev => prev.map(t => t.id === tile.id ? { ...t, [field]: value } : t));
+  };
+
+  const handleTileDelete = () => setTiles(prev => prev.filter(t => t.id !== tile.id));
+
+  const handleAddImage = () => {
+    const newImage: MosaicImageData = { id: `new-img-${Date.now()}`, src: 'https://placehold.co/600x400.png', alt: 'Nueva Imagen', hint: 'placeholder', caption: 'Nueva Leyenda' };
+    setTiles(prev => prev.map(t => t.id === tile.id ? { ...t, images: [...t.images, newImage] } : t));
+  };
+  
+  const handleImageDragEnd = (event: DragEndEvent) => {
+     const { active, over } = event;
+     if(over && active.id !== over.id) {
+         setTiles((prevTiles) => prevTiles.map(t => {
+             if (t.id === tile.id) {
+                const oldIndex = t.images.findIndex(img => img.id === active.id);
+                const newIndex = t.images.findIndex(img => img.id === over.id);
+                if (oldIndex !== -1 && newIndex !== -1) {
+                    return {...t, images: arrayMove(t.images, oldIndex, newIndex) };
+                }
+             }
+             return t;
+         }));
+     }
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <Card className="mb-4 bg-muted/30">
+        <CardHeader className="flex flex-row items-center justify-between p-3">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2"><GripVertical /></Button>
+            <span className="font-semibold">Mosaico (Layout: {tile.layout})</span>
+          </div>
+          <Button variant="destructive" size="icon" onClick={handleTileDelete} disabled={isPending}><Trash2 className="h-4 w-4" /></Button>
+        </CardHeader>
+        <CardContent className="p-4 pt-0 grid gap-4">
+            <div className="grid md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                    <Label>Layout (CSS Grid)</Label>
+                    <Input value={tile.layout} onChange={e => handleTileChange('layout', e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                    <Label>Duración (ms)</Label>
+                    <Input type="number" value={tile.duration} onChange={e => handleTileChange('duration', parseInt(e.target.value) || 0)} />
+                </div>
+                 <div className="space-y-2">
+                    <Label>Animación</Label>
+                     <Select onValueChange={value => handleTileChange('animation', value)} defaultValue={tile.animation}>
+                         <SelectTrigger><SelectValue /></SelectTrigger>
+                         <SelectContent>
+                             <SelectItem value="animate-fade-in-up">Fade In Up</SelectItem>
+                             <SelectItem value="animate-zoom-in-gentle">Zoom In</SelectItem>
+                             <SelectItem value="animate-crossfade-in">Crossfade</SelectItem>
+                             <SelectItem value="animate-ken-burns-in">Ken Burns</SelectItem>
+                         </SelectContent>
+                     </Select>
+                </div>
+            </div>
+            <div>
+                 <Label className="text-lg font-medium mb-2 block">Imágenes del Mosaico</Label>
+                 <DndContext collisionDetection={closestCenter} onDragEnd={handleImageDragEnd}>
+                    <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {tile.images.map(image => <SortableImageItem key={image.id} image={image} tileId={tile.id} setTiles={setTiles} isPending={isPending} />)}
+                        </div>
+                    </SortableContext>
+                 </DndContext>
+                <Button onClick={handleAddImage} className="mt-4"><Plus className="mr-2 h-4 w-4" />Añadir Imagen</Button>
+            </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileData[] }) {
+  const [tiles, setTiles] = useState<MosaicTileData[]>(initialTiles);
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+
+  const handleTileDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+        setTiles(items => arrayMove(items, items.findIndex(i => i.id === active.id), items.findIndex(i => i.id === over.id)));
+    }
+  };
+
+  const handleAddNewTile = () => {
+    const newTile: MosaicTileData = {
+        id: `new-tile-${Date.now()}`,
+        layout: 'col-span-1 row-span-1', duration: 5000, animation: 'animate-fade-in-up',
+        images: [{ id: `new-img-${Date.now()}`, src: 'https://placehold.co/600x400.png', alt: 'Placeholder', caption: 'Nueva Imagen', hint: 'placeholder' }]
+    };
+    setTiles(prev => [...prev, newTile]);
+  };
+  
+  const handleSaveChanges = () => {
+    startTransition(async () => {
+      const result = await saveMosaicAction(tiles);
+      if (result.success) toast({ title: "¡Éxito!", description: result.message });
+      else toast({ variant: "destructive", title: "Error", description: result.message });
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <DndContext collisionDetection={closestCenter} onDragEnd={handleTileDragEnd}>
+        <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
+          {tiles.map(tile => <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} />)}
+        </SortableContext>
+      </DndContext>
+      <div className="flex justify-between items-center">
+        <Button onClick={handleAddNewTile} disabled={isPending}><Plus className="mr-2 h-4 w-4" />Añadir Mosaico</Button>
+        <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
+          {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+          Guardar Cambios
+        </Button>
+      </div>
+    </div>
+  );
+}

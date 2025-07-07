@@ -1,0 +1,43 @@
+
+[
+  {
+    "layout": "col-span-2 row-span-2",
+    "duration": 5000,
+    "animation": "animate-fade-in-up",
+    "images": [
+      { "src": "/grupo.webp", "alt": "Militantes en un evento", "hint": "political rally", "caption": "Participá en nuestros eventos." },
+      { "src": "/afilia1.webp", "alt": "Candidato dando un discurso", "hint": "political speech", "caption": "Nuevas ideas para el futuro." },
+      { "src": "/afiliando.webp", "alt": "Voluntarios del partido", "hint": "volunteers community", "caption": "Sumate como voluntario." }
+    ]
+  },
+  {
+    "layout": "col-span-1 row-span-1",
+    "duration": 3500,
+    "animation": "animate-zoom-in-gentle",
+    "images": [
+      { "src": "/banner1.jpg", "alt": "Ciudadanos debatiendo", "hint": "community discussion", "caption": "Debate ciudadano." },
+      { "src": "/Ninfa y Julio.webp", "alt": "Mesa de afiliación", "hint": "people joining", "caption": "Afiliate al partido." },
+      { "src": "/Ninfa.webp", "alt": "Plaza pública", "hint": "public square", "caption": "Estamos en tu ciudad." }
+    ]
+  },
+  {
+    "layout": "col-span-1 row-span-1",
+    "duration": 6000,
+    "animation": "animate-crossfade-in",
+    "images": [
+      { "src": "https://placehold.co/600x600.png", "alt": "Paisaje de Misiones", "hint": "Misiones landscape", "caption": "Por una Misiones libre." },
+      { "src": "https://placehold.co/600x600.png", "alt": "Cataratas del Iguazú", "hint": "Iguazu falls", "caption": "Belleza natural." },
+      { "src": "https://placehold.co/600x600.png", "alt": "Cultivo de yerba mate", "hint": "yerba mate", "caption": "Apoyo al productor." }
+    ]
+  },
+  {
+    "layout": "col-span-2 row-span-1",
+    "duration": 4500,
+    "animation": "animate-fade-in-up",
+    "images": [
+      { "src": "https://placehold.co/800x400.png", "alt": "Grupo de jóvenes libertarios", "hint": "young people group", "caption": "La juventud se activa." },
+      { "src": "https://placehold.co/800x400.png", "alt": "Manifestación por la libertad", "hint": "freedom protest", "caption": "Defendemos tus derechos." },
+      { "src": "https://placehold.co/800x400.png", "alt": "Bandera Argentina ondeando", "hint": "Argentina flag", "caption": "Un nuevo rumbo para el país." }
+    ]
+  }
+]

@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, ListChecks } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutGrid, ListChecks } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -42,6 +42,40 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-content">
                 <ListChecks className="mr-2 h-4 w-4" />
                 Ir al Gestor
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Banner</CardTitle>
+            <CardDescription>Editá, reordená y eliminá las diapositivas del banner principal.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Controlá el contenido que se muestra en el carrusel de la página de inicio.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-banner">
+                <GalleryHorizontal className="mr-2 h-4 w-4" />
+                Editar Banner
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Mosaico</CardTitle>
+            <CardDescription>Editá los mosaicos de imágenes y sus animaciones.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Personalizá la galería de imágenes animadas de la página de inicio.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-mosaic">
+                <LayoutGrid className="mr-2 h-4 w-4" />
+                Editar Mosaico
               </Link>
             </Button>
           </CardContent>

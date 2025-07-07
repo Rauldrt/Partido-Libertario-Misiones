@@ -19,7 +19,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-
+import type { BannerSlideData, MosaicTileData } from '@/lib/homepage-service';
 
 const values = [
   {
@@ -43,74 +43,6 @@ const values = [
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
 
-const carouselSlides = [
-    {
-        title: "Nuestra Misión",
-        description: "Promover y defender los principios de una sociedad libre, impulsando políticas que garanticen los derechos individuales, la propiedad privada, el libre mercado y un gobierno limitado.",
-        cta: { text: "Conocer Más", link: "#accordion-info", accordionTarget: "mission" }
-    },
-    {
-        title: "Nuestra Visión",
-        description: "Ser la fuerza política que lidere la transformación hacia una provincia donde la libertad sea el motor del progreso, la innovación y la calidad de vida.",
-        cta: { text: "Ver Detalles", link: "#accordion-info", accordionTarget: "vision" }
-    },
-    {
-        title: "Nuestros Valores",
-        description: "Creemos en la Libertad Individual, la Propiedad Privada, el Libre Mercado y un Gobierno Limitado como pilares para la prosperidad.",
-        cta: { text: "Explorar Principios", link: "#accordion-info", accordionTarget: "values" }
-    },
-    {
-        title: "Últimas Noticias",
-        description: "Mantenete al día con nuestras actividades, comunicados y los próximos eventos en Misiones.",
-        cta: { text: "Ir a Noticias", link: "#latest-news" }
-    }
-];
-
-const mosaicTiles = [
-  {
-    layout: 'col-span-2 row-span-2',
-    duration: 5000,
-    animation: 'animate-fade-in-up',
-    images: [
-      { src: "/grupo.webp", alt: "Militantes en un evento", hint: "political rally", caption: "Participá en nuestros eventos." },
-      { src: "/afilia1.webp", alt: "Candidato dando un discurso", hint: "political speech", caption: "Nuevas ideas para el futuro." },
-      { src: "/afiliando.webp", alt: "Voluntarios del partido", hint: "volunteers community", caption: "Sumate como voluntario." },
-    ]
-  },
-  {
-    layout: 'col-span-1 row-span-1',
-    duration: 3500,
-    animation: 'animate-zoom-in-gentle',
-    images: [
-      { src: "/banner1.jpg", alt: "Ciudadanos debatiendo", hint: "community discussion", caption: "Debate ciudadano." },
-      { src: "/Ninfa y Julio.webp", alt: "Mesa de afiliación", hint: "people joining", caption: "Afiliate al partido." },
-      { src: "/Ninfa.webp", alt: "Plaza pública", hint: "public square", caption: "Estamos en tu ciudad." },
-    ]
-  },
-  {
-    layout: 'col-span-1 row-span-1',
-    duration: 6000,
-    animation: 'animate-crossfade-in',
-    images: [
-      { src: "https://placehold.co/600x600.png", alt: "Paisaje de Misiones", hint: "Misiones landscape", caption: "Por una Misiones libre." },
-      { src: "https://placehold.co/600x600.png", alt: "Cataratas del Iguazú", hint: "Iguazu falls", caption: "Belleza natural." },
-      { src: "https://placehold.co/600x600.png", alt: "Cultivo de yerba mate", hint: "yerba mate", caption: "Apoyo al productor." },
-    ]
-  },
-  {
-    layout: 'col-span-2 row-span-1',
-    duration: 4500,
-    animation: 'animate-fade-in-up',
-    images: [
-      { src: "https://placehold.co/800x400.png", alt: "Grupo de jóvenes libertarios", hint: "young people group", caption: "La juventud se activa." },
-      { src: "https://placehold.co/800x400.png", alt: "Manifestación por la libertad", hint: "freedom protest", caption: "Defendemos tus derechos." },
-      { src: "https://placehold.co/800x400.png", alt: "Bandera Argentina ondeando", hint: "Argentina flag", caption: "Un nuevo rumbo para el país." },
-    ]
-  }
-];
-
-type MosaicTileData = (typeof mosaicTiles)[0];
-
 const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (src: string) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -125,6 +57,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
   }, [tile.images, tile.duration]);
 
   const currentImage = tile.images[currentIndex];
+  if (!currentImage) return null; // Handle case where tile has no images
 
   return (
     <div
@@ -155,7 +88,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 };
 
 
-export default function HomePageClient({ children }: PropsWithChildren) {
+export default function HomePageClient({ children, slides, tiles }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[] }>) {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
 
@@ -188,7 +121,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
             }}
         >
             <CarouselContent className="ml-0">
-                {carouselSlides.map((slide, index) => (
+                {slides.map((slide, index) => (
                     <CarouselItem key={index} className="pl-0">
                         <Banner
                             title={slide.title}
@@ -233,7 +166,7 @@ export default function HomePageClient({ children }: PropsWithChildren) {
 
         <div className="max-w-5xl mx-auto mb-16 px-4">
              <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] gap-4">
-                {mosaicTiles.map((tile, index) => (
+                {tiles.map((tile, index) => (
                     <MosaicTile key={index} tile={tile} onImageClick={setLightboxImage} />
                 ))}
             </div>

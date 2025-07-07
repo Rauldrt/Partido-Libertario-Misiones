@@ -1,5 +1,18 @@
 [
   {
+    "id": "1",
+    "title": "Nueva emisión de Ágora Libertaria",
+    "date": "28 de Junio, 2025",
+    "summary": "Ágora radio, nueva edición del streaming libertario de la tierra colorada",
+    "content": "Hoy debatimos los temas que otros medios callan. Acompañanos, participá en el chat en vivo y sumate a esta comunidad que defiende la libertad, la propiedad privada y el mercado libre",
+    "imageUrl": "https://placehold.co/600x400.png",
+    "imageHint": "political rally opening",
+    "linkUrl": "/news/1",
+    "type": "event",
+    "youtubeVideoId": "YXlz1K6o_ps",
+    "published": true
+  },
+  {
     "title": "Real fuerte impulsa competitividad argentina: Dólar bajo presión",
     "date": "06 61 July, 2025",
     "summary": "El real brasileño se fortaleció frente al dólar, impulsando la competitividad argentina y aliviando la presión sobre los precios. A pesar de una liquidación significativa del campo, la demanda de dólares se mantiene firme, influenciada por factores como la compra de dólares para atesoramiento y el fin de apuestas por bonos en pesos por parte de inversores como JP Morgan. El equipo económico argentino busca acumular reservas sin intervenir directamente en el mercado, mientras monitorea de cerca la evolución del dólar y las elecciones legislativas.",
@@ -13,16 +26,15 @@
     "published": true
   },
   {
-    "id": "1",
-    "title": "Nueva emisión de Ágora Libertaria",
-    "date": "28 de Junio, 2025",
-    "summary": "Ágora radio, nueva edición del streaming libertario de la tierra colorada",
-    "content": "Hoy debatimos los temas que otros medios callan. Acompañanos, participá en el chat en vivo y sumate a esta comunidad que defiende la libertad, la propiedad privada y el mercado libre",
+    "id": "7",
+    "title": "Lanzamiento Campaña de Voluntariado",
+    "date": "18 de Julio, 2024",
+    "summary": "Sumate a nuestro equipo de voluntarios y sé parte activa del cambio que Misiones necesita.",
+    "content": "El Partido Libertario de Misiones lanza oficialmente su campaña de voluntariado. Buscamos ciudadanos comprometidos que quieran dedicar parte de su tiempo y talento a difundir las ideas de la libertad y colaborar en diversas actividades del partido. ¡Tu participación es fundamental! Inscribite en nuestra web.",
     "imageUrl": "https://placehold.co/600x400.png",
-    "imageHint": "political rally opening",
-    "linkUrl": "/news/1",
-    "type": "event",
-    "youtubeVideoId": "YXlz1K6o_ps",
+    "imageHint": "volunteers team group",
+    "linkUrl": "/news/7",
+    "type": "news",
     "published": true
   },
   {
@@ -85,17 +97,5 @@
     "linkUrl": "/news/6",
     "type": "news",
     "published": false
-  },
-  {
-    "id": "7",
-    "title": "Lanzamiento Campaña de Voluntariado",
-    "date": "18 de Julio, 2024",
-    "summary": "Sumate a nuestro equipo de voluntarios y sé parte activa del cambio que Misiones necesita.",
-    "content": "El Partido Libertario de Misiones lanza oficialmente su campaña de voluntariado. Buscamos ciudadanos comprometidos que quieran dedicar parte de su tiempo y talento a difundir las ideas de la libertad y colaborar en diversas actividades del partido. ¡Tu participación es fundamental! Inscribite en nuestra web.",
-    "imageUrl": "https://placehold.co/600x400.png",
-    "imageHint": "volunteers team group",
-    "linkUrl": "/news/7",
-    "type": "news",
-    "published": true
   }
 ]
