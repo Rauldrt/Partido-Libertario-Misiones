@@ -6,6 +6,7 @@ import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import Script from 'next/script';
 
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
@@ -62,14 +63,23 @@ export function Footer() {
             </DialogTitle>
           </DialogHeader>
           {modalNetwork && (
-            <iframe
-              // EJEMPLO: Este es un iframe de ejemplo funcional.
-              // Reemplaza el atributo 'src' con la URL de tu widget o página para probar.
-              // Para usar la URL del enlace social en el que se hizo clic (puede que no funcione), usa: src={modalNetwork.href}
-              src="https://www.openstreetmap.org/export/embed.html?bbox=-56.32171630859375%2C-28.14959418658634%2C-53.602294921875%2C-25.96139139899981&layer=mapnik"
-              title={`Visitanos en ${modalNetwork.label}`}
-              className="w-full h-full flex-grow border-0"
-            />
+            <div className="w-full h-full flex-grow">
+              {/* 
+                Para widgets basados en scripts (como Elfsight):
+                1. El componente <Script> de Next.js carga el script del proveedor del widget de forma optimizada.
+                2. El <div> de abajo sirve como el contenedor donde el script inyectará el widget.
+                3. REEMPLAZÁ el className de este <div> con el que te proporcione tu servicio de widgets.
+              */}
+              <Script 
+                src="https://static.elfsight.com/platform/platform.js" 
+                strategy="lazyOnload" 
+                data-elfsight-app-lazy-init 
+              />
+              <div 
+                className="elfsight-app-c225f74d-3f36-42ac-a5c1-2bb07fed927d h-full w-full" 
+                data-elfsight-app-lazy
+              />
+            </div>
           )}
         </DialogContent>
       </Dialog>
