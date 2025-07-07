@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -167,10 +168,11 @@ export function Header() {
             </DialogTitle>
           </DialogHeader>
           {modalNetwork && (
-            // Puedes modificar o reemplazar este iframe con tu propio código.
-            // La URL (src) se obtiene de la variable 'modalNetwork.href' definida en la parte superior de este archivo.
             <iframe
-              src={modalNetwork.href}
+              // EJEMPLO: Este es un iframe de ejemplo funcional.
+              // Reemplaza el atributo 'src' con la URL de tu widget o página para probar.
+              // Para usar la URL del enlace social en el que se hizo clic (puede que no funcione), usa: src={modalNetwork.href}
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-56.32171630859375%2C-28.14959418658634%2C-53.602294921875%2C-25.96139139899981&layer=mapnik"
               title={`Visitanos en ${modalNetwork.label}`}
               className="w-full h-full flex-grow border-0"
             />
