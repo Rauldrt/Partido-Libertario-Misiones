@@ -20,6 +20,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { BannerSlideData, MosaicTileData } from '@/lib/homepage-service';
+import { SocialWidget } from '@/components/SocialWidget';
 
 const values = [
   {
@@ -283,6 +284,11 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
             Mantenete al tanto de nuestras actividades y comunicados.
           </p>
         </div>
+
+        <div className="max-w-xl mx-auto mb-12">
+            <SocialWidget />
+        </div>
+
         {children}
       </Section>
 

@@ -6,13 +6,12 @@ import { Section } from '@/components/ui/Section';
 import type { NewsCardData } from '@/lib/news-service';
 import { Newspaper, CalendarDays, Megaphone, Radio, Facebook, Twitter, Instagram, Youtube, Rss } from 'lucide-react';
 import Link from 'next/link';
-
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Banner } from '@/components/Banner';
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { SocialWidget } from '@/components/SocialWidget';
 
 export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[] }) {
   const carouselNewsItems = newsItems.slice(0, 4);
@@ -103,10 +102,10 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
                 <div>
                      <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center text-foreground">
                         <Rss className="h-8 w-8 text-primary mr-3" />
-                        Seguinos en Redes
+                        Conectate con Nosotros
                     </h2>
                     <p className="font-body text-lg text-muted-foreground mb-6">
-                        No te pierdas ninguna de nuestras actualizaciones y participá de la conversación.
+                        No te pierdas ninguna de nuestras actualizaciones y participá de la conversación en nuestras redes sociales.
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white"><Link href="#"><Facebook className="mr-2"/>Facebook</Link></Button>
@@ -115,27 +114,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
                         <Button asChild className="bg-red-600 hover:bg-red-700 text-white"><Link href="#"><Youtube className="mr-2"/>YouTube</Link></Button>
                     </div>
                 </div>
-                <Card className="shadow-lg overflow-hidden">
-                    <CardHeader>
-                        <CardTitle>Widget de Redes Sociales</CardTitle>
-                        <CardDescription>
-                            Aquí puedes incrustar tu widget de redes sociales (ej. timeline de X/Twitter).
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                        <div className="border-2 border-dashed border-muted-foreground/50 rounded-lg p-6 text-center bg-background/50">
-                            <p className="font-body text-sm text-muted-foreground">
-                                <b>Paso 1:</b> Generá el código para incrustar desde tu proveedor de widgets (ej. <Link href="https://publish.twitter.com/" target="_blank" className="text-primary underline">publish.twitter.com</Link>).
-                            </p>
-                            <p className="font-body text-sm text-muted-foreground mt-2">
-                                <b>Paso 2:</b> Copiá el código HTML que te proporcionen (usualmente empieza con `&lt;iframe&gt;` o `&lt;script&gt;`).
-                            </p>
-                            <p className="font-body text-sm text-muted-foreground mt-2">
-                                <b>Paso 3:</b> Reemplazá este recuadro con el código que copiaste.
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                <SocialWidget />
             </div>
         </Section>
 
