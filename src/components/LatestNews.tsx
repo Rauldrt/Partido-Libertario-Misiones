@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 export async function LatestNews() {
   const allNews = await getNewsItems();
-  const latestNews = allNews.slice(0, 3);
+  const latestNews = allNews.filter(item => item.published).slice(0, 3);
 
   return (
     <>

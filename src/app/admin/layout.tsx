@@ -12,7 +12,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { FileText, LayoutDashboard } from 'lucide-react';
+import { FilePlus, LayoutDashboard, ListChecks } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
@@ -39,8 +39,16 @@ export default function AdminLayout({ children }: PropsWithChildren) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/admin/news-generator">
-                    <FileText />
-                    Generador de Contenido
+                    <FilePlus />
+                    Crear Contenido
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/manage-content">
+                    <ListChecks />
+                    Gestionar Contenido
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

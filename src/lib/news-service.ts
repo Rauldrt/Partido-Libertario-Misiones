@@ -15,6 +15,7 @@ export interface NewsCardData {
   linkUrl: string;
   type: 'news' | 'event';
   youtubeVideoId?: string;
+  published: boolean;
 }
 
 const newsFilePath = path.join(process.cwd(), 'data', 'news.json');
@@ -28,8 +29,12 @@ const newsFilePath = path.join(process.cwd(), 'data', 'news.json');
 export async function getNewsItems(): Promise<NewsCardData[]> {
   try {
     const data = await fs.readFile(newsFilePath, 'utf-8');
-    const newsItems = JSON.parse(data);
-    return newsItems;
+    const newsItems: NewsCardData[] = JSON.parse(data);
+    // Ensure backward compatibility for items without the 'published' flag
+    return newsItems.map(item => ({
+      ...item,
+      published: item.published !== false, // Defaults to true if undefined
+    }));
   } catch (error: any) {
     if (error.code === 'ENOENT') {
       return [];
@@ -39,7 +44,7 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
   }
 }
 
-export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): Promise<NewsCardData> {
+export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'>): Promise<NewsCardData> {
   const allItems = await getNewsItems();
   
   const newItemId = Date.now().toString();
@@ -47,7 +52,8 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): P
   const newItem: NewsCardData = {
     ...item,
     id: newItemId,
-    linkUrl: `/news/${newItemId}`
+    linkUrl: `/news/${newItemId}`,
+    published: true,
   };
 
   const updatedItems = [newItem, ...allItems];
@@ -58,5 +64,44 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): P
   } catch (error) {
     console.error('Failed to write news data:', error);
     throw new Error('Could not save the new item.');
+  }
+}
+
+export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
+  const allItems = await getNewsItems();
+  const itemIndex = allItems.findIndex(i => i.id === id);
+
+  if (itemIndex === -1) {
+    throw new Error(`Item with id ${id} not found.`);
+  }
+
+  const updatedItem = { ...allItems[itemIndex], ...updates };
+  allItems[itemIndex] = updatedItem;
+
+  try {
+    await fs.writeFile(newsFilePath, JSON.stringify(allItems, null, 2), 'utf-8');
+    return updatedItem;
+  } catch (error) {
+    console.error('Failed to write news data:', error);
+    throw new Error('Could not update the item.');
+  }
+}
+
+export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
+  let allItems = await getNewsItems();
+  const initialLength = allItems.length;
+  allItems = allItems.filter(i => i.id !== id);
+  
+  if(allItems.length === initialLength) {
+    console.warn(`Item with id ${id} not found for deletion.`);
+    return { success: false };
+  }
+
+  try {
+    await fs.writeFile(newsFilePath, JSON.stringify(allItems, null, 2), 'utf-8');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to write news data:', error);
+    throw new Error('Could not delete the item.');
   }
 }

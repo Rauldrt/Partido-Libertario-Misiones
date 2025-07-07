@@ -1,3 +1,4 @@
+
 [
   {
     "title": "Real fuerte impulsa competitividad argentina: Dólar bajo presión",
@@ -9,7 +10,8 @@
     "type": "news",
     "youtubeVideoId": "",
     "id": "1751839131354",
-    "linkUrl": "/news/1751839131354"
+    "linkUrl": "/news/1751839131354",
+    "published": true
   },
   {
     "id": "1",
@@ -21,7 +23,8 @@
     "imageHint": "political rally opening",
     "linkUrl": "/news/1",
     "type": "event",
-    "youtubeVideoId": "YXlz1K6o_ps"
+    "youtubeVideoId": "YXlz1K6o_ps",
+    "published": true
   },
   {
     "id": "2",
@@ -32,7 +35,8 @@
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "economy chart growth",
     "linkUrl": "/news/2",
-    "type": "news"
+    "type": "news",
+    "published": true
   },
   {
     "id": "3",
@@ -43,7 +47,8 @@
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "education debate discussion",
     "linkUrl": "/news/3",
-    "type": "event"
+    "type": "event",
+    "published": true
   },
   {
     "id": "4",
@@ -54,7 +59,8 @@
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "people joining community",
     "linkUrl": "/news/4",
-    "type": "news"
+    "type": "news",
+    "published": true
   },
   {
     "id": "5",
@@ -66,7 +72,8 @@
     "imageHint": "conference speaker national",
     "linkUrl": "/news/5",
     "type": "event",
-    "youtubeVideoId": "k1nq1h29X58"
+    "youtubeVideoId": "k1nq1h29X58",
+    "published": true
   },
   {
     "id": "6",
@@ -77,7 +84,8 @@
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "financial report analysis",
     "linkUrl": "/news/6",
-    "type": "news"
+    "type": "news",
+    "published": true
   },
   {
     "id": "7",
@@ -88,6 +96,7 @@
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "volunteers team group",
     "linkUrl": "/news/7",
-    "type": "news"
+    "type": "news",
+    "published": true
   }
 ]

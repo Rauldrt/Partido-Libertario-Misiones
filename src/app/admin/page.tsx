@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FileText } from 'lucide-react';
+import { FilePlus, ListChecks } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -14,7 +14,7 @@ export default function AdminDashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>Generador de Contenido</CardTitle>
+            <CardTitle>Crear Contenido</CardTitle>
             <CardDescription>Creá y publicá noticias o eventos en el sitio.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -23,8 +23,25 @@ export default function AdminDashboardPage() {
             </p>
             <Button asChild>
               <Link href="/admin/news-generator">
-                <FileText className="mr-2 h-4 w-4" />
-                Ir al Generador
+                <FilePlus className="mr-2 h-4 w-4" />
+                Ir al Creador
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+         <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Contenido</CardTitle>
+            <CardDescription>Editá, ocultá o eliminá noticias y eventos.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Administrá la visibilidad y el ciclo de vida de tus publicaciones.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-content">
+                <ListChecks className="mr-2 h-4 w-4" />
+                Ir al Gestor
               </Link>
             </Button>
           </CardContent>

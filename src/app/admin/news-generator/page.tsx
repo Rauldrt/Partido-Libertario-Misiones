@@ -11,27 +11,25 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dna, FileText, Loader2, Save } from 'lucide-react';
+import { Dna, FilePlus, Loader2, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateNewsFromUrl } from '@/ai/flows/generate-news-from-url-flow';
 import { format } from 'date-fns';
 import { saveNewsItemAction } from './actions';
 
-const EMPTY_NEWS_ITEM: Partial<NewsCardData> = {
-  id: 'new-id',
+const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'> = {
   title: 'Título del Contenido',
   date: format(new Date(), 'dd de MMMM, yyyy'),
   summary: 'Este es un resumen breve. Atrae al lector para que haga clic y lea más.',
   imageUrl: 'https://placehold.co/600x400.png',
   imageHint: 'keyword1 keyword2',
-  linkUrl: '/news/new-id',
   type: 'news',
   content: 'Este es el contenido completo. Puede ser más largo y detallado que el resumen.',
   youtubeVideoId: '',
 };
 
 export default function NewsGeneratorPage() {
-  const [newsData, setNewsData] = useState<Partial<NewsCardData>>(EMPTY_NEWS_ITEM);
+  const [newsData, setNewsData] = useState<Omit<NewsCardData, 'id' | 'linkUrl' | 'published'>>(EMPTY_NEWS_ITEM);
   const [aiUrl, setAiUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -43,7 +41,7 @@ export default function NewsGeneratorPage() {
   };
 
   const handleSelectChange = (name: keyof NewsCardData) => (value: string) => {
-    setNewsData(prev => ({ ...prev, [name]: value }));
+    setNewsData(prev => ({ ...prev, [name]: value as any }));
   };
 
   const handleSave = async () => {
@@ -54,6 +52,7 @@ export default function NewsGeneratorPage() {
         title: '¡Contenido Guardado!',
         description: result.message,
       });
+      // Optionally reset form or navigate away
     } else {
       toast({
         variant: 'destructive',
@@ -103,6 +102,13 @@ export default function NewsGeneratorPage() {
     }
   };
 
+  const previewData: NewsCardData = {
+    ...newsData,
+    id: 'preview-id',
+    linkUrl: '/#',
+    published: true,
+  }
+
   return (
     <div className="grid lg:grid-cols-2 gap-12 items-start max-w-7xl mx-auto">
       <Card className="shadow-lg">
@@ -113,7 +119,7 @@ export default function NewsGeneratorPage() {
         <CardContent>
           <Tabs defaultValue="manual">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="manual"><FileText className="mr-2 h-4 w-4" />Manual</TabsTrigger>
+              <TabsTrigger value="manual"><FilePlus className="mr-2 h-4 w-4" />Manual</TabsTrigger>
               <TabsTrigger value="ai"><Dna className="mr-2 h-4 w-4" />Potenciado por IA</TabsTrigger>
             </TabsList>
             <TabsContent value="manual" className="space-y-4 pt-4">
@@ -187,19 +193,19 @@ export default function NewsGeneratorPage() {
               <CardDescription>Así se verá el contenido en la página.</CardDescription>
            </CardHeader>
             <CardContent>
-               <NewsCard {...newsData as NewsCardData} />
+               <NewsCard {...previewData} />
             </CardContent>
          </Card>
          <Button className="w-full" onClick={handleSave} disabled={isSaving}>
            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-           Guardar Contenido
+           Guardar y Publicar
          </Button>
          <div className="text-sm text-muted-foreground p-4 border rounded-md bg-card">
               <p className="font-bold text-card-foreground">¿Cómo agregar el contenido?</p>
               <p>1. Ajustá los datos usando el editor o la IA.</p>
-              <p>2. Hacé clic en el botón "Guardar Contenido".</p>
-              <p>3. El contenido se agregará automáticamente al sitio.</p>
-              <p>4. La página de inicio y de noticias se actualizarán.</p>
+              <p>2. Hacé clic en "Guardar y Publicar".</p>
+              <p>3. El contenido se agregará y será visible en el sitio.</p>
+              <p>4. Podés gestionar su visibilidad desde "Gestionar Contenido".</p>
          </div>
       </div>
     </div>
