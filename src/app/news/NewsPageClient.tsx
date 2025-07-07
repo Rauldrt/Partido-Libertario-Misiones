@@ -3,26 +3,28 @@
 import { NewsCard } from '@/components/NewsCard';
 import { Section } from '@/components/ui/Section';
 import type { NewsCardData } from '@/lib/news-service';
-import { Newspaper, CalendarDays, Megaphone, Radio, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Newspaper, CalendarDays, Megaphone, Radio, Facebook, Twitter, Instagram, Youtube, Rss } from 'lucide-react';
 import Link from 'next/link';
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Banner } from '@/components/Banner';
 import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[] }) {
-  const carouselNewsItems = newsItems.slice(0, 4); 
+  const carouselNewsItems = newsItems.slice(0, 4);
+  
+  // Find the latest post that is an event and has a YouTube video
+  const latestVideoPost = newsItems.find(item => item.type === 'event' && item.youtubeVideoId);
 
   return (
     <>
       <Section id="news-and-events-header" className="overflow-hidden relative">
         {/* Animated Background and Icons Container */}
         <div className="absolute inset-0 z-0">
-          {/* Gradient Background */}
           <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400 bg-300% animate-animated-gradient" />
-          
-          {/* Superimposed Icons */}
           <Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white animate-subtle-pulse" style={{ animationDuration: '7s' }} />
           <CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white animate-subtle-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
           <Megaphone className="absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-white animate-subtle-pulse" style={{ animationDuration: '8s', animationDelay: '0.5s' }} />
@@ -40,20 +42,6 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
           <p className="font-body text-xl text-primary-foreground/90 mt-2 max-w-3xl mx-auto">
             Mantenete al tanto de las últimas novedades y próximos encuentros del Partido Libertario de Misiones.
           </p>
-          <div className="mt-8 flex justify-center gap-6">
-            <Link href="#" aria-label="Facebook" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
-              <Facebook className="h-7 w-7" />
-            </Link>
-            <Link href="#" aria-label="Twitter" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
-              <Twitter className="h-7 w-7" />
-            </Link>
-            <Link href="#" aria-label="Instagram" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
-              <Instagram className="h-7 w-7" />
-            </Link>
-            <Link href="#" aria-label="YouTube" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
-              <Youtube className="h-7 w-7" />
-            </Link>
-          </div>
         </div>
       </Section>
 
@@ -111,8 +99,47 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
             </div>
           </div>
         </Section>
+        
+        <Section id="social-media" className="py-12 bg-muted/30">
+            <div className="grid lg:grid-cols-2 gap-8 items-center">
+                <div>
+                     <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center text-foreground">
+                        <Rss className="h-8 w-8 text-primary mr-3" />
+                        Seguinos en Redes
+                    </h2>
+                    <p className="font-body text-lg text-muted-foreground mb-6">
+                        No te pierdas ninguna de nuestras actualizaciones y participá de la conversación.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                        <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white"><Link href="#"><Facebook className="mr-2"/>Facebook</Link></Button>
+                        <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white"><Link href="#"><Twitter className="mr-2"/>Twitter / X</Link></Button>
+                        <Button asChild className="bg-rose-500 hover:bg-rose-600 text-white"><Link href="#"><Instagram className="mr-2"/>Instagram</Link></Button>
+                        <Button asChild className="bg-red-600 hover:bg-red-700 text-white"><Link href="#"><Youtube className="mr-2"/>YouTube</Link></Button>
+                    </div>
+                </div>
+                {latestVideoPost && (
+                    <Card className="shadow-lg overflow-hidden">
+                        <CardHeader>
+                            <CardTitle className="truncate">{latestVideoPost.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                           <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                                <iframe
+                                className="absolute top-0 left-0 w-full h-full"
+                                src={`https://www.youtube.com/embed/${latestVideoPost.youtubeVideoId}`}
+                                title={latestVideoPost.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                ></iframe>
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
+            </div>
+        </Section>
 
-        <Section id="news-list-items" className="!py-0">
+        <Section id="news-list-items" className="!pt-12 !pb-0">
           <div>
             <h2 className="font-headline text-3xl font-semibold mb-6 flex items-center text-foreground">
               <Newspaper className="h-8 w-8 text-primary mr-3" />
