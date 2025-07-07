@@ -24,10 +24,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-br from-purple-950 via-purple-950 to-fuchsia-500">
+      <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-b from-purple-950 via-purple-900 to-fuchsia-500">
         <ThemeManager />
         <Header />
-        <div className="flex-grow flex flex-col">
+        <div className="flex-grow flex flex-col overflow-x-hidden">
           <main className="flex-grow">
             {children}
           </main>
