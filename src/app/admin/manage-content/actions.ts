@@ -1,7 +1,7 @@
 
 'use server';
 
-import { deleteNewsItem, updateNewsItem } from '@/lib/news-service';
+import { deleteNewsItem, reorderNewsItems, updateNewsItem } from '@/lib/news-service';
 import { revalidatePath } from 'next/cache';
 
 export async function togglePublishStatusAction(id: string, currentState: boolean) {
@@ -26,6 +26,18 @@ export async function deleteNewsItemAction(id: string) {
     revalidatePath('/news');
     revalidatePath('/admin/manage-content');
     return { success: true, message: 'El artículo ha sido eliminado.' };
+  } catch (error) {
+    return { success: false, message: (error as Error).message };
+  }
+}
+
+export async function reorderNewsItemsAction(orderedIds: string[]) {
+  try {
+    await reorderNewsItems(orderedIds);
+    revalidatePath('/');
+    revalidatePath('/news');
+    revalidatePath('/admin/manage-content');
+    return { success: true, message: 'El contenido ha sido reordenado.' };
   } catch (error) {
     return { success: false, message: (error as Error).message };
   }

@@ -1,4 +1,3 @@
-
 [
   {
     "title": "Real fuerte impulsa competitividad argentina: Dólar bajo presión",
@@ -36,7 +35,7 @@
     "imageHint": "economy chart growth",
     "linkUrl": "/news/2",
     "type": "news",
-    "published": true
+    "published": false
   },
   {
     "id": "3",
@@ -48,7 +47,7 @@
     "imageHint": "education debate discussion",
     "linkUrl": "/news/3",
     "type": "event",
-    "published": true
+    "published": false
   },
   {
     "id": "4",
@@ -60,7 +59,7 @@
     "imageHint": "people joining community",
     "linkUrl": "/news/4",
     "type": "news",
-    "published": true
+    "published": false
   },
   {
     "id": "5",
@@ -73,7 +72,7 @@
     "linkUrl": "/news/5",
     "type": "event",
     "youtubeVideoId": "k1nq1h29X58",
-    "published": true
+    "published": false
   },
   {
     "id": "6",
@@ -85,7 +84,7 @@
     "imageHint": "financial report analysis",
     "linkUrl": "/news/6",
     "type": "news",
-    "published": true
+    "published": false
   },
   {
     "id": "7",

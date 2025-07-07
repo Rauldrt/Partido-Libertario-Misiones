@@ -37,6 +37,8 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
     }));
   } catch (error: any) {
     if (error.code === 'ENOENT') {
+      // If the file doesn't exist, create it with an empty array
+      await fs.writeFile(newsFilePath, JSON.stringify([], null, 2), 'utf-8');
       return [];
     }
     console.error('Failed to read news data:', error);
@@ -103,5 +105,36 @@ export async function deleteNewsItem(id: string): Promise<{ success: boolean }> 
   } catch (error) {
     console.error('Failed to write news data:', error);
     throw new Error('Could not delete the item.');
+  }
+}
+
+export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
+  const allItems = await getNewsItems();
+  const itemsById = new Map(allItems.map(item => [item.id, item]));
+  
+  const reorderedItems: NewsCardData[] = [];
+  const foundIds = new Set<string>();
+
+  // Create the new ordered list
+  for (const id of orderedIds) {
+    const item = itemsById.get(id);
+    if (item) {
+      reorderedItems.push(item);
+      foundIds.add(id);
+    }
+  }
+
+  // Add any items that were not in the orderedIds list to the end of the list to prevent data loss.
+  for (const item of allItems) {
+    if (!foundIds.has(item.id)) {
+      reorderedItems.push(item);
+    }
+  }
+  
+  try {
+    await fs.writeFile(newsFilePath, JSON.stringify(reorderedItems, null, 2), 'utf-8');
+  } catch (error) {
+    console.error('Failed to write reordered news data:', error);
+    throw new Error('Could not save the reordered items.');
   }
 }

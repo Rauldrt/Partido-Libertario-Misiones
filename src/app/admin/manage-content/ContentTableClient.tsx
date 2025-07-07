@@ -25,9 +25,78 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { deleteNewsItemAction, togglePublishStatusAction } from './actions';
-import { Loader2, Trash2 } from 'lucide-react';
+import { deleteNewsItemAction, reorderNewsItemsAction, togglePublishStatusAction } from './actions';
+import { GripVertical, Loader2, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+const SortableRow = ({
+  item,
+  handlePublishToggle,
+  handleDeleteClick,
+  isPending
+}: {
+  item: NewsCardData;
+  handlePublishToggle: (id: string, currentStatus: boolean) => void;
+  handleDeleteClick: (item: NewsCardData) => void;
+  isPending: boolean;
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
+
+  const style: React.CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1 : 'auto',
+    position: 'relative',
+    background: isDragging ? 'hsl(var(--card))' : 'transparent',
+  };
+  
+  return (
+    <TableRow ref={setNodeRef} style={style} {...attributes} data-state={isDragging && "selected"}>
+        <TableCell className="w-[32px] cursor-grab touch-none p-2" {...listeners}>
+            <GripVertical className="h-5 w-5 text-muted-foreground" />
+        </TableCell>
+        <TableCell>
+            <Image src={item.imageUrl} alt={item.title} width={64} height={36} className="rounded-sm object-cover aspect-video" />
+        </TableCell>
+        <TableCell className="font-medium">{item.title}</TableCell>
+        <TableCell className="hidden md:table-cell capitalize">{item.type}</TableCell>
+        <TableCell className="hidden sm:table-cell">{item.date}</TableCell>
+        <TableCell className="text-center">
+            <Badge variant={item.published ? 'default' : 'secondary'}>
+            {item.published ? 'Publicado' : 'Oculto'}
+            </Badge>
+        </TableCell>
+        <TableCell className="text-right space-x-2">
+            <Switch
+            checked={item.published}
+            onCheckedChange={() => handlePublishToggle(item.id, item.published)}
+            aria-label="Publicar"
+            disabled={isPending}
+            />
+            <Button
+            variant="destructive"
+            size="icon"
+            onClick={() => handleDeleteClick(item)}
+            disabled={isPending}
+            >
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Eliminar</span>
+            </Button>
+        </TableCell>
+    </TableRow>
+  )
+}
 
 export function ContentTableClient({ initialItems }: { initialItems: NewsCardData[] }) {
   const [items, setItems] = useState<NewsCardData[]>(initialItems);
@@ -38,6 +107,7 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
   const handlePublishToggle = (id: string, currentStatus: boolean) => {
     startTransition(async () => {
       // Optimistic update
+      const originalItems = items;
       setItems(currentItems =>
         currentItems.map(item =>
           item.id === id ? { ...item, published: !currentStatus } : item
@@ -52,11 +122,7 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
           description: result.message,
         });
         // Revert optimistic update on failure
-        setItems(currentItems =>
-            currentItems.map(item =>
-              item.id === id ? { ...item, published: currentStatus } : item
-            )
-        );
+        setItems(originalItems);
       }
     });
   };
@@ -67,9 +133,9 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
 
   const handleConfirmDelete = () => {
     if (!itemToDelete) return;
-    const originalItems = items;
 
     startTransition(async () => {
+      const originalItems = items;
       // Optimistic update
       setItems(currentItems => currentItems.filter(item => item.id !== itemToDelete.id));
 
@@ -92,56 +158,64 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
       }
     });
   };
+  
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+        startTransition(async () => {
+            const oldIndex = items.findIndex((item) => item.id === active.id);
+            const newIndex = items.findIndex((item) => item.id === over.id);
+            const reorderedItems = arrayMove(items, oldIndex, newIndex);
+            
+            const originalItems = items;
+            setItems(reorderedItems); // Optimistic update
+            
+            const orderedIds = reorderedItems.map((item) => item.id);
+            const result = await reorderNewsItemsAction(orderedIds);
+            
+            if (!result.success) {
+                toast({
+                    variant: 'destructive',
+                    title: 'Error al Reordenar',
+                    description: result.message,
+                });
+                setItems(originalItems); // Revert on failure
+            }
+        });
+    }
+  };
 
   return (
     <>
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[80px]">Imagen</TableHead>
-              <TableHead>Título</TableHead>
-              <TableHead className="hidden md:table-cell">Tipo</TableHead>
-              <TableHead className="hidden sm:table-cell">Fecha</TableHead>
-              <TableHead className="text-center">Estado</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <Image src={item.imageUrl} alt={item.title} width={64} height={36} className="rounded-sm object-cover aspect-video" />
-                </TableCell>
-                <TableCell className="font-medium">{item.title}</TableCell>
-                <TableCell className="hidden md:table-cell capitalize">{item.type}</TableCell>
-                <TableCell className="hidden sm:table-cell">{item.date}</TableCell>
-                <TableCell className="text-center">
-                  <Badge variant={item.published ? 'default' : 'secondary'}>
-                    {item.published ? 'Publicado' : 'Oculto'}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Switch
-                    checked={item.published}
-                    onCheckedChange={() => handlePublishToggle(item.id, item.published)}
-                    aria-label="Publicar"
-                    disabled={isPending}
-                  />
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDeleteClick(item)}
-                    disabled={isPending}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Eliminar</span>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <Table>
+            <TableHeader>
+                <TableRow>
+                <TableHead className="w-[32px] p-0" />
+                <TableHead className="w-[80px]">Imagen</TableHead>
+                <TableHead>Título</TableHead>
+                <TableHead className="hidden md:table-cell">Tipo</TableHead>
+                <TableHead className="hidden sm:table-cell">Fecha</TableHead>
+                <TableHead className="text-center">Estado</TableHead>
+                <TableHead className="text-right">Acciones</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
+                    {items.map((item) => (
+                        <SortableRow
+                            key={item.id}
+                            item={item}
+                            handlePublishToggle={handlePublishToggle}
+                            handleDeleteClick={handleDeleteClick}
+                            isPending={isPending}
+                        />
+                    ))}
+                </SortableContext>
+            </TableBody>
+            </Table>
+        </DndContext>
       </div>
 
       <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
