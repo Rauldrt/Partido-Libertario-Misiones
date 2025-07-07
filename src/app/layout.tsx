@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -23,10 +24,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-br from-purple-800 to-fuchsia-500">
+      <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-br from-purple-800 via-purple-800 to-fuchsia-500">
         <ThemeManager />
         <Header />
-        <div className="flex-grow flex flex-col perspective-container">
+        <div className="flex-grow flex flex-col">
           <main className="flex-grow">
             {children}
           </main>
