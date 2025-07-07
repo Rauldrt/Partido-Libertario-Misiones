@@ -19,7 +19,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { BannerSlideData, MosaicTileData } from '@/lib/homepage-service';
+import type { BannerSlideData, MosaicImageData, MosaicTileData } from '@/lib/homepage-service';
 import { SocialWidget } from '@/components/SocialWidget';
 
 const values = [
@@ -44,7 +44,7 @@ const values = [
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
 
-const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (src: string) => void }) => {
+const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (images: MosaicImageData[], startIndex: number) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
         tile.layout,
         tile.animation
       )}
-      onClick={() => onImageClick(currentImage.src)}
+      onClick={() => onImageClick(tile.images, currentIndex)}
     >
       <Image
         src={currentImage.src}
@@ -90,7 +90,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 
 
 export default function HomePageClient({ children, slides, tiles }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[] }>) {
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
 
   const handleBannerCtaClick = (accordionTarget?: string) => {
@@ -168,7 +168,7 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
         <div className="max-w-5xl mx-auto mb-16 px-4">
              <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] gap-4">
                 {tiles.map((tile, index) => (
-                    <MosaicTile key={index} tile={tile} onImageClick={setLightboxImage} />
+                    <MosaicTile key={index} tile={tile} onImageClick={(images, startIndex) => setLightboxData({ images, startIndex })} />
                 ))}
             </div>
         </div>
@@ -292,15 +292,40 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
         {children}
       </Section>
 
-      <Dialog open={!!lightboxImage} onOpenChange={(isOpen) => !isOpen && setLightboxImage(null)}>
-        <DialogContent className="max-w-5xl w-full p-0 bg-transparent border-0 shadow-none">
-          <Image
-            src={lightboxImage || "https://placehold.co/1200x800.png"}
-            alt="Vista a pantalla completa"
-            width={1200}
-            height={800}
-            className="rounded-lg object-contain w-full h-auto"
-          />
+      <Dialog open={!!lightboxData} onOpenChange={(isOpen) => !isOpen && setLightboxData(null)}>
+        <DialogContent className="max-w-5xl w-full p-2 bg-transparent border-0 shadow-none">
+          {lightboxData && (
+            <Carousel
+                opts={{
+                    loop: lightboxData.images.length > 1,
+                    startIndex: lightboxData.startIndex,
+                }}
+                className="w-full"
+            >
+                <CarouselContent>
+                    {lightboxData.images.map((image, index) => (
+                        <CarouselItem key={index}>
+                           <div className="flex items-center justify-center h-full">
+                                <Image
+                                    src={image.src}
+                                    alt={image.alt}
+                                    width={1200}
+                                    height={800}
+                                    className="rounded-lg object-contain w-full h-auto max-h-[90vh]"
+                                    data-ai-hint={image.hint}
+                                />
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                 {lightboxData.images.length > 1 && (
+                    <>
+                        <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+                        <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+                    </>
+                 )}
+            </Carousel>
+          )}
         </DialogContent>
       </Dialog>
     </>
