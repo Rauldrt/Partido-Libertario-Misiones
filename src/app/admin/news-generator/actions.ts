@@ -33,7 +33,7 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
         revalidatePath('/');
         revalidatePath('/news');
         
-        return { success: true, message: '¡Noticia guardada con éxito!' };
+        return { success: true, message: '¡Contenido guardado con éxito!' };
     } catch (error) {
         return { success: false, message: (error as Error).message };
     }
