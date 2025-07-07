@@ -1,10 +1,9 @@
-
 "use client";
 
 import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
 const socialLinks = [
@@ -54,26 +53,20 @@ export function Footer() {
       </footer>
       
       <Dialog open={!!modalNetwork} onOpenChange={(isOpen) => !isOpen && setModalNetwork(null)}>
-        <DialogContent className="sm:max-w-md bg-card">
-          <DialogHeader>
+        <DialogContent className="max-w-3xl w-full h-[80vh] p-2 flex flex-col bg-card">
+          <DialogHeader className="p-4 border-b flex-row items-center justify-between">
             <DialogTitle className="flex items-center gap-3 font-headline">
               <span className="text-primary">{modalNetwork?.icon}</span>
-              Visitanos en {modalNetwork?.label}
+              {modalNetwork?.label}
             </DialogTitle>
-            <DialogDescription className="font-body">
-              Serás redirigido a nuestra página de {modalNetwork?.label} en una nueva pestaña.
-            </DialogDescription>
           </DialogHeader>
-          <div className="flex justify-end gap-2 mt-4">
-             <Button variant="outline" onClick={() => setModalNetwork(null)}>
-                Cancelar
-             </Button>
-             <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <a href={modalNetwork?.href} target="_blank" rel="noopener noreferrer" onClick={() => setModalNetwork(null)}>
-                    Continuar a {modalNetwork?.label}
-                </a>
-              </Button>
-          </div>
+          {modalNetwork && (
+            <iframe
+              src={modalNetwork.href}
+              title={`Visitanos en ${modalNetwork.label}`}
+              className="w-full h-full flex-grow border-0"
+            />
+          )}
         </DialogContent>
       </Dialog>
     </>
