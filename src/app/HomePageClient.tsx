@@ -159,7 +159,7 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
         </div>
       </Section>
       
-      <Section id="info" className="py-16 md:py-24">
+      <Section id="info" className="py-16 md:py-24 bg-background">
         <div className="text-center mb-12">
             <h2 className="font-headline text-4xl font-bold">El Camino de la Libertad</h2>
             <p className="font-body text-lg text-muted-foreground mt-2">Nuestros principios y cómo podés participar.</p>
@@ -277,7 +277,7 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
         </div>
       </Section>
       
-      <Section id="latest-news" className="py-16 md:py-24">
+      <Section id="latest-news" className="py-16 md:py-24 bg-background">
         <div className="text-center mb-12">
           <h2 className="font-headline text-4xl font-bold">Últimas Noticias</h2>
           <p className="font-body text-lg text-muted-foreground mt-2">

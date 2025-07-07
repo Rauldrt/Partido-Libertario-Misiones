@@ -52,7 +52,7 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      <Section id="about-details" className="py-8 md:py-12">
+      <Section id="about-details" className="py-8 md:py-12 bg-background">
         <div className="max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="w-full space-y-4">
             <AccordionItem value="mission" className="border-b-0">
@@ -158,7 +158,7 @@ export default function AboutPage() {
         </div>
       </Section>
       
-      <Section id="image-divider" className="py-8 md:py-12">
+      <Section id="image-divider" className="py-8 md:py-12 bg-background">
         <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-xl max-w-5xl mx-auto">
           <Image src="/grupo.webp" alt="Misiones Landscape" layout="fill" objectFit="cover" data-ai-hint="Misiones landscape" />
           <div className="absolute inset-0 bg-primary/30 flex items-center justify-center">
