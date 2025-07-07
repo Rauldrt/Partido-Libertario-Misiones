@@ -1,3 +1,4 @@
+
 "use client";
 
 import { NewsCard } from '@/components/NewsCard';
@@ -10,15 +11,12 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Autoplay from "embla-carousel-autoplay";
 import { Banner } from '@/components/Banner';
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[] }) {
   const carouselNewsItems = newsItems.slice(0, 4);
   
-  // Find the latest post that is an event and has a YouTube video
-  const latestVideoPost = newsItems.find(item => item.type === 'event' && item.youtubeVideoId);
-
   return (
     <>
       <Section id="news-and-events-header" className="overflow-hidden relative">
@@ -117,25 +115,27 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
                         <Button asChild className="bg-red-600 hover:bg-red-700 text-white"><Link href="#"><Youtube className="mr-2"/>YouTube</Link></Button>
                     </div>
                 </div>
-                {latestVideoPost && (
-                    <Card className="shadow-lg overflow-hidden">
-                        <CardHeader>
-                            <CardTitle className="truncate">{latestVideoPost.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-0">
-                           <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-                                <iframe
-                                className="absolute top-0 left-0 w-full h-full"
-                                src={`https://www.youtube.com/embed/${latestVideoPost.youtubeVideoId}`}
-                                title={latestVideoPost.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowFullScreen
-                                ></iframe>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
+                <Card className="shadow-lg overflow-hidden">
+                    <CardHeader>
+                        <CardTitle>Widget de Redes Sociales</CardTitle>
+                        <CardDescription>
+                            Aquí puedes incrustar tu widget de redes sociales (ej. timeline de X/Twitter).
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4">
+                        <div className="border-2 border-dashed border-muted-foreground/50 rounded-lg p-6 text-center bg-background/50">
+                            <p className="font-body text-sm text-muted-foreground">
+                                <b>Paso 1:</b> Generá el código para incrustar desde tu proveedor de widgets (ej. <Link href="https://publish.twitter.com/" target="_blank" className="text-primary underline">publish.twitter.com</Link>).
+                            </p>
+                            <p className="font-body text-sm text-muted-foreground mt-2">
+                                <b>Paso 2:</b> Copiá el código HTML que te proporcionen (usualmente empieza con `<iframe>` o `<script>`).
+                            </p>
+                            <p className="font-body text-sm text-muted-foreground mt-2">
+                                <b>Paso 3:</b> Reemplazá este recuadro con el código que copiaste.
+                            </p>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </Section>
 
