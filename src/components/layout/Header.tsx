@@ -25,9 +25,9 @@ const navItems = [
 
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" />, widgetClass: 'id-del-widget-de-facebook' },
-  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" />, widgetClass: 'c225f74d-3f36-42ac-a5c1-2bb07fed927d' }, // ID de ejemplo de Elfsight para X/Twitter
-  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" />, widgetClass: 'id-del-widget-de-instagram' },
-  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" />, widgetClass: 'id-del-widget-de-youtube' },
+  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" />, widgetClass: 'elfsight-app-177e6f4c-8c95-47f2-8d35-13dde78a394f' }, // ID de ejemplo de Elfsight para X/Twitter
+  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" />, widgetClass: 'elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" />, widgetClass: 'elfsight-app-b5428be1-2a97-45a4-83ae-e8415117e7c2' },
 ];
 
 export function Header() {
