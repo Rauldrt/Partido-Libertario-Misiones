@@ -128,7 +128,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
                                 <b>Paso 1:</b> Generá el código para incrustar desde tu proveedor de widgets (ej. <Link href="https://publish.twitter.com/" target="_blank" className="text-primary underline">publish.twitter.com</Link>).
                             </p>
                             <p className="font-body text-sm text-muted-foreground mt-2">
-                                <b>Paso 2:</b> Copiá el código HTML que te proporcionen (usualmente empieza con `<iframe>` o `<script>`).
+                                <b>Paso 2:</b> Copiá el código HTML que te proporcionen (usualmente empieza con `&lt;iframe&gt;` o `&lt;script&gt;`).
                             </p>
                             <p className="font-body text-sm text-muted-foreground mt-2">
                                 <b>Paso 3:</b> Reemplazá este recuadro con el código que copiaste.
