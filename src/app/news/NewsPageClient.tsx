@@ -1,10 +1,10 @@
-
 "use client";
 
 import { NewsCard } from '@/components/NewsCard';
 import { Section } from '@/components/ui/Section';
 import type { NewsCardData } from '@/lib/news-service';
-import { Newspaper, CalendarDays, Megaphone, Radio } from 'lucide-react';
+import { Newspaper, CalendarDays, Megaphone, Radio, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
+import Link from 'next/link';
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -37,9 +37,23 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
            <Newspaper className="h-12 w-12 text-accent" />
           </div>
           <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary-foreground">Noticias y Eventos</h1>
-          <p className="font-body text-xl text-primary-foreground/90 mt-2">
+          <p className="font-body text-xl text-primary-foreground/90 mt-2 max-w-3xl mx-auto">
             Mantenete al tanto de las últimas novedades y próximos encuentros del Partido Libertario de Misiones.
           </p>
+          <div className="mt-8 flex justify-center gap-6">
+            <Link href="#" aria-label="Facebook" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
+              <Facebook className="h-7 w-7" />
+            </Link>
+            <Link href="#" aria-label="Twitter" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
+              <Twitter className="h-7 w-7" />
+            </Link>
+            <Link href="#" aria-label="Instagram" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
+              <Instagram className="h-7 w-7" />
+            </Link>
+            <Link href="#" aria-label="YouTube" className="text-primary-foreground/80 hover:text-accent transition-colors p-2 rounded-full hover:bg-black/20">
+              <Youtube className="h-7 w-7" />
+            </Link>
+          </div>
         </div>
       </Section>
 
