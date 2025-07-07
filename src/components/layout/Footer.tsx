@@ -61,6 +61,8 @@ export function Footer() {
             </DialogTitle>
           </DialogHeader>
           {modalNetwork && (
+            // Puedes modificar o reemplazar este iframe con tu propio código.
+            // La URL (src) se obtiene de la variable 'modalNetwork.href' definida en la parte superior de este archivo.
             <iframe
               src={modalNetwork.href}
               title={`Visitanos en ${modalNetwork.label}`}
