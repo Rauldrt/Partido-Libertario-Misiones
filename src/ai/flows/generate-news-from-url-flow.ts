@@ -55,7 +55,7 @@ const newsGeneratorPrompt = ai.definePrompt({
   output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true, youtubeVideoId: true }) }, // The LLM doesn't generate these
   prompt: `Eres un experto editor de noticias para un sitio web político. Tu tarea es analizar el contenido proporcionado y generar un resumen de noticias en ESPAÑOL.
 
-El contenido puede ser un artículo completo, una publicación de redes sociales o la TRANSCRIPCIÓN DE UN VIDEO. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
+El contenido puede ser un artículo completo, una publicación de redes sociales, la descripción de un video o la TRANSCRIPCIÓN DE UN VIDEO. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
 
 - Genera un título llamativo en español.
 - Escribe un resumen conciso en español que capture la esencia del contenido.
@@ -72,6 +72,51 @@ function getYoutubeVideoId(url: string): string | null {
   const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
   const match = url.match(youtubeRegex);
   return match ? match[1] : null;
+}
+
+/**
+ * Scrapes a URL to extract the main readable content and a potential image URL.
+ */
+async function scrapeUrlForContent(url: string): Promise<{ articleContent: string, imageUrl?: string }> {
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+        },
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch URL: ${response.statusText}`);
+    }
+    const html = await response.text();
+
+    const dom = new JSDOM(html, { url: url });
+    const reader = new Readability(dom.window.document);
+    const article = reader.parse();
+
+    let content = '';
+    let imageUrl: string | undefined = undefined;
+
+    if (article && article.content) {
+        content = article.textContent.replace(/\s\s+/g, ' ').trim();
+        const contentDom = new JSDOM(article.content, { url: url });
+        const mainImage = contentDom.window.document.querySelector('img');
+        if (mainImage?.src) {
+            try {
+              const resolvedUrl = new URL(mainImage.src, url).href;
+              if (resolvedUrl.startsWith('http')) {
+                  imageUrl = resolvedUrl;
+              }
+            } catch (e) {
+              console.warn(`Could not resolve image URL: ${mainImage.src}`);
+            }
+        }
+    } else {
+        // Fallback for pages that Readability can't parse
+        content = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
+    }
+
+    return { articleContent: content, imageUrl };
 }
 
 
@@ -91,62 +136,38 @@ const generateNewsFromUrlFlow = ai.defineFlow(
 
     if (videoId) {
         youtubeVideoId = videoId;
-        // Get the highest quality thumbnail for the video.
+        // Get the highest quality thumbnail for the video as a primary image.
         imageUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
         try {
-            const transcript = await YoutubeTranscript.fetchTranscript(videoId);
+            // First, try to get a Spanish transcript.
+            const transcript = await YoutubeTranscript.fetchTranscript(videoId, { lang: 'es' });
             articleContent = transcript.map((t) => t.text).join(' ').trim();
-            if (!articleContent) {
-                throw new Error('Empty transcript returned.');
-            }
         } catch (error) {
-            console.error('Error fetching YouTube transcript:', error);
-            throw new Error(
-                'No se pudo obtener la transcripción para este video. Es posible que las transcripciones estén deshabilitadas o que el video no sea válido.'
-            );
+            console.warn('Could not fetch Spanish transcript, trying any language...', error);
+            try {
+                 // If Spanish fails, try any available transcript.
+                const transcript = await YoutubeTranscript.fetchTranscript(videoId);
+                articleContent = transcript.map((t) => t.text).join(' ').trim();
+            } catch (finalError) {
+                console.warn(`Could not fetch any transcript for ${videoId}. Falling back to page scraping.`, finalError);
+                // If all transcript attempts fail, fall back to scraping the page for title/description.
+                const scrapedData = await scrapeUrlForContent(input.url);
+                articleContent = scrapedData.articleContent;
+                // We keep the YouTube thumbnail, so we don't use the scraped imageUrl.
+            }
         }
 
     } else {
-        // Fallback to existing logic for scraping web pages
-        const response = await fetch(input.url, {
-            headers: {
-                'User-Agent':
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            },
-        });
-        if (!response.ok) {
-            throw new Error(`Failed to fetch URL: ${response.statusText}`);
-        }
-        const html = await response.text();
-
-        const dom = new JSDOM(html, { url: input.url });
-        const reader = new Readability(dom.window.document);
-        const article = reader.parse();
-
-        if (article && article.content) {
-            articleContent = article.textContent.replace(/\s\s+/g, ' ').trim();
-            const contentDom = new JSDOM(article.content, { url: input.url });
-            const mainImage = contentDom.window.document.querySelector('img');
-            if (mainImage?.src) {
-                try {
-                const resolvedUrl = new URL(mainImage.src, input.url).href;
-                if (resolvedUrl.startsWith('http')) {
-                    imageUrl = resolvedUrl;
-                }
-                } catch (e) {
-                console.warn(`Could not resolve image URL: ${mainImage.src}`);
-                }
-            }
-        } else {
-            articleContent = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
-        }
+        // Standard logic for scraping web pages
+        const scrapedData = await scrapeUrlForContent(input.url);
+        articleContent = scrapedData.articleContent;
+        imageUrl = scrapedData.imageUrl;
     }
 
 
-    if (!articleContent) {
+    if (!articleContent.trim()) {
       throw new Error(
-        'Could not extract any meaningful content from the URL. The site may be protected, heavily reliant on JavaScript, or the video may lack a transcript.'
+        'No se pudo extraer contenido significativo de la URL. El sitio puede estar protegido, depender de JavaScript, o el video puede no tener transcripción ni descripción.'
       );
     }
     
