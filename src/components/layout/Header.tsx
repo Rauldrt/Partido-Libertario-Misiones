@@ -24,15 +24,15 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
-  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" /> },
-  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" /> },
-  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" /> },
+  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" />, widgetClass: 'id-del-widget-de-facebook' },
+  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" />, widgetClass: 'c225f74d-3f36-42ac-a5c1-2bb07fed927d' }, // ID de ejemplo de Elfsight para X/Twitter
+  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" />, widgetClass: 'id-del-widget-de-instagram' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" />, widgetClass: 'id-del-widget-de-youtube' },
 ];
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const [modalNetwork, setModalNetwork] = React.useState<{ label: string; href: string; icon: JSX.Element } | null>(null);
+  const [modalNetwork, setModalNetwork] = React.useState<{ label: string; href: string; icon: JSX.Element; widgetClass: string; } | null>(null);
 
   const handleSocialClick = (e: React.MouseEvent, network: typeof socialLinks[0]) => {
     e.preventDefault();
@@ -170,19 +170,21 @@ export function Header() {
           </DialogHeader>
           {modalNetwork && (
              <div className="w-full h-full flex-grow">
-              {/* 
+               {/*
                 Para widgets basados en scripts (como Elfsight):
-                1. El componente <Script> de Next.js carga el script del proveedor del widget de forma optimizada.
-                2. El <div> de abajo sirve como el contenedor donde el script inyectará el widget.
-                3. REEMPLAZÁ el className de este <div> con el que te proporcione tu servicio de widgets.
+                1. El componente <Script> carga el código base del proveedor del widget.
+                2. El <div> de abajo es el contenedor. Su "className" se asigna dinámicamente
+                   según el icono en el que hiciste clic.
+                3. Para cambiar el widget de una red social, simplemente actualiza el
+                   "widgetClass" en el array "socialLinks" al principio de este archivo.
               */}
-              <Script 
-                src="https://static.elfsight.com/platform/platform.js" 
-                strategy="lazyOnload" 
-                data-elfsight-app-lazy-init 
+              <Script
+                src="https://static.elfsight.com/platform/platform.js"
+                strategy="lazyOnload"
+                data-elfsight-app-lazy-init
               />
-              <div 
-                className="elfsight-app-c225f74d-3f36-42ac-a5c1-2bb07fed927d h-full w-full" 
+              <div
+                className={`${modalNetwork.widgetClass} h-full w-full`}
                 data-elfsight-app-lazy
               />
             </div>
