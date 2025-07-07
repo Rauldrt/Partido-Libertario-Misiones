@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import React from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 const navItems = [
   { label: 'Inicio', href: '/', icon: <Home className="mr-2 h-5 w-5" /> },
@@ -22,14 +23,21 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { label: 'Facebook', href: '#', icon: <Facebook className="h-6 w-6" /> },
-  { label: 'Twitter', href: '#', icon: <Twitter className="h-6 w-6" /> },
-  { label: 'Instagram', href: '#', icon: <Instagram className="h-6 w-6" /> },
-  { label: 'YouTube', href: '#', icon: <Youtube className="h-6 w-6" /> },
+  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
+  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" /> },
+  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" /> },
+  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" /> },
 ];
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [modalNetwork, setModalNetwork] = React.useState<{ label: string; href: string; icon: JSX.Element } | null>(null);
+
+  const handleSocialClick = (e: React.MouseEvent, network: typeof socialLinks[0]) => {
+    e.preventDefault();
+    setModalNetwork(network);
+    setIsMobileMenuOpen(false); // Close mobile menu if open
+  };
 
   return (
     <>
@@ -141,7 +149,7 @@ export function Header() {
                   href={social.href} 
                   aria-label={social.label}
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => handleSocialClick(e, social)}
                 >
                   {React.cloneElement(social.icon, { className: "h-7 w-7" })}
                 </Link>
@@ -150,6 +158,30 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <Dialog open={!!modalNetwork} onOpenChange={(isOpen) => !isOpen && setModalNetwork(null)}>
+        <DialogContent className="sm:max-w-md bg-card">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3 font-headline">
+              <span className="text-primary">{modalNetwork?.icon}</span>
+              Visitanos en {modalNetwork?.label}
+            </DialogTitle>
+            <DialogDescription className="font-body">
+              Serás redirigido a nuestra página de {modalNetwork?.label} en una nueva pestaña.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={() => setModalNetwork(null)}>
+              Cancelar
+            </Button>
+            <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+              <a href={modalNetwork?.href} target="_blank" rel="noopener noreferrer" onClick={() => setModalNetwork(null)}>
+                Continuar a {modalNetwork?.label}
+              </a>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
