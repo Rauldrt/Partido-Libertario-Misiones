@@ -117,6 +117,7 @@ export default function NewsGeneratorPage() {
         imageHint: result.imageHint,
         imageUrl: result.imageUrl || EMPTY_NEWS_ITEM.imageUrl,
         youtubeVideoId: result.youtubeVideoId || '',
+        embedCode: result.embedCode || '',
         type: result.youtubeVideoId ? 'event' : 'news',
       }));
        toast({
@@ -231,7 +232,7 @@ export default function NewsGeneratorPage() {
                     <span className="ml-2 hidden sm:inline">Generar</span>
                   </Button>
                 </div>
-                <p className="text-xs text-muted-foreground">Pegá el link de un artículo o video de YouTube y la IA generará un título, resumen y sugerencia de imagen.</p>
+                <p className="text-xs text-muted-foreground">Pegá el link de un artículo, video de YouTube o publicación de red social y la IA generará el contenido.</p>
               </div>
                <p className="font-body text-sm text-center bg-accent/20 p-3 rounded-md border border-accent">
                   La IA completará los campos de la pestaña "Manual". ¡Revisalos y ajústalos antes de guardar!

@@ -37,6 +37,7 @@ const GenerateNewsOutputSchema = z.object({
     ),
   imageUrl: z.string().url().optional().describe('URL de la imagen principal extraída del artículo o video.'),
   youtubeVideoId: z.string().optional().describe('El ID del video de YouTube, si la URL es de YouTube.'),
+  embedCode: z.string().optional().describe('El código HTML para insertar la publicación de redes sociales, si corresponde.'),
 });
 export type GenerateNewsOutput = z.infer<typeof GenerateNewsOutputSchema>;
 
@@ -52,7 +53,7 @@ export async function generateNewsFromUrl(
 const newsGeneratorPrompt = ai.definePrompt({
   name: 'newsGeneratorPrompt',
   input: { schema: z.object({ articleContent: z.string() }) },
-  output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true, youtubeVideoId: true }) }, // The LLM doesn't generate these
+  output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true, youtubeVideoId: true, embedCode: true }) }, // The LLM doesn't generate these
   prompt: `Eres un experto editor de noticias para un sitio web político. Tu tarea es analizar el contenido proporcionado y generar un resumen de noticias en ESPAÑOL.
 
 El contenido puede ser un artículo completo, una publicación de redes sociales, la descripción de un video o la TRANSCRIPCIÓN DE UN VIDEO. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
@@ -75,6 +76,38 @@ function getYoutubeVideoId(url: string): string | null {
   const match = url.match(youtubeRegex);
   return match ? match[1] : null;
 }
+
+/**
+ * Constructs an HTML embed code for supported social media URLs.
+ * @param url The URL of the social media post.
+ * @returns The embed code as a string, or undefined if the platform is not supported.
+ */
+function constructEmbedCode(url: string): string | undefined {
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.replace(/^www\./, '');
+
+    if (hostname === 'instagram.com') {
+      return `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"></blockquote><script async src="//www.instagram.com/embed.js"></script>`;
+    }
+
+    if (hostname === 'facebook.com' && (urlObj.pathname.includes('/posts/') || urlObj.pathname.includes('/videos/'))) {
+        const encodedUrl = encodeURIComponent(url);
+        return `<iframe src="https://www.facebook.com/plugins/post.php?href=${encodedUrl}&show_text=true&width=500" width="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+    }
+    
+    if (hostname === 'x.com' || hostname === 'twitter.com') {
+        return `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`;
+    }
+
+    return undefined;
+
+  } catch (error) {
+    console.error("Error constructing embed code:", error);
+    return undefined;
+  }
+}
+
 
 /**
  * Scrapes a URL to extract the main readable content and a potential image URL.
@@ -172,6 +205,7 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     let articleContent = '';
     let imageUrl: string | undefined = undefined;
     let youtubeVideoId: string | undefined = undefined;
+    const embedCode = constructEmbedCode(input.url);
     
     const videoId = getYoutubeVideoId(input.url);
 
@@ -199,7 +233,7 @@ const generateNewsFromUrlFlow = ai.defineFlow(
         }
 
     } else {
-        // Standard logic for scraping web pages
+        // Standard logic for scraping web pages (this will also handle social media for text content)
         const scrapedData = await scrapeUrlForContent(input.url);
         articleContent = scrapedData.articleContent;
         imageUrl = scrapedData.imageUrl;
@@ -219,6 +253,6 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     }
     
     // Combine LLM output with programmatically extracted data
-    return { ...output, imageUrl, youtubeVideoId };
+    return { ...output, imageUrl, youtubeVideoId, embedCode };
   }
 );
