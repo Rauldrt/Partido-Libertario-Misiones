@@ -38,6 +38,18 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.misionescuatro.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'misionescuatro.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };
