@@ -143,7 +143,7 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
             <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
 
-        <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
+        <div className="absolute bottom-36 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
             <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/fiscalizacion">
                   <ShieldCheck className="mr-2 h-5 w-5" />
@@ -253,16 +253,11 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
       </Section>
 
       <Section id="contact-us" className="pb-16 md:pb-24">
-        <div className="text-center mb-12">
-          <h2 className="font-headline text-4xl font-bold text-white">Sumate a la Causa</h2>
-          <p className="font-body text-lg text-white/90 mt-2">Tu participación es fundamental para el cambio.</p>
-        </div>
         <div className="max-w-4xl mx-auto">
           <Accordion 
               type="single" 
               collapsible 
-              value={openAccordionItem} 
-              onValueChange={(value) => setOpenAccordionItem(value || '')}
+              defaultValue="contact"
               className="w-full"
             >
               <AccordionItem value="contact" className="border-b-0">
