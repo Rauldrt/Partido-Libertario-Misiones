@@ -78,44 +78,83 @@ function getYoutubeVideoId(url: string): string | null {
 
 /**
  * Scrapes a URL to extract the main readable content and a potential image URL.
+ * It prioritizes Mozilla's Readability, but falls back to Open Graph meta tags
+ * which works better for social media and video pages.
  */
 async function scrapeUrlForContent(url: string): Promise<{ articleContent: string, imageUrl?: string }> {
     const response = await fetch(url, {
-        headers: {
+        headers: { // Use a common user agent to avoid being blocked
             'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         },
     });
     if (!response.ok) {
-        throw new Error(`Failed to fetch URL: ${response.statusText}`);
+        throw new Error(`Error al buscar la URL: ${response.statusText}`);
     }
     const html = await response.text();
-
-    const dom = new JSDOM(html, { url: url });
-    const reader = new Readability(dom.window.document);
+    const dom = new JSDOM(html, { url });
+    const doc = dom.window.document;
+    const reader = new Readability(doc);
     const article = reader.parse();
 
     let content = '';
     let imageUrl: string | undefined = undefined;
 
-    if (article && article.content) {
-        content = article.textContent.replace(/\s\s+/g, ' ').trim();
-        const contentDom = new JSDOM(article.content, { url: url });
-        const mainImage = contentDom.window.document.querySelector('img');
-        if (mainImage?.src) {
-            try {
-              const resolvedUrl = new URL(mainImage.src, url).href;
-              if (resolvedUrl.startsWith('http')) {
-                  imageUrl = resolvedUrl;
-              }
-            } catch (e) {
-              console.warn(`Could not resolve image URL: ${mainImage.src}`);
+    // 1. Primary strategy: Use Readability's parsed article
+    if (article && article.textContent) {
+        // Combine title and content for a more complete context for the LLM
+        content = `${article.title}\n\n${article.textContent}`.replace(/\s\s+/g, ' ').trim();
+        
+        // Try to get the main image from the parsed content
+        if (article.content) {
+            const contentDom = new JSDOM(article.content, { url });
+            const mainImage = contentDom.window.document.querySelector('img');
+            if (mainImage?.src) {
+                try {
+                    const resolvedUrl = new URL(mainImage.src, url).href;
+                    if (resolvedUrl.startsWith('http')) {
+                        imageUrl = resolvedUrl;
+                    }
+                } catch (e) {
+                    console.warn(`Could not resolve image URL from content: ${mainImage.src}`);
+                }
             }
         }
-    } else {
-        // Fallback for pages that Readability can't parse
-        content = dom.window.document.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
+    }
+
+    // 2. Fallback strategy: Use Open Graph (og:) and standard meta tags.
+    // This is often more reliable for SPAs, social media, and video links.
+    const metaTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content') || doc.title;
+    const metaDescription = doc.querySelector('meta[property="og:description"]')?.getAttribute('content') || doc.querySelector('meta[name="description"]')?.getAttribute('content');
+    
+    let metaContent = '';
+    if (metaTitle) metaContent += metaTitle;
+    if (metaDescription) metaContent += `\n\n${metaDescription}`;
+    
+    // If meta content is substantially better (e.g. for SPAs where readability fails), use it.
+    if (metaContent.length > content.length + 50) {
+        content = metaContent.trim();
+    }
+    
+    // Try to get image from og:image meta tag if we don't have one yet.
+    if (!imageUrl) {
+        const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content');
+        if (ogImage) {
+            try {
+                const resolvedUrl = new URL(ogImage, url).href;
+                if (resolvedUrl.startsWith('http')) {
+                    imageUrl = resolvedUrl;
+                }
+            } catch (e) {
+                console.warn(`Could not resolve OG image URL: ${ogImage}`);
+            }
+        }
+    }
+
+    // 3. Last resort fallback: grab all text from the body.
+    if (!content.trim()) {
+        content = doc.body.textContent?.replace(/\s\s+/g, ' ').trim() || '';
     }
 
     return { articleContent: content, imageUrl };
