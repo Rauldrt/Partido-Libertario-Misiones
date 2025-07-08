@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { type PropsWithChildren, useState, useEffect } from 'react';
@@ -116,7 +115,7 @@ export default function HomePageClient({ children, slides, tiles }: PropsWithChi
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-full max-w-5xl"
+            className="w-full max-w-5xl mb-24"
             opts={{
                 loop: true,
             }}
