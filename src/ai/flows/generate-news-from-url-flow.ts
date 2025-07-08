@@ -3,7 +3,7 @@
 /**
  * @fileOverview A Genkit flow for generating news article data from a URL.
  *
- * - generateNewsFromUrl - A function that takes a URL (article or YouTube), gets its content, and uses an LLM to generate a title, summary, and image hint.
+ * - generateNewsFromUrl - A function that takes a URL (article, social media post, or YouTube video), gets its content, and uses an LLM to generate a title, summary, and image hint.
  * - GenerateNewsInput - The input type for the generateNewsFromUrl function.
  * - GenerateNewsOutput - The return type for the generateNewsFromUrl function.
  */
@@ -16,7 +16,7 @@ import { YoutubeTranscript } from 'youtube-transcript';
 
 // Input Schema
 const GenerateNewsInputSchema = z.object({
-  url: z.string().url().describe('The URL of the article or YouTube video to process.'),
+  url: z.string().url().describe('The URL of the article, social media post, or YouTube video to process.'),
 });
 export type GenerateNewsInput = z.infer<typeof GenerateNewsInputSchema>;
 
@@ -57,9 +57,11 @@ const newsGeneratorPrompt = ai.definePrompt({
 
 El contenido puede ser un artículo completo, una publicación de redes sociales, la descripción de un video o la TRANSCRIPCIÓN DE UN VIDEO. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
 
-- Genera un título llamativo en español.
+Si el contenido parece provenir de una red social (ej. Twitter, Facebook, Instagram), enfócate en el texto principal de la publicación e ignora el texto de la interfaz de usuario como "Me gusta", "Compartir", comentarios, marcas de tiempo, etc.
+
+- Genera un título llamativo en español basado en el contenido principal.
 - Escribe un resumen conciso en español que capture la esencia del contenido.
-- Proporciona una o dos palabras clave en español para una imagen de archivo.
+- Proporciona una o dos palabras clave en español para una imagen de archivo que represente el tema.
 
 Genera una respuesta en el formato JSON requerido.
 
