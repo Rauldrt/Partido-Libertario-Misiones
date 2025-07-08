@@ -12,7 +12,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, LayoutDashboard, LayoutGrid, ListChecks } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutDashboard, LayoutGrid, ListChecks, Server } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
@@ -65,6 +65,14 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                   <Link href="/admin/manage-mosaic">
                     <LayoutGrid />
                     Gestionar Mosaico
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/manage-hosts">
+                    <Server />
+                    Gestionar Hosts
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

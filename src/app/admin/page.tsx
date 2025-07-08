@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, LayoutGrid, ListChecks } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutGrid, ListChecks, Server } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -76,6 +76,23 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-mosaic">
                 <LayoutGrid className="mr-2 h-4 w-4" />
                 Editar Mosaico
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Hosts de Imágenes</CardTitle>
+            <CardDescription>Añade los dominios desde los que se pueden cargar imágenes.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Edita la configuración de Next.js para permitir nuevos hosts de imágenes.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-hosts">
+                <Server className="mr-2 h-4 w-4" />
+                Gestionar Hosts
               </Link>
             </Button>
           </CardContent>
