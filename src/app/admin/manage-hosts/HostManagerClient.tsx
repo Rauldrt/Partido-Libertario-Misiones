@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useTransition } from 'react';
@@ -74,11 +73,11 @@ export function HostManagerClient({ initialHosts }: { initialHosts: HostPattern[
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <Alert variant="destructive">
-          <TriangleAlert className="h-4 w-4" />
-          <AlertTitle>¡Atención!</AlertTitle>
+        <Alert variant="destructive" className="bg-destructive/10 border-destructive/50 text-destructive-foreground">
+          <TriangleAlert className="h-4 w-4 !text-destructive" />
+          <AlertTitle>Paso Manual Requerido</AlertTitle>
           <AlertDescription>
-            Después de guardar los cambios, es **necesario reiniciar el servidor de la aplicación** para que las nuevas configuraciones de host surtan efecto.
+            Para que los cambios en esta página surtan efecto, es **imprescindible reiniciar el servidor de la aplicación manualmente** después de guardar. La aplicación no puede reiniciarse sola.
           </AlertDescription>
         </Alert>
 
@@ -114,9 +113,9 @@ export function HostManagerClient({ initialHosts }: { initialHosts: HostPattern[
             <Plus className="mr-2 h-4 w-4" />
             Añadir Host
           </Button>
-          <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
+          <Button onClick={handleSaveChanges} disabled={isPending} size="lg" className="bg-destructive hover:bg-destructive/90">
             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-            Guardar Cambios
+            Guardar y Recordar Reinicio
           </Button>
         </div>
       </CardContent>
