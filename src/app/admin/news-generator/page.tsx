@@ -17,6 +17,7 @@ import { generateNewsFromUrl } from '@/ai/flows/generate-news-from-url-flow';
 import { format } from 'date-fns';
 import { getNewsItemForEditAction, saveNewsItemAction } from './actions';
 import { useSearchParams } from 'next/navigation';
+import { EmbedDisplay } from '@/components/EmbedDisplay';
 
 const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'> = {
   title: 'Título del Contenido',
@@ -244,10 +245,21 @@ export default function NewsGeneratorPage() {
          <Card className="shadow-lg">
            <CardHeader>
               <CardTitle>Vista Previa</CardTitle>
-              <CardDescription>Así se verá el contenido en la página.</CardDescription>
+              <CardDescription>
+                {previewData.embedCode 
+                    ? 'Así se verá el contenido insertado en la página del artículo.'
+                    : 'Así se verá la tarjeta en la página de noticias.'
+                }
+              </CardDescription>
            </CardHeader>
             <CardContent>
-               <NewsCard {...previewData} />
+                {previewData.embedCode ? (
+                    <div className="border rounded-md p-2 bg-muted/30">
+                        <EmbedDisplay embedCode={previewData.embedCode} />
+                    </div>
+                ) : (
+                    <NewsCard {...previewData} />
+                )}
             </CardContent>
          </Card>
          <Button className="w-full" onClick={handleSave} disabled={isSaving}>
