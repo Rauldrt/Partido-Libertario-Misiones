@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, CalendarDays, YoutubeIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { EmbedDisplay } from '@/components/EmbedDisplay';
 
 interface NewsArticlePageProps {
   params: { id: string };
@@ -53,48 +54,56 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
             )}
           </div>
 
-          {article.imageUrl && !article.youtubeVideoId && ( // Solo mostrar imagen si no hay video principal, o decidir si mostrar ambos
-            <div className="relative w-full h-56 sm:h-72 md:h-96 mb-8 rounded-md overflow-hidden shadow-md">
-              <Image
-                src={article.imageUrl}
-                alt={article.title}
-                layout="fill"
-                objectFit="cover"
-                data-ai-hint={article.imageHint}
-                priority
-              />
+          {article.embedCode ? (
+            <div className="mt-8 [&>*]:mx-auto">
+              <EmbedDisplay embedCode={article.embedCode} />
             </div>
-          )}
-          
-          <div className="space-y-5 font-body text-base md:text-lg text-foreground/90 leading-relaxed">
-            {articleContent.split('\\n').map((paragraph, index) => (
-              paragraph.trim() ? <p key={index}>{paragraph}</p> : null
-            ))}
-          </div>
+          ) : (
+            <>
+              {article.imageUrl && !article.youtubeVideoId && (
+                <div className="relative w-full h-56 sm:h-72 md:h-96 mb-8 rounded-md overflow-hidden shadow-md">
+                  <Image
+                    src={article.imageUrl}
+                    alt={article.title}
+                    layout="fill"
+                    objectFit="cover"
+                    data-ai-hint={article.imageHint}
+                    priority
+                  />
+                </div>
+              )}
+              
+              <div className="space-y-5 font-body text-base md:text-lg text-foreground/90 leading-relaxed">
+                {articleContent.split('\\n').map((paragraph, index) => (
+                  paragraph.trim() ? <p key={index}>{paragraph}</p> : null
+                ))}
+              </div>
 
-          {article.youtubeVideoId && (
-            <div className="mt-8">
-              <Card className="overflow-hidden shadow-lg">
-                <CardHeader className="bg-muted/30 p-3">
-                  <CardTitle className="font-headline text-lg flex items-center">
-                    <YoutubeIcon className="mr-2 h-6 w-6 text-red-500" />
-                    Video Relacionado
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0"> {/* Remove padding for aspect ratio div to work well */}
-                  <div className="relative w-full" style={{ paddingTop: '56.25%' }}> {/* 16:9 Aspect Ratio */}
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full rounded-b-lg"
-                      src={`https://www.youtube.com/embed/${article.youtubeVideoId}`}
-                      title={`Video de YouTube: ${article.title}`}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+              {article.youtubeVideoId && (
+                <div className="mt-8">
+                  <Card className="overflow-hidden shadow-lg">
+                    <CardHeader className="bg-muted/30 p-3">
+                      <CardTitle className="font-headline text-lg flex items-center">
+                        <YoutubeIcon className="mr-2 h-6 w-6 text-red-500" />
+                        Video Relacionado
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                        <iframe
+                          className="absolute top-0 left-0 w-full h-full rounded-b-lg"
+                          src={`https://www.youtube.com/embed/${article.youtubeVideoId}`}
+                          title={`Video de YouTube: ${article.title}`}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                        ></iframe>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </>
           )}
         </article>
 

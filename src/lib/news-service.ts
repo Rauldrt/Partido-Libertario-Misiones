@@ -16,6 +16,7 @@ export interface NewsCardData {
   type: 'news' | 'event';
   youtubeVideoId?: string;
   published: boolean;
+  embedCode?: string;
 }
 
 const newsFilePath = path.join(process.cwd(), 'data', 'news.json');

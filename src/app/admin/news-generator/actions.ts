@@ -16,6 +16,7 @@ const NewsItemSchema = z.object({
     imageHint: z.string().default(''),
     type: z.enum(['news', 'event']),
     youtubeVideoId: z.string().optional().default(''),
+    embedCode: z.string().optional().default(''),
     linkUrl: z.string().optional(),
     published: z.boolean().optional(),
 });

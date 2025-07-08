@@ -27,6 +27,7 @@ const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'> = {
   type: 'news',
   content: 'Este es el contenido completo. Puede ser más largo y detallado que el resumen.',
   youtubeVideoId: '',
+  embedCode: '',
 };
 
 export default function NewsGeneratorPage() {
@@ -184,6 +185,13 @@ export default function NewsGeneratorPage() {
                <div className="space-y-2">
                 <Label htmlFor="content">Contenido (Opcional)</Label>
                 <Textarea id="content" name="content" value={newsData.content || ''} onChange={handleInputChange} placeholder="El contenido completo del artículo..." />
+              </div>
+               <div className="space-y-2">
+                <Label htmlFor="embedCode">Código de Inserción (Opcional)</Label>
+                <Textarea id="embedCode" name="embedCode" value={newsData.embedCode || ''} onChange={handleInputChange} placeholder="<blockquote class='instagram-media' ...>...</blockquote>" className="font-mono text-xs" />
+                 <p className="text-xs text-muted-foreground">
+                    Si rellenás esto, se mostrará en lugar del contenido principal, la imagen y el video de YouTube.
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
