@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NewsCard } from '@/components/NewsCard';
 import type { NewsCardData } from '@/lib/news-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,8 @@ import { Dna, FilePlus, Loader2, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateNewsFromUrl } from '@/ai/flows/generate-news-from-url-flow';
 import { format } from 'date-fns';
-import { saveNewsItemAction } from './actions';
+import { getNewsItemForEditAction, saveNewsItemAction } from './actions';
+import { useSearchParams } from 'next/navigation';
 
 const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'> = {
   title: 'Título del Contenido',
@@ -29,11 +30,38 @@ const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'> = {
 };
 
 export default function NewsGeneratorPage() {
-  const [newsData, setNewsData] = useState<Omit<NewsCardData, 'id' | 'linkUrl' | 'published'>>(EMPTY_NEWS_ITEM);
+  const searchParams = useSearchParams();
+  const editId = searchParams.get('edit');
+  const isEditing = !!editId;
+
+  const [newsData, setNewsData] = useState<Partial<NewsCardData>>(EMPTY_NEWS_ITEM);
   const [aiUrl, setAiUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(isEditing); // Start in loading state if editing
   const { toast } = useToast();
+  
+  useEffect(() => {
+    if (editId) {
+      setIsLoading(true);
+      getNewsItemForEditAction(editId)
+        .then(result => {
+          if (result.success && result.data) {
+            setNewsData(result.data);
+          } else {
+            toast({
+              variant: 'destructive',
+              title: 'Error al cargar',
+              description: result.message || 'No se pudo encontrar el contenido para editar.',
+            });
+          }
+        })
+        .finally(() => setIsLoading(false));
+    } else {
+      setNewsData(EMPTY_NEWS_ITEM);
+      setIsLoading(false);
+    }
+  }, [editId, toast]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -49,10 +77,13 @@ export default function NewsGeneratorPage() {
     const result = await saveNewsItemAction(newsData);
     if (result.success) {
       toast({
-        title: '¡Contenido Guardado!',
+        title: '¡Éxito!',
         description: result.message,
       });
-      // Optionally reset form or navigate away
+      if (!isEditing) {
+        setNewsData(EMPTY_NEWS_ITEM);
+        setAiUrl('');
+      }
     } else {
       toast({
         variant: 'destructive',
@@ -77,7 +108,7 @@ export default function NewsGeneratorPage() {
     try {
       const result = await generateNewsFromUrl({ url: aiUrl });
       setNewsData(prev => ({
-        ...EMPTY_NEWS_ITEM,
+        ...prev, // Keep ID if editing
         title: result.title,
         summary: result.summary,
         content: result.summary,
@@ -103,18 +134,33 @@ export default function NewsGeneratorPage() {
   };
 
   const previewData: NewsCardData = {
+    ...EMPTY_NEWS_ITEM,
     ...newsData,
-    id: 'preview-id',
-    linkUrl: '/#',
-    published: true,
+    id: newsData.id || 'preview-id',
+    linkUrl: newsData.linkUrl || '/#',
+    published: newsData.published ?? true,
+  }
+
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center p-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="ml-4 text-lg">Cargando contenido para editar...</p>
+        </div>
+    )
   }
 
   return (
     <div className="grid lg:grid-cols-2 gap-12 items-start max-w-7xl mx-auto">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>Editor de Contenido</CardTitle>
-          <CardDescription>Usá las pestañas para crear una noticia o evento manually o con ayuda de la IA.</CardDescription>
+          <CardTitle>{isEditing ? 'Editar Contenido' : 'Crear Contenido'}</CardTitle>
+          <CardDescription>
+            {isEditing 
+                ? 'Modificá los detalles del contenido y guardá los cambios.' 
+                : 'Usá las pestañas para crear una noticia o evento manualmente o con ayuda de la IA.'
+            }
+        </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="manual">
@@ -198,13 +244,13 @@ export default function NewsGeneratorPage() {
          </Card>
          <Button className="w-full" onClick={handleSave} disabled={isSaving}>
            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-           Guardar y Publicar
+           {isEditing ? 'Guardar Cambios' : 'Guardar y Publicar'}
          </Button>
          <div className="text-sm text-muted-foreground p-4 border rounded-md bg-card">
-              <p className="font-bold text-card-foreground">¿Cómo agregar el contenido?</p>
+              <p className="font-bold text-card-foreground">¿Cómo agregar o editar el contenido?</p>
               <p>1. Ajustá los datos usando el editor o la IA.</p>
-              <p>2. Hacé clic en "Guardar y Publicar".</p>
-              <p>3. El contenido se agregará y será visible en el sitio.</p>
+              <p>2. Hacé clic en "{isEditing ? 'Guardar Cambios' : 'Guardar y Publicar'}".</p>
+              <p>3. El contenido se guardará y será visible en el sitio.</p>
               <p>4. Podés gestionar su visibilidad desde "Gestionar Contenido".</p>
          </div>
       </div>

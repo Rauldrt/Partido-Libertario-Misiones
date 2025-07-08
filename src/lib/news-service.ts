@@ -46,6 +46,11 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
   }
 }
 
+export async function getNewsItemById(id: string): Promise<NewsCardData | undefined> {
+  const allItems = await getNewsItems();
+  return allItems.find((item) => item.id === id);
+}
+
 export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'>): Promise<NewsCardData> {
   const allItems = await getNewsItems();
   
@@ -69,7 +74,7 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl' | 'p
   }
 }
 
-export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
+export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id'>>): Promise<NewsCardData> {
   const allItems = await getNewsItems();
   const itemIndex = allItems.findIndex(i => i.id === id);
 
@@ -77,7 +82,8 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
     throw new Error(`Item with id ${id} not found.`);
   }
 
-  const updatedItem = { ...allItems[itemIndex], ...updates };
+  // Preserve the original linkUrl, but allow other fields to be updated
+  const updatedItem = { ...allItems[itemIndex], ...updates, linkUrl: allItems[itemIndex].linkUrl };
   allItems[itemIndex] = updatedItem;
 
   try {

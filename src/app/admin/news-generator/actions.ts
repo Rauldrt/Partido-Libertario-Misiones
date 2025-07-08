@@ -2,11 +2,12 @@
 'use server';
 
 import { z } from 'zod';
-import { addNewsItem } from '@/lib/news-service';
+import { addNewsItem, updateNewsItem, getNewsItemById } from '@/lib/news-service';
 import type { NewsCardData } from '@/lib/news-service';
 import { revalidatePath } from 'next/cache';
 
 const NewsItemSchema = z.object({
+    id: z.string().optional(),
     title: z.string().min(1, 'Title is required'),
     date: z.string().min(1, 'Date is required'),
     summary: z.string().min(1, 'Summary is required'),
@@ -15,8 +16,8 @@ const NewsItemSchema = z.object({
     imageHint: z.string().default(''),
     type: z.enum(['news', 'event']),
     youtubeVideoId: z.string().optional().default(''),
-    linkUrl: z.string().optional(), // These are generated server-side
-    id: z.string().optional(),
+    linkUrl: z.string().optional(),
+    published: z.boolean().optional(),
 });
 
 export async function saveNewsItemAction(data: Partial<NewsCardData>) {
@@ -27,13 +28,41 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
     }
 
     try {
-        const { id, linkUrl, ...newsData } = validation.data;
-        await addNewsItem(newsData);
-        
-        revalidatePath('/');
-        revalidatePath('/news');
-        
-        return { success: true, message: '¡Contenido guardado con éxito!' };
+        if (validation.data.id) {
+            // This is an update
+            const { id, ...updateData } = validation.data;
+            await updateNewsItem(id, updateData);
+            
+            revalidatePath('/');
+            revalidatePath('/news');
+            revalidatePath(`/news/${id}`);
+            revalidatePath('/admin/manage-content');
+            
+            return { success: true, message: '¡Contenido actualizado con éxito!' };
+        } else {
+            // This is a new item
+            const { id, linkUrl, ...newsData } = validation.data;
+            await addNewsItem(newsData);
+            
+            revalidatePath('/');
+            revalidatePath('/news');
+            revalidatePath('/admin/manage-content');
+            
+            return { success: true, message: '¡Contenido guardado con éxito!' };
+        }
+    } catch (error) {
+        return { success: false, message: (error as Error).message };
+    }
+}
+
+
+export async function getNewsItemForEditAction(id: string) {
+    try {
+        const item = await getNewsItemById(id);
+        if (!item) {
+            return { success: false, message: 'Contenido no encontrado.' };
+        }
+        return { success: true, data: item };
     } catch (error) {
         return { success: false, message: (error as Error).message };
     }

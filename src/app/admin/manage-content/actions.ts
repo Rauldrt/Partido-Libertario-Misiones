@@ -9,6 +9,7 @@ export async function togglePublishStatusAction(id: string, currentState: boolea
     await updateNewsItem(id, { published: !currentState });
     revalidatePath('/');
     revalidatePath('/news');
+    revalidatePath(`/news/${id}`);
     revalidatePath('/admin/manage-content');
     return { success: true, message: `El estado del artículo ha sido cambiado.` };
   } catch (error) {
