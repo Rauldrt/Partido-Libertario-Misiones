@@ -16,7 +16,7 @@ export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, t
     <Card className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg">
       <CardHeader className="p-0">
         {embedCode ? (
-          <div className="bg-card">
+          <div className="bg-card max-h-[400px] overflow-y-auto">
             <EmbedDisplay embedCode={embedCode} />
           </div>
         ) : youtubeVideoId ? (
