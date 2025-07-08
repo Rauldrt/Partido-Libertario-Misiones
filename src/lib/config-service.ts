@@ -15,15 +15,30 @@ const configPath = path.join(process.cwd(), 'next.config.js');
 
 /**
  * Reads the next.config.js file and returns the remotePatterns array.
- * It invalidates the require cache to try and get the latest version of the file.
+ * This version reads the file as a string and parses the array to avoid
+ * issues with `require` in the Next.js build process.
  */
 export async function getAllowedHosts(): Promise<HostPattern[]> {
   try {
-    delete require.cache[require.resolve(configPath)];
-    const config = require(path.resolve(configPath));
-    return config.images?.remotePatterns || [];
+    const fileContent = await fs.readFile(configPath, 'utf-8');
+    
+    // Regex to find and capture the remotePatterns array string.
+    const remotePatternsRegex = /remotePatterns:\s*(\[[\s\S]*?\])/;
+    const match = fileContent.match(remotePatternsRegex);
+
+    if (match && match[1]) {
+      const arrayString = match[1];
+      // Safely evaluate the JavaScript array string from the config file using `new Function`.
+      // This is safer than `eval` and can parse the JavaScript object literal format.
+      const patterns = new Function(`return ${arrayString}`)();
+      return patterns || [];
+    }
+
+    // If no match is found, return an empty array.
+    return [];
   } catch (error) {
-    console.error('Error reading next.config.js:', error);
+    console.error('Error reading and parsing next.config.js:', error);
+    // If any error occurs (e.g., file not found, parsing error), return an empty array.
     return [];
   }
 }
