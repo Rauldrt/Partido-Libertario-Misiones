@@ -5,16 +5,21 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CalendarDays, Youtube } from 'lucide-react';
 import type { NewsCardData } from '@/lib/news-service';
+import { EmbedDisplay } from './EmbedDisplay';
 
 // The NewsCardData interface has been moved to src/lib/news-service.ts
 // to be shared between the component and the data service.
 export type { NewsCardData };
 
-export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, type, youtubeVideoId }: NewsCardData) {
+export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, type, youtubeVideoId, embedCode }: NewsCardData) {
   return (
     <Card className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg">
       <CardHeader className="p-0">
-        {youtubeVideoId ? (
+        {embedCode ? (
+          <div className="bg-card">
+            <EmbedDisplay embedCode={embedCode} />
+          </div>
+        ) : youtubeVideoId ? (
           <div className="aspect-video overflow-hidden rounded-t-lg">
             <iframe
               className="w-full h-full"
