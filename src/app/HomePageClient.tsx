@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus } from 'lucide-react';
+import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -20,6 +20,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { BannerSlideData, MosaicImageData, MosaicTileData } from '@/lib/homepage-service';
+import { SocialWidget } from '@/components/SocialWidget';
 
 const values = [
   {
@@ -248,6 +249,19 @@ export default function HomePageClient({ children, slides, tiles, events }: Prop
         </div>
 
         {children}
+      </Section>
+
+      <Section id="social-media" className="py-16 md:py-24 text-center">
+            <h2 className="font-headline text-4xl font-bold text-white flex items-center justify-center">
+                <Rss className="h-8 w-8 text-primary mr-3" />
+                Conectate con Nosotros
+            </h2>
+            <p className="font-body text-lg text-white/90 mt-2 mb-8 max-w-2xl mx-auto">
+                No te pierdas ninguna de nuestras actualizaciones y participá de la conversación en nuestras redes sociales.
+            </p>
+            <div className="max-w-3xl mx-auto">
+              <SocialWidget />
+            </div>
       </Section>
 
       <Section id="contact-us" className="pb-16 md:pb-24">
