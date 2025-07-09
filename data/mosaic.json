@@ -11,6 +11,16 @@
     ]
   },
   {
+    "layout": "col-span-2 row-span-1",
+    "duration": 4500,
+    "animation": "animate-fade-in-up",
+    "images": [
+      { "src": "https://placehold.co/800x400.png", "alt": "Grupo de jóvenes libertarios", "hint": "young people group", "caption": "La juventud se activa." },
+      { "src": "https://placehold.co/800x400.png", "alt": "Manifestación por la libertad", "hint": "freedom protest", "caption": "Defendemos tus derechos." },
+      { "src": "https://placehold.co/800x400.png", "alt": "Bandera Argentina ondeando", "hint": "Argentina flag", "caption": "Un nuevo rumbo para el país." }
+    ]
+  },
+  {
     "layout": "col-span-1 row-span-1",
     "duration": 3500,
     "animation": "animate-zoom-in-gentle",
@@ -28,16 +38,6 @@
       { "src": "https://placehold.co/600x600.png", "alt": "Paisaje de Misiones", "hint": "Misiones landscape", "caption": "Por una Misiones libre." },
       { "src": "https://placehold.co/600x600.png", "alt": "Cataratas del Iguazú", "hint": "Iguazu falls", "caption": "Belleza natural." },
       { "src": "https://placehold.co/600x600.png", "alt": "Cultivo de yerba mate", "hint": "yerba mate", "caption": "Apoyo al productor." }
-    ]
-  },
-  {
-    "layout": "col-span-2 row-span-1",
-    "duration": 4500,
-    "animation": "animate-fade-in-up",
-    "images": [
-      { "src": "https://placehold.co/800x400.png", "alt": "Grupo de jóvenes libertarios", "hint": "young people group", "caption": "La juventud se activa." },
-      { "src": "https://placehold.co/800x400.png", "alt": "Manifestación por la libertad", "hint": "freedom protest", "caption": "Defendemos tus derechos." },
-      { "src": "https://placehold.co/800x400.png", "alt": "Bandera Argentina ondeando", "hint": "Argentina flag", "caption": "Un nuevo rumbo para el país." }
     ]
   }
 ]
