@@ -28,8 +28,6 @@ export function Footer() {
     openModal({
       embedCode: link.embedCode,
       title: `Visitanos en ${link.label}`,
-      width: link.width,
-      height: link.height,
     });
   };
 

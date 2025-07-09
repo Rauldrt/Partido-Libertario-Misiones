@@ -9,8 +9,6 @@ interface ModalState {
   isOpen: boolean;
   embedCode: string;
   title: string;
-  width?: string;
-  height?: string;
 }
 
 interface SocialModalContextType {
@@ -24,8 +22,6 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
     isOpen: false,
     embedCode: '',
     title: '',
-    width: undefined,
-    height: undefined,
   });
 
   const openModal = (options: Omit<ModalState, 'isOpen'>) => {
@@ -33,7 +29,7 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
   };
 
   const closeModal = () => {
-    setModalState({ isOpen: false, embedCode: '', title: '', width: undefined, height: undefined });
+    setModalState({ isOpen: false, embedCode: '', title: '' });
   };
 
   return (
@@ -41,21 +37,17 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
       {children}
       <Dialog open={modalState.isOpen} onOpenChange={closeModal}>
         <DialogContent 
-            className="p-2 flex flex-col" 
-            style={{
-                width: modalState.width || '90vw',
-                height: modalState.height || '90vh',
-                maxWidth: '90vw',
-                maxHeight: '90vh'
-            }}
+            className="p-0 flex flex-col w-[90vw] h-[90vh] max-w-[1200px]" 
         >
-          <DialogHeader className="p-4 pb-2 flex-shrink-0">
+          <DialogHeader className="p-4 pb-2 flex-shrink-0 border-b">
             <DialogTitle className="font-headline text-primary">{modalState.title}</DialogTitle>
           </DialogHeader>
           <div 
-            className="flex-grow rounded-b-lg overflow-auto bg-background flex items-center justify-center w-full h-full"
+            className="flex-grow rounded-b-lg overflow-auto bg-background w-full h-full"
           >
-            <EmbedDisplay embedCode={modalState.embedCode} />
+            <div className="w-full h-full [&>div]:w-full [&>div]:h-full">
+              <EmbedDisplay embedCode={modalState.embedCode} />
+            </div>
           </div>
         </DialogContent>
       </Dialog>

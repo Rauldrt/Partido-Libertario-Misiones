@@ -9,11 +9,15 @@ const SocialLinkSchema = z.object({
     id: z.string(),
     label: z.string(),
     embedCode: z.string(),
-    width: z.string().optional(),
-    height: z.string().optional(),
 });
 
-export type SocialLink = z.infer<typeof SocialLinkSchema>;
+// This is the type that will be used in the components, which can have extra fields
+// that are not saved to the file, like the old 'width' and 'height'.
+export type SocialLink = z.infer<typeof SocialLinkSchema> & {
+    width?: string;
+    height?: string;
+};
+
 
 const linksFilePath = path.join(process.cwd(), 'data', 'social-links.json');
 
@@ -22,12 +26,15 @@ export async function getSocialLinks(): Promise<SocialLink[]> {
     const data = await fs.readFile(linksFilePath, 'utf-8');
     const linksData = JSON.parse(data);
     
-    const parsed = z.array(SocialLinkSchema).safeParse(linksData);
+    // We use passthrough() to allow extra fields (like width/height) during parsing
+    // even if they are not defined in the base schema. This prevents validation errors
+    // if the old fields still exist in the data file.
+    const parsed = z.array(SocialLinkSchema.passthrough()).safeParse(linksData);
     if(parsed.success) {
         return parsed.data;
     }
     
-    console.warn("Social links data is invalid, returning empty array.");
+    console.warn("Social links data is invalid, returning empty array.", parsed.error.issues);
     return [];
 
   } catch (error: any) {
@@ -40,7 +47,7 @@ export async function getSocialLinks(): Promise<SocialLink[]> {
   }
 }
 
-export async function saveSocialLinks(data: SocialLink[]): Promise<void> {
+export async function saveSocialLinks(data: Pick<SocialLink, 'id' | 'label' | 'embedCode'>[]): Promise<void> {
     const validation = z.array(SocialLinkSchema).safeParse(data);
 
     if (!validation.success) {

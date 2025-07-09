@@ -1,3 +1,4 @@
+
 [
   {
     "id": "facebook",
@@ -12,14 +13,11 @@
   {
     "id": "instagram",
     "label": "Instagram",
-    "embedCode": "\n<script src=\"https://static.elfsight.com/platform/platform.js\" style=\"width:90%;height:100%;\" async></script>\n<div class=\"elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1\" data-elfsight-app-lazy></div>",
-    "width": ""
+    "embedCode": "\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1\" data-elfsight-app-lazy></div>"
   },
   {
     "id": "youtube",
     "label": "YouTube",
-    "embedCode": "<!-- Elfsight YouTube Gallery | Untitled YouTube Gallery -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-25a9663d-bb59-4e73-b86f-edcda5b6eccb\" data-elfsight-app-lazy></div>",
-    "width": "",
-    "height": ""
+    "embedCode": "<!-- Elfsight YouTube Gallery | Untitled YouTube Gallery -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-25a9663d-bb59-4e73-b86f-edcda5b6eccb\" data-elfsight-app-lazy></div>"
   }
 ]

@@ -9,8 +9,6 @@ const SocialLinkSchema = z.object({
   id: z.string(),
   label: z.string(),
   embedCode: z.string(),
-  width: z.string().optional(),
-  height: z.string().optional(),
 });
 
 const SocialLinksSchema = z.array(SocialLinkSchema);
@@ -24,7 +22,9 @@ export async function saveSocialLinksAction(data: unknown) {
     }
 
     try {
-        await saveSocialLinks(validation.data);
+        // We need to filter out the properties not in the schema before saving.
+        const dataToSave = validation.data.map(({ id, label, embedCode }) => ({ id, label, embedCode }));
+        await saveSocialLinks(dataToSave);
         revalidatePath('/'); // Revalidate home page in case links are used there
         revalidatePath('/news');
         

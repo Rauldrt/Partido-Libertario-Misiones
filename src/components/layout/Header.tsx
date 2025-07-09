@@ -44,8 +44,6 @@ export function Header() {
     openModal({
       embedCode: link.embedCode,
       title: `Visitanos en ${link.label}`,
-      width: link.width,
-      height: link.height,
     });
     setIsMobileMenuOpen(false);
   };
