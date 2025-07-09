@@ -30,11 +30,11 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
     <SocialModalContext.Provider value={{ openModal }}>
       {children}
       <Dialog open={modalState.isOpen} onOpenChange={closeModal}>
-        <DialogContent className="sm:max-w-[80vw] md:max-w-[60vw] h-[80vh] flex flex-col p-2">
-          <DialogHeader className="p-4 pb-2">
+        <DialogContent className="max-w-[90vw] max-h-[90vh] w-auto h-auto flex flex-col p-2">
+          <DialogHeader className="p-4 pb-2 flex-shrink-0">
             <DialogTitle className="font-headline text-primary">{modalState.title}</DialogTitle>
           </DialogHeader>
-          <div className="flex-grow rounded-b-lg overflow-hidden bg-background">
+          <div className="flex-grow rounded-b-lg overflow-auto bg-background flex items-center justify-center">
             <EmbedDisplay embedCode={modalState.embedCode} />
           </div>
         </DialogContent>

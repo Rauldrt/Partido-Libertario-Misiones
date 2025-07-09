@@ -1,4 +1,3 @@
-
 [
   {
     "id": "facebook",
@@ -13,11 +12,11 @@
   {
     "id": "instagram",
     "label": "Instagram",
-    "embedCode": "<iframe src=\"https://www.instagram.com/plmisiones/embed\" width=\"100%\" height=\"100%\" frameborder=\"0\"></iframe>"
+    "embedCode": "\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1\" data-elfsight-app-lazy></div>"
   },
   {
     "id": "youtube",
     "label": "YouTube",
-    "embedCode": "<iframe src=\"https://www.youtube.com/embed/videoseries?list=UULFO2i6Ua_52F8Y-mFc0J8w\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen style=\"width:100%; height:100%;\"></iframe>"
+    "embedCode": "<iframe style=\"border:none;overflow:hidden;width:90%;height:90%;\" scrolling=\"no\" frameborder=\"0\" allowfullscreen=\"true\" allow=\"autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share\"><!-- Elfsight YouTube Gallery | Untitled YouTube Gallery -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-b5428be1-2a97-45a4-83ae-e8415117e7c2\" data-elfsight-app-lazy></div></iframe>"
   }
 ]
