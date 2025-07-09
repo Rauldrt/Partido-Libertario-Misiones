@@ -12,11 +12,14 @@
   {
     "id": "instagram",
     "label": "Instagram",
-    "embedCode": "width=\"300\" height=\"500\"\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1\" data-elfsight-app-lazy></div>"
+    "embedCode": "\n<script src=\"https://static.elfsight.com/platform/platform.js\" style=\"width:90%;height:100%;\" async></script>\n<div class=\"elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1\" data-elfsight-app-lazy></div>",
+    "width": ""
   },
   {
     "id": "youtube",
     "label": "YouTube",
-    "embedCode": "\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-b5428be1-2a97-45a4-83ae-e8415117e7c2\" data-elfsight-app-lazy></div>"
+    "embedCode": "\n<!-- Elfsight YouTube Gallery | Untitled YouTube Gallery -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-d1627218-15c6-4b57-af76-a61972ac4c28\" data-elfsight-app-lazy style=\"width:90%;heigth:400;\"></div>",
+    "width": "",
+    "height": ""
   }
 ]
