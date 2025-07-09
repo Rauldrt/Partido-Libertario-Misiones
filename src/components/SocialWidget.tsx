@@ -1,29 +1,24 @@
 
-"use client";
+"use server";
 
-import React, { useEffect } from 'react';
+import { getSocialWidgetData } from '@/lib/widget-service';
+import { EmbedDisplay } from './EmbedDisplay';
 
-export function SocialWidget() {
-  useEffect(() => {
-    // This script is required to load the Elfsight widget platform
-    const script = document.createElement('script');
-    script.src = "https://static.elfsight.com/platform/platform.js";
-    script.setAttribute('data-use-service-core', '');
-    script.defer = true;
-    
-    // Append the script to the document head
-    document.head.appendChild(script);
+export async function SocialWidget() {
+  const { embedCode } = await getSocialWidgetData();
+  
+  if (!embedCode) {
+    return (
+        <div className="flex items-center justify-center p-4 border rounded-lg bg-muted/50 h-full min-h-[300px]">
+            <p className="text-center text-muted-foreground">
+                No hay ningún widget social configurado.
+                <br />
+                Por favor, añada un código de inserción en el panel de administración.
+            </p>
+        </div>
+    );
+  }
 
-    // Clean up the script when the component unmounts
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
-  }, []);
-
-  // The class name is the unique ID for your Elfsight widget.
-  return (
-    <div className="elfsight-app-d34ae5a8-4286-4552-87f4-a521eda6780c" data-elfsight-app-lazy></div>
-  );
+  // The EmbedDisplay component handles rendering the HTML and executing any scripts safely.
+  return <EmbedDisplay embedCode={embedCode} />;
 }

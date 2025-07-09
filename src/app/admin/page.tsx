@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, LayoutGrid, ListChecks, Server } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutGrid, ListChecks, Rss, Server } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -76,6 +76,23 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-mosaic">
                 <LayoutGrid className="mr-2 h-4 w-4" />
                 Editar Mosaico
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Widget Social</CardTitle>
+            <CardDescription>Modificá el contenido del widget de redes sociales.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Cambiá el código de inserción para mostrar diferentes feeds de redes sociales.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-social-widget">
+                <Rss className="mr-2 h-4 w-4" />
+                Gestionar Widget
               </Link>
             </Button>
           </CardContent>
