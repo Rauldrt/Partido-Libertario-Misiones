@@ -243,9 +243,9 @@ export default function HomePageClient({ children, slides, tiles, events, social
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start mb-16">
-            <div className="lg:col-span-1">{events}</div>
-            <div className="lg:col-span-1">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-16">
+            <div className="col-span-1">{events}</div>
+            <div className="col-span-1">
                  <Card className="shadow-lg w-full">
                     <CardHeader>
                         <CardTitle className="flex items-center">
