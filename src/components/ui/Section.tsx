@@ -11,6 +11,8 @@ interface SectionProps extends PropsWithChildren {
   backgroundOverlay?: string;
 }
 
+// NOTE: Parallax functionality has been removed to resolve a persistent CSS build error.
+// The `parallax` prop is now ignored.
 export function Section({ 
   children, 
   className, 
@@ -18,7 +20,6 @@ export function Section({
   id, 
   backgroundImage, 
   videoSrc,
-  parallax,
   backgroundOverlay
 }: SectionProps) {
   const sectionStyle: React.CSSProperties = backgroundImage && !videoSrc
@@ -27,33 +28,6 @@ export function Section({
   
   const hasBackground = backgroundImage || videoSrc;
 
-  // With parallax, the section becomes a positioning context for the layers
-  if (parallax) {
-    return (
-      <section
-        id={id}
-        className={cn(
-          'relative parallax-wrapper', // This handles the transform-style
-          backgroundImage && !videoSrc && 'bg-[image:var(--bg-image)] bg-center bg-no-repeat', // image can be here too
-          className)}
-        style={sectionStyle}
-      >
-        {videoSrc && (
-          <video className="parallax-video-bg" autoPlay loop muted playsInline>
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        )}
-        {hasBackground && backgroundOverlay && (
-          <div className={cn("absolute inset-0 z-10", backgroundOverlay)} />
-        )}
-        <div className={cn('parallax-content-layer relative z-20', containerClassName)}>
-          {children}
-        </div>
-      </section>
-    );
-  }
-
-  // Non-parallax logic
   return (
     <section 
       id={id} 

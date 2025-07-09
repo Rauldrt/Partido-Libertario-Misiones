@@ -43,11 +43,6 @@ body {
 
     --radius: 1.3rem; /* Increased for more rounded corners */
 
-    --cyan-color-h: 180;
-    --cyan-color-s: 85%;
-    --cyan-color-l: 45%;
-    --cyan-color-foreground-l: 95%;
-
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -115,67 +110,5 @@ body {
   body {
     @apply text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-  }
-}
-
-@layer components {
-  .btn-ripple {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate; 
-  }
-
-  .btn-ripple::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0; /* Start with 0 width/height */
-    height: 0;
-    border-radius: 50%;
-    /* Ripple color: semi-transparent white, generally visible on most button colors */
-    background-color: hsla(0, 0%, 100%, 0.25); 
-    opacity: 0;
-    transform: translate(-50%, -50%); 
-    pointer-events: none;
-    /* Transition for the OUT phase (when :active is removed) */
-    transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
-  }
-
-  .btn-ripple:active::after {
-    width: 250px; /* Expand to a large size (adjust based on typical button size) */
-    height: 250px;
-    opacity: 1;
-    /* Transition for the IN phase (on active) - can be faster or different easing */
-    transition: width 0.2s ease-out, height 0.2s ease-out, opacity 0.2s ease-out;
-  }
-
-  .perspective-container {
-    overflow-x: hidden;
-    overflow-y: auto;
-    perspective: 2px;
-    -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
-  }
-  
-  .parallax-wrapper {
-    position: relative;
-    transform-style: preserve-3d;
-    overflow: hidden; /* This will clip the scaled video background */
-  }
-
-  .parallax-video-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform-origin: center;
-    transform: translateZ(-1px) scale(1.5);
-    z-index: -1;
-  }
-
-  .parallax-content-layer {
-    transform: translateZ(0);
   }
 }
