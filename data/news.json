@@ -1,5 +1,33 @@
 [
   {
+    "title": "Acto día de la Independencia",
+    "date": "09/07/25",
+    "summary": "Conmemoramos un aniversario mas de nuestra independencia con un acto en la plaza central",
+    "content": "",
+    "imageUrl": "https://www.infobae.com/resizer/v2/GHJCMURVURG3ZDTD7JXUWOMJUQ.jpg?auth=12680ba6aeeb0c3a6d9602eee08a164b90e0b538f91457f2efbf8448fc3a8408&smart=true&width=992&height=557&quality=85",
+    "imageHint": "keyword1 keyword2",
+    "type": "event",
+    "youtubeVideoId": "",
+    "embedCode": "",
+    "id": "1752066530103",
+    "linkUrl": "/news/1752066530103",
+    "published": true
+  },
+  {
+    "title": "Acto día de la independencia",
+    "date": "09/07/25 ",
+    "summary": "Conmemoramos un aniversario mas de nuestra independencia con un acto en la plaza Central",
+    "content": "",
+    "imageUrl": "https://placehold.co/600x400.png",
+    "imageHint": "keyword1 keyword2",
+    "type": "event",
+    "youtubeVideoId": "",
+    "embedCode": "",
+    "id": "1752066259520",
+    "linkUrl": "/news/1752066259520",
+    "published": true
+  },
+  {
     "title": "Título del Contenido",
     "date": "08 83 July, 2025",
     "summary": "Este es un resumen breve. Atrae al lector para que haga clic y lea más.",

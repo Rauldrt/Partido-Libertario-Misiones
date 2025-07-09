@@ -1,14 +1,13 @@
+"use client";
 
-import { getNewsItems } from '@/lib/news-service';
+import type { NewsCardData } from '@/lib/news-service';
 import { NewsCard } from '@/components/NewsCard';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { CalendarDays } from 'lucide-react';
 import Autoplay from "embla-carousel-autoplay";
 
-export async function EventsCarousel() {
-  const allItems = await getNewsItems();
-  const events = allItems.filter(item => item.type === 'event' && item.published);
+export function EventsCarousel({ events }: { events: NewsCardData[] }) {
 
   if (events.length === 0) {
     return null;

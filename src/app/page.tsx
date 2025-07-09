@@ -2,11 +2,14 @@ import HomePageClient from './HomePageClient';
 import { LatestNews } from '@/components/LatestNews';
 import { getBannerSlides, getMosaicTiles } from '@/lib/homepage-service';
 import { EventsCarousel } from '@/components/EventsCarousel';
+import { getNewsItems } from '@/lib/news-service';
 
 // This is a Server Component by default
 export default async function HomePage() {
   const slides = await getBannerSlides();
   const tiles = await getMosaicTiles();
+  const allItems = await getNewsItems();
+  const events = allItems.filter(item => item.type === 'event' && item.published);
 
   return (
     // We render the Client Component and pass server components
@@ -14,7 +17,7 @@ export default async function HomePage() {
     <HomePageClient 
         slides={slides} 
         tiles={tiles}
-        events={<EventsCarousel />}
+        events={<EventsCarousel events={events} />}
     >
       <LatestNews />
     </HomePageClient>
