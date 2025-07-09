@@ -9,6 +9,8 @@ const SocialLinkSchema = z.object({
   id: z.string(),
   label: z.string(),
   embedCode: z.string(),
+  width: z.string().optional(),
+  height: z.string().optional(),
 });
 
 const SocialLinksSchema = z.array(SocialLinkSchema);

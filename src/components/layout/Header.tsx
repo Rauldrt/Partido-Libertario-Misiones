@@ -39,9 +39,14 @@ export function Header() {
     getSocialLinks().then(setSocialLinks);
   }, []);
 
-  const handleSocialClick = (e: React.MouseEvent, embedCode: string, label: string) => {
+  const handleSocialClick = (e: React.MouseEvent, link: SocialLink) => {
     e.preventDefault();
-    openModal(embedCode, `Visitanos en ${label}`);
+    openModal({
+      embedCode: link.embedCode,
+      title: `Visitanos en ${link.label}`,
+      width: link.width,
+      height: link.height,
+    });
     setIsMobileMenuOpen(false);
   };
 
@@ -155,7 +160,7 @@ export function Header() {
                   key={social.id} 
                   aria-label={social.label}
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
-                  onClick={(e) => handleSocialClick(e, social.embedCode, social.label)}
+                  onClick={(e) => handleSocialClick(e, social)}
                 >
                   {iconMap[social.id] || social.label}
                 </button>

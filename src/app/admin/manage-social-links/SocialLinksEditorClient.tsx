@@ -11,16 +11,17 @@ import { Loader2, Save } from 'lucide-react';
 import { saveSocialLinksAction } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 
 export function SocialLinksEditorClient({ initialLinks }: { initialLinks: SocialLink[] }) {
   const [links, setLinks] = useState<SocialLink[]>(initialLinks);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const handleLinkChange = (id: string, newCode: string) => {
+  const handleLinkChange = (id: string, field: keyof Omit<SocialLink, 'id' | 'label'>, value: string) => {
     setLinks(currentLinks =>
       currentLinks.map(link =>
-        link.id === id ? { ...link, embedCode: newCode } : link
+        link.id === id ? { ...link, [field]: value } : link
       )
     );
   };
@@ -49,23 +50,52 @@ export function SocialLinksEditorClient({ initialLinks }: { initialLinks: Social
         <Alert>
           <AlertTitle>¿Cómo funciona esto?</AlertTitle>
           <AlertDescription>
-            <p>Pegá aquí el código completo para "insertar" o "embed" que te proporciona cada red social (por ejemplo, desde las opciones de compartir de una publicación o perfil).</p>
-            <p className="mt-2">Este código se mostrará dentro de una ventana modal cuando un usuario haga clic en el ícono correspondiente en el encabezado o pie de página.</p>
+            <p>Pegá aquí el código para "insertar" que te da cada red social. Luego, ajustá el ancho y alto en los campos separados. Podés usar valores como `500px` o `100%`.</p>
+            <p className="mt-2">Este contenido se mostrará en una ventana modal al hacer clic en los íconos del encabezado o pie de página.</p>
           </AlertDescription>
         </Alert>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {links.map((link) => (
-            <div key={link.id} className="space-y-2">
-              <Label htmlFor={`link-${link.id}`} className="text-base font-medium">{link.label}</Label>
-              <Textarea
-                id={`link-${link.id}`}
-                value={link.embedCode}
-                onChange={(e) => handleLinkChange(link.id, e.target.value)}
-                placeholder={`Código de inserción para ${link.label}`}
-                disabled={isPending}
-                className="min-h-[120px] font-mono text-xs"
-              />
+            <div key={link.id} className="p-4 border rounded-lg space-y-4 bg-muted/30">
+              <Label htmlFor={`link-${link.id}`} className="text-lg font-semibold text-primary">{link.label}</Label>
+              
+              <div className="space-y-2">
+                <Label htmlFor={`embedCode-${link.id}`}>Código de Inserción</Label>
+                <Textarea
+                  id={`embedCode-${link.id}`}
+                  value={link.embedCode}
+                  onChange={(e) => handleLinkChange(link.id, 'embedCode', e.target.value)}
+                  placeholder={`Código de inserción para ${link.label}`}
+                  disabled={isPending}
+                  className="min-h-[120px] font-mono text-xs bg-background"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor={`width-${link.id}`}>Ancho (ej: 500px, 100%)</Label>
+                    <Input
+                        id={`width-${link.id}`}
+                        value={link.width || ''}
+                        onChange={(e) => handleLinkChange(link.id, 'width', e.target.value)}
+                        placeholder="Automático"
+                        disabled={isPending}
+                        className="bg-background"
+                    />
+                </div>
+                 <div className="space-y-2">
+                    <Label htmlFor={`height-${link.id}`}>Alto (ej: 600px)</Label>
+                    <Input
+                        id={`height-${link.id}`}
+                        value={link.height || ''}
+                        onChange={(e) => handleLinkChange(link.id, 'height', e.target.value)}
+                        placeholder="Automático"
+                        disabled={isPending}
+                        className="bg-background"
+                    />
+                </div>
+              </div>
             </div>
           ))}
         </div>
