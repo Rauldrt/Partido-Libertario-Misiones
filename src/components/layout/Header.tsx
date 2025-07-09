@@ -41,8 +41,9 @@ export function Header() {
 
   const handleSocialClick = (e: React.MouseEvent, link: SocialLink) => {
     e.preventDefault();
+    if (!link.embedCode) return;
     openModal({
-      embedCode: link.embedCode,
+      content: link.embedCode,
       title: `Visitanos en ${link.label}`,
     });
     setIsMobileMenuOpen(false);

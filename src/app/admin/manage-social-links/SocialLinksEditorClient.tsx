@@ -49,7 +49,8 @@ export function SocialLinksEditorClient({ initialLinks }: { initialLinks: Social
         <Alert>
           <AlertTitle>¿Cómo funciona esto?</AlertTitle>
           <AlertDescription>
-            <p>Pegá aquí el código para "insertar" (embed) que te da cada red social (ej. Elfsight, X, Facebook, etc.). El contenido se adaptará automáticamente al tamaño de la pantalla del usuario.</p>
+            <p>Para cada red social, puedes pegar el **código de inserción completo** (embed) o **solo la URL** que se debe mostrar en el iframe.</p>
+             <p className="mt-2">Si pegás solo una URL (ej. `https://www.youtube.com/embed/...`), el sistema creará un `<iframe>` responsivo por vos.</p>
           </AlertDescription>
         </Alert>
 
@@ -63,7 +64,7 @@ export function SocialLinksEditorClient({ initialLinks }: { initialLinks: Social
                   id={`embedCode-${link.id}`}
                   value={link.embedCode}
                   onChange={(e) => handleLinkChange(link.id, e.target.value)}
-                  placeholder={`Pegá aquí el código de inserción para ${link.label}`}
+                  placeholder={`Pegá aquí el código de inserción o la URL para ${link.label}`}
                   disabled={isPending}
                   className="min-h-[150px] font-mono text-xs bg-background"
                 />
