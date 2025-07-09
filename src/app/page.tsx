@@ -3,6 +3,7 @@ import { LatestNews } from '@/components/LatestNews';
 import { getBannerSlides, getMosaicTiles } from '@/lib/homepage-service';
 import { EventsCarousel } from '@/components/EventsCarousel';
 import { getNewsItems } from '@/lib/news-service';
+import { SocialWidget } from '@/components/SocialWidget';
 
 // This is a Server Component by default
 export default async function HomePage() {
@@ -18,6 +19,7 @@ export default async function HomePage() {
         slides={slides} 
         tiles={tiles}
         events={<EventsCarousel events={events} />}
+        socialWidget={<SocialWidget />}
     >
       <LatestNews />
     </HomePageClient>

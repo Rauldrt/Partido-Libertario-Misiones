@@ -20,7 +20,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { BannerSlideData, MosaicImageData, MosaicTileData } from '@/lib/homepage-service';
-import { SocialWidget } from '@/components/SocialWidget';
 
 const values = [
   {
@@ -89,7 +88,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 };
 
 
-export default function HomePageClient({ children, slides, tiles, events }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], events: React.ReactNode }>) {
+export default function HomePageClient({ children, slides, tiles, events, socialWidget }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], events: React.ReactNode, socialWidget: React.ReactNode }>) {
   const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
 
@@ -244,24 +243,27 @@ export default function HomePageClient({ children, slides, tiles, events }: Prop
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto mb-16">
-            {events}
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-start mb-16">
+            <div className="lg:col-span-1">{events}</div>
+            <div className="lg:col-span-1">
+                 <Card className="shadow-lg w-full">
+                    <CardHeader>
+                        <CardTitle className="flex items-center">
+                            <Rss className="h-6 w-6 text-primary mr-3" />
+                            Conectate en Redes
+                        </CardTitle>
+                        <CardDescription>
+                            Seguinos para no perderte ninguna novedad.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {socialWidget}
+                    </CardContent>
+                </Card>
+            </div>
         </div>
 
         {children}
-      </Section>
-
-      <Section id="social-media" className="py-16 md:py-24 text-center">
-            <h2 className="font-headline text-4xl font-bold text-white flex items-center justify-center">
-                <Rss className="h-8 w-8 text-primary mr-3" />
-                Conectate con Nosotros
-            </h2>
-            <p className="font-body text-lg text-white/90 mt-2 mb-8 max-w-2xl mx-auto">
-                No te pierdas ninguna de nuestras actualizaciones y participá de la conversación en nuestras redes sociales.
-            </p>
-            <div className="max-w-3xl mx-auto">
-              <SocialWidget />
-            </div>
       </Section>
 
       <Section id="contact-us" className="pb-16 md:pb-24">
