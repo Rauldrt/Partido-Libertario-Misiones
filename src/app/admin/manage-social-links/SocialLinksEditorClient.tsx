@@ -5,22 +5,22 @@ import React, { useState, useTransition } from 'react';
 import type { SocialLink } from '@/lib/social-links-service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Save } from 'lucide-react';
 import { saveSocialLinksAction } from './actions';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Textarea } from '@/components/ui/textarea';
 
 export function SocialLinksEditorClient({ initialLinks }: { initialLinks: SocialLink[] }) {
   const [links, setLinks] = useState<SocialLink[]>(initialLinks);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const handleLinkChange = (id: string, newUrl: string) => {
+  const handleLinkChange = (id: string, newCode: string) => {
     setLinks(currentLinks =>
       currentLinks.map(link =>
-        link.id === id ? { ...link, embedUrl: newUrl } : link
+        link.id === id ? { ...link, embedCode: newCode } : link
       )
     );
   };
@@ -49,8 +49,8 @@ export function SocialLinksEditorClient({ initialLinks }: { initialLinks: Social
         <Alert>
           <AlertTitle>¿Cómo funciona esto?</AlertTitle>
           <AlertDescription>
-            <p>Estas URLs se utilizan cuando un usuario hace clic en un ícono de red social en el encabezado o pie de página. Se abrirá una ventana emergente (modal) con el contenido de esta URL.</p>
-            <p className="mt-2">Idealmente, deberías usar una URL de "embed" o "inserción" si la red social la proporciona, ya que a menudo ofrecen una vista más limpia y adaptada.</p>
+            <p>Pegá aquí el código completo para "insertar" o "embed" que te proporciona cada red social (por ejemplo, desde las opciones de compartir de una publicación o perfil).</p>
+            <p className="mt-2">Este código se mostrará dentro de una ventana modal cuando un usuario haga clic en el ícono correspondiente en el encabezado o pie de página.</p>
           </AlertDescription>
         </Alert>
 
@@ -58,12 +58,13 @@ export function SocialLinksEditorClient({ initialLinks }: { initialLinks: Social
           {links.map((link) => (
             <div key={link.id} className="space-y-2">
               <Label htmlFor={`link-${link.id}`} className="text-base font-medium">{link.label}</Label>
-              <Input
+              <Textarea
                 id={`link-${link.id}`}
-                value={link.embedUrl}
+                value={link.embedCode}
                 onChange={(e) => handleLinkChange(link.id, e.target.value)}
-                placeholder={`URL para ${link.label}`}
+                placeholder={`Código de inserción para ${link.label}`}
                 disabled={isPending}
+                className="min-h-[120px] font-mono text-xs"
               />
             </div>
           ))}

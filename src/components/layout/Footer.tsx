@@ -23,9 +23,9 @@ export function Footer() {
     getSocialLinks().then(setSocialLinks);
   }, []);
 
-  const handleSocialClick = (e: React.MouseEvent, embedUrl: string, label: string) => {
+  const handleSocialClick = (e: React.MouseEvent, embedCode: string, label: string) => {
     e.preventDefault();
-    openModal(embedUrl, `Visitanos en ${label}`);
+    openModal(embedCode, `Visitanos en ${label}`);
   };
 
   return (
@@ -38,7 +38,7 @@ export function Footer() {
                 key={social.id}
                 aria-label={social.label}
                 className="hover:text-primary transition-colors"
-                onClick={(e) => handleSocialClick(e, social.embedUrl, social.label)}
+                onClick={(e) => handleSocialClick(e, social.embedCode, social.label)}
               >
                 {iconMap[social.id] || social.label}
               </button>

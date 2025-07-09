@@ -3,21 +3,21 @@
   {
     "id": "facebook",
     "label": "Facebook",
-    "embedUrl": "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FPLMisiones&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+    "embedCode": "<iframe src=\"https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FPLMisiones&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId\" style=\"border:none;overflow:hidden;width:100%;height:100%;\" scrolling=\"no\" frameborder=\"0\" allowfullscreen=\"true\" allow=\"autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share\"></iframe>"
   },
   {
     "id": "x",
     "label": "X (Twitter)",
-    "embedUrl": "https://x.com/PLMisiones"
+    "embedCode": "<a class=\"twitter-timeline\" href=\"https://twitter.com/PLMisiones?ref_src=twsrc%5Etfw\">Tweets by PLMisiones</a> <script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>"
   },
   {
     "id": "instagram",
     "label": "Instagram",
-    "embedUrl": "https://www.instagram.com/plmisiones/embed"
+    "embedCode": "<iframe src=\"https://www.instagram.com/plmisiones/embed\" width=\"100%\" height=\"100%\" frameborder=\"0\"></iframe>"
   },
   {
     "id": "youtube",
     "label": "YouTube",
-    "embedUrl": "https://www.youtube.com/embed/videoseries?list=UULFO2i6Ua_52F8Y-mFc0J8w"
+    "embedCode": "<iframe src=\"https://www.youtube.com/embed/videoseries?list=UULFO2i6Ua_52F8Y-mFc0J8w\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen style=\"width:100%; height:100%;\"></iframe>"
   }
 ]

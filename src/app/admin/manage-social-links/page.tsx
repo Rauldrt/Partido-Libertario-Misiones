@@ -11,7 +11,7 @@ export default async function ManageSocialLinksPage() {
       <CardHeader>
         <CardTitle>Gestionar Enlaces Sociales para Modales</CardTitle>
         <CardDescription>
-          Modificá las URLs de inserción (embed) que se abren en una ventana modal al hacer clic en los íconos de redes sociales del encabezado y pie de página.
+          Modificá los códigos de inserción (embed) que se abren en una ventana modal al hacer clic en los íconos de redes sociales del encabezado y pie de página.
         </CardDescription>
       </CardHeader>
       <CardContent>

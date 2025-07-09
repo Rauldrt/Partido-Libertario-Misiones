@@ -3,26 +3,27 @@
 
 import React, { createContext, useState, useContext, type PropsWithChildren } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { EmbedDisplay } from '@/components/EmbedDisplay';
 
 interface SocialModalContextType {
-  openModal: (url: string, title: string) => void;
+  openModal: (embedCode: string, title: string) => void;
 }
 
 const SocialModalContext = createContext<SocialModalContextType | undefined>(undefined);
 
 export function SocialModalProvider({ children }: PropsWithChildren) {
-  const [modalState, setModalState] = useState<{ isOpen: boolean; url: string; title: string }>({
+  const [modalState, setModalState] = useState<{ isOpen: boolean; embedCode: string; title: string }>({
     isOpen: false,
-    url: '',
+    embedCode: '',
     title: '',
   });
 
-  const openModal = (url: string, title: string) => {
-    setModalState({ isOpen: true, url, title });
+  const openModal = (embedCode: string, title: string) => {
+    setModalState({ isOpen: true, embedCode, title });
   };
 
   const closeModal = () => {
-    setModalState({ isOpen: false, url: '', title: '' });
+    setModalState({ isOpen: false, embedCode: '', title: '' });
   };
 
   return (
@@ -33,14 +34,8 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
           <DialogHeader className="p-4 pb-2">
             <DialogTitle className="font-headline text-primary">{modalState.title}</DialogTitle>
           </DialogHeader>
-          <div className="flex-grow rounded-b-lg overflow-hidden">
-            <iframe
-              src={modalState.url}
-              title={modalState.title}
-              width="100%"
-              height="100%"
-              frameBorder="0"
-            />
+          <div className="flex-grow rounded-b-lg overflow-hidden bg-background">
+            <EmbedDisplay embedCode={modalState.embedCode} />
           </div>
         </DialogContent>
       </Dialog>
