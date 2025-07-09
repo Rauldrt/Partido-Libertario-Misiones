@@ -44,8 +44,11 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
   };
 
   let finalEmbedCode = modalState.content;
+  let useResponsiveWrapper = false;
+
   if (modalState.isOpen && isUrl(modalState.content)) {
-     finalEmbedCode = `<iframe src="${modalState.content}" style="border:none;width:100%;height:100%;" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+     finalEmbedCode = `<iframe src="${modalState.content}" class="absolute top-0 left-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+     useResponsiveWrapper = true;
   }
 
   return (
@@ -61,9 +64,15 @@ export function SocialModalProvider({ children }: PropsWithChildren) {
           <div 
             className="flex-grow rounded-b-lg overflow-auto bg-background w-full h-full"
           >
-            <div className="w-full h-full [&>div]:w-full [&>div]:h-full">
-              <EmbedDisplay embedCode={finalEmbedCode} />
-            </div>
+             {useResponsiveWrapper ? (
+                <div className="relative w-full" style={{ paddingTop: '56.25%' /* 16:9 aspect ratio */ }}>
+                    <EmbedDisplay embedCode={finalEmbedCode} />
+                </div>
+            ) : (
+                <div className="w-full h-full [&>div]:w-full [&>div]:h-full">
+                    <EmbedDisplay embedCode={finalEmbedCode} />
+                </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
