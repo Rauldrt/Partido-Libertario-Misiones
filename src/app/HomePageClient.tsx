@@ -64,7 +64,8 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
       key={currentImage.src} // Key helps React re-render, triggering the animation
       className={cn(
         'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer',
-        tile.layout
+        tile.layout,
+        tile.animation
       )}
       onClick={() => onImageClick(tile.images, currentIndex)}
     >

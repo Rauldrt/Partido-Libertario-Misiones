@@ -4,13 +4,12 @@
 import { NewsCard } from '@/components/NewsCard';
 import { Section } from '@/components/ui/Section';
 import type { NewsCardData } from '@/lib/news-service';
-import { Newspaper, CalendarDays, Megaphone, Radio, Facebook, Twitter, Instagram, Youtube, Rss } from 'lucide-react';
-import Link from 'next/link';
+import { Newspaper, CalendarDays, Megaphone, Radio, Rss } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Banner } from '@/components/Banner';
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { SocialWidget } from '@/components/SocialWidget';
 
 export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[] }) {
   const carouselNewsItems = newsItems.slice(0, 4);
@@ -97,18 +96,15 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
         </Section>
         
         <Section id="social-media" className="py-12 text-center bg-card/50">
-             <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center justify-center text-foreground">
+            <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center justify-center text-foreground">
                 <Rss className="h-8 w-8 text-primary mr-3" />
                 Conectate con Nosotros
             </h2>
             <p className="font-body text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
                 No te pierdas ninguna de nuestras actualizaciones y participá de la conversación en nuestras redes sociales.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"><Link href="https://www.facebook.com/PLMisiones/" target="_blank" rel="noopener noreferrer"><Facebook className="mr-2"/>Facebook</Link></Button>
-                <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white shadow-lg"><Link href="https://x.com/PLMisiones" target="_blank" rel="noopener noreferrer"><Twitter className="mr-2"/>Twitter / X</Link></Button>
-                <Button asChild className="bg-rose-500 hover:bg-rose-600 text-white shadow-lg"><Link href="https://www.instagram.com/plmisiones/" target="_blank" rel="noopener noreferrer"><Instagram className="mr-2"/>Instagram</Link></Button>
-                <Button asChild className="bg-red-600 hover:bg-red-700 text-white shadow-lg"><Link href="https://www.youtube.com/@partidolibertariomisiones" target="_blank" rel="noopener noreferrer"><Youtube className="mr-2"/>YouTube</Link></Button>
+            <div className="max-w-3xl mx-auto">
+              <SocialWidget />
             </div>
         </Section>
 
