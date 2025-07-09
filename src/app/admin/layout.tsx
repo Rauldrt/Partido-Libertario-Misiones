@@ -12,7 +12,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, LayoutDashboard, LayoutGrid, ListChecks, Rss, Server } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutDashboard, LayoutGrid, Link2, ListChecks, Rss, Server } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
@@ -73,6 +73,14 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                   <Link href="/admin/manage-social-widget">
                     <Rss />
                     Gestionar Widget Social
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/manage-social-links">
+                    <Link2 />
+                    Gestionar Enlaces Sociales
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

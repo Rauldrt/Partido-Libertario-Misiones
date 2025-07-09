@@ -1,24 +1,31 @@
 
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { useSocialModal } from '@/context/SocialModalContext';
+import { getSocialLinks, type SocialLink } from '@/lib/social-links-service';
 
-const socialLinks = [
-  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
-  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" /> },
-  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" /> },
-  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" /> },
-];
+const iconMap: { [key: string]: React.ReactNode } = {
+  facebook: <Facebook className="h-6 w-6" />,
+  x: <Twitter className="h-6 w-6" />,
+  instagram: <Instagram className="h-6 w-6" />,
+  youtube: <Youtube className="h-6 w-6" />,
+};
 
 export function Footer() {
   const { openModal } = useSocialModal();
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
-  const handleSocialClick = (e: React.MouseEvent, href: string, label: string) => {
+  useEffect(() => {
+    // Fetch links on the client side since this is a client component
+    getSocialLinks().then(setSocialLinks);
+  }, []);
+
+  const handleSocialClick = (e: React.MouseEvent, embedUrl: string, label: string) => {
     e.preventDefault();
-    openModal(href, `Visitanos en ${label}`);
+    openModal(embedUrl, `Visitanos en ${label}`);
   };
 
   return (
@@ -28,12 +35,12 @@ export function Footer() {
           <div className="flex justify-center gap-6 mb-4">
             {socialLinks.map((social) => (
               <button 
-                key={social.label}
+                key={social.id}
                 aria-label={social.label}
                 className="hover:text-primary transition-colors"
-                onClick={(e) => handleSocialClick(e, social.href, social.label)}
+                onClick={(e) => handleSocialClick(e, social.embedUrl, social.label)}
               >
-                {social.icon}
+                {iconMap[social.id] || social.label}
               </button>
             ))}
           </div>

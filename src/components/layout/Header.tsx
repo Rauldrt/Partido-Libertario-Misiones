@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSocialModal } from '@/context/SocialModalContext';
+import { getSocialLinks, type SocialLink } from '@/lib/social-links-service';
 
 const navItems = [
   { label: 'Inicio', href: '/', icon: <Home className="mr-2 h-5 w-5" /> },
@@ -22,20 +23,25 @@ const navItems = [
   { label: 'Contacto', href: '/contact', icon: <Mail className="mr-2 h-5 w-5" /> },
 ];
 
-const socialLinks = [
-  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
-  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" /> },
-  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" /> },
-  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" /> },
-];
+const iconMap: { [key: string]: React.ReactNode } = {
+  facebook: <Facebook className="h-7 w-7" />,
+  x: <Twitter className="h-7 w-7" />,
+  instagram: <Instagram className="h-7 w-7" />,
+  youtube: <Youtube className="h-7 w-7" />,
+};
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const { openModal } = useSocialModal();
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
-  const handleSocialClick = (e: React.MouseEvent, href: string, label: string) => {
+  useEffect(() => {
+    getSocialLinks().then(setSocialLinks);
+  }, []);
+
+  const handleSocialClick = (e: React.MouseEvent, embedUrl: string, label: string) => {
     e.preventDefault();
-    openModal(href, `Visitanos en ${label}`);
+    openModal(embedUrl, `Visitanos en ${label}`);
     setIsMobileMenuOpen(false);
   };
 
@@ -146,12 +152,12 @@ export function Header() {
             <div className="flex justify-around items-center py-2 px-2">
               {socialLinks.map((social) => (
                 <button 
-                  key={social.label} 
+                  key={social.id} 
                   aria-label={social.label}
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
-                  onClick={(e) => handleSocialClick(e, social.href, social.label)}
+                  onClick={(e) => handleSocialClick(e, social.embedUrl, social.label)}
                 >
-                  {React.cloneElement(social.icon, { className: "h-7 w-7" })}
+                  {iconMap[social.id] || social.label}
                 </button>
               ))}
             </div>

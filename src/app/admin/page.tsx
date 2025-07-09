@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, LayoutGrid, ListChecks, Rss, Server } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutGrid, Link2, ListChecks, Rss, Server } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -93,6 +93,23 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-social-widget">
                 <Rss className="mr-2 h-4 w-4" />
                 Gestionar Widget
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+         <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Enlaces Sociales</CardTitle>
+            <CardDescription>Edita las URLs que se abren en los modales de redes sociales.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Controla las URLs de "embed" para los íconos del encabezado y pie de página.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-social-links">
+                <Link2 className="mr-2 h-4 w-4" />
+                Gestionar Enlaces
               </Link>
             </Button>
           </CardContent>

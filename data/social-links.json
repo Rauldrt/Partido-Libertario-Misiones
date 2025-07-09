@@ -1,0 +1,23 @@
+
+[
+  {
+    "id": "facebook",
+    "label": "Facebook",
+    "embedUrl": "https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FPLMisiones&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+  },
+  {
+    "id": "x",
+    "label": "X (Twitter)",
+    "embedUrl": "https://x.com/PLMisiones"
+  },
+  {
+    "id": "instagram",
+    "label": "Instagram",
+    "embedUrl": "https://www.instagram.com/plmisiones/embed"
+  },
+  {
+    "id": "youtube",
+    "label": "YouTube",
+    "embedUrl": "https://www.youtube.com/embed/videoseries?list=UULFO2i6Ua_52F8Y-mFc0J8w"
+  }
+]
