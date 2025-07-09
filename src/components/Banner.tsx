@@ -35,14 +35,14 @@ export function Banner({
       className
     )}>
       <h1 
-        className="w-full font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up break-words"
+        className="w-full font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 break-words"
         style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}
       >
         {title}
       </h1>
       <p 
         className={cn(
-          "w-full font-body text-base md:text-lg mb-6 md:mb-8 opacity-0 animate-fade-in-up [animation-delay:200ms] break-words",
+          "w-full font-body text-base md:text-lg mb-6 md:mb-8 break-words",
            "md:max-w-2xl",
            textAlignment === 'center' ? 'mx-auto' : ''
         )}
@@ -52,7 +52,7 @@ export function Banner({
       </p>
       {ctas && ctas.length > 0 && (
           <div className={cn(
-              "opacity-0 animate-fade-in-up [animation-delay:400ms] flex flex-col items-center gap-4 w-full",
+              "flex flex-col items-center gap-4 w-full",
                textAlignment === 'center' ? 'md:justify-center' : 'md:justify-start',
                'md:flex-row md:flex-wrap'
           )}>

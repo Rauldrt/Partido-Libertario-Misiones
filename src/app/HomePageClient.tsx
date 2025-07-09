@@ -20,7 +20,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { BannerSlideData, MosaicImageData, MosaicTileData } from '@/lib/homepage-service';
-import { SocialWidget } from '@/components/SocialWidget';
 
 const values = [
   {
@@ -65,8 +64,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
       key={currentImage.src} // Key helps React re-render, triggering the animation
       className={cn(
         'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer',
-        tile.layout,
-        tile.animation
+        tile.layout
       )}
       onClick={() => onImageClick(tile.images, currentIndex)}
     >
@@ -105,7 +103,6 @@ export default function HomePageClient({ children, slides, tiles, events }: Prop
         id="hero" 
         className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
         videoSrc="/background.mp4"
-        parallax={true}
         backgroundOverlay="bg-black/60"
         containerClassName="w-full h-full px-4 relative flex items-center justify-center"
       >
@@ -143,7 +140,7 @@ export default function HomePageClient({ children, slides, tiles, events }: Prop
             <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
 
-        <div className="absolute bottom-40 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
+        <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
             <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/fiscalizacion">
                   <ShieldCheck className="mr-2 h-5 w-5" />
@@ -245,8 +242,7 @@ export default function HomePageClient({ children, slides, tiles, events }: Prop
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto mb-16 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            <SocialWidget />
+        <div className="max-w-5xl mx-auto mb-16">
             {events}
         </div>
 

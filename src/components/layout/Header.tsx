@@ -13,8 +13,6 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import Script from 'next/script';
 
 const navItems = [
   { label: 'Inicio', href: '/', icon: <Home className="mr-2 h-5 w-5" /> },
@@ -24,21 +22,14 @@ const navItems = [
 ];
 
 const socialLinks = [
-  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" />, widgetClass: 'id-del-widget-de-facebook' },
-  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" />, widgetClass: 'elfsight-app-177e6f4c-8c95-47f2-8d35-13dde78a394f' }, // ID de ejemplo de Elfsight para X/Twitter
-  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" />, widgetClass: 'elfsight-app-8d36f943-82d9-4ee1-9c2d-c4ddfa7b45a1' },
-  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" />, widgetClass: 'elfsight-app-b5428be1-2a97-45a4-83ae-e8415117e7c2' },
+  { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
+  { label: 'Twitter', href: 'https://x.com/PLMisiones', icon: <Twitter className="h-6 w-6" /> },
+  { label: 'Instagram', href: 'https://www.instagram.com/plmisiones/', icon: <Instagram className="h-6 w-6" /> },
+  { label: 'YouTube', href: 'https://www.youtube.com/@partidolibertariomisiones', icon: <Youtube className="h-6 w-6" /> },
 ];
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const [modalNetwork, setModalNetwork] = React.useState<{ label: string; href: string; icon: JSX.Element; widgetClass: string; } | null>(null);
-
-  const handleSocialClick = (e: React.MouseEvent, network: typeof socialLinks[0]) => {
-    e.preventDefault();
-    setModalNetwork(network);
-    setIsMobileMenuOpen(false); // Close mobile menu if open
-  };
 
   return (
     <>
@@ -93,7 +84,7 @@ export function Header() {
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="bg-gradient-to-br from-purple-950 to-orange-600 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75 btn-ripple"
+              className="bg-gradient-to-br from-purple-950 to-orange-600 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
               {isMobileMenuOpen ? (
@@ -149,8 +140,10 @@ export function Header() {
                   key={social.label} 
                   href={social.href} 
                   aria-label={social.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
-                  onClick={(e) => handleSocialClick(e, social)}
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {React.cloneElement(social.icon, { className: "h-7 w-7" })}
                 </Link>
@@ -159,38 +152,6 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      <Dialog open={!!modalNetwork} onOpenChange={(isOpen) => !isOpen && setModalNetwork(null)}>
-        <DialogContent className="max-w-3xl w-full h-[80vh] p-2 flex flex-col bg-card">
-          <DialogHeader className="p-4 border-b flex-row items-center justify-between">
-            <DialogTitle className="flex items-center gap-3 font-headline">
-              <span className="text-primary">{modalNetwork?.icon}</span>
-              {modalNetwork?.label}
-            </DialogTitle>
-          </DialogHeader>
-          {modalNetwork && (
-             <div className="w-full h-full flex-grow">
-               {/*
-                Para widgets basados en scripts (como Elfsight):
-                1. El componente <Script> carga el código base del proveedor del widget.
-                2. El <div> de abajo es el contenedor. Su "className" se asigna dinámicamente
-                   según el icono en el que hiciste clic.
-                3. Para cambiar el widget de una red social, simplemente actualiza el
-                   "widgetClass" en el array "socialLinks" al principio de este archivo.
-              */}
-              <Script
-                src="https://static.elfsight.com/platform/platform.js"
-                strategy="lazyOnload"
-                data-elfsight-app-lazy-init
-              />
-              <div
-                className={`${modalNetwork.widgetClass} h-full w-full`}
-                data-elfsight-app-lazy
-              />
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

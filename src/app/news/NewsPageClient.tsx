@@ -11,7 +11,6 @@ import Autoplay from "embla-carousel-autoplay";
 import { Banner } from '@/components/Banner';
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { SocialWidget } from '@/components/SocialWidget';
 
 export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[] }) {
   const carouselNewsItems = newsItems.slice(0, 4);
@@ -21,13 +20,13 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
       <Section id="news-and-events-header" className="overflow-hidden relative">
         {/* Animated Background and Icons Container */}
         <div className="absolute inset-0 z-0">
-          <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400 bg-300% animate-animated-gradient" />
-          <Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white animate-subtle-pulse" style={{ animationDuration: '7s' }} />
-          <CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white animate-subtle-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
-          <Megaphone className="absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-white animate-subtle-pulse" style={{ animationDuration: '8s', animationDelay: '0.5s' }} />
-          <Radio className="absolute top-[10%] right-[10%] h-12 w-12 text-white animate-subtle-pulse" style={{ animationDuration: '6s', animationDelay: '1.5s' }} />
-           <Newspaper className="absolute bottom-[10%] left-[30%] h-14 w-14 text-white animate-subtle-pulse" style={{ animationDuration: '7.5s', animationDelay: '2s' }} />
-          <CalendarDays className="absolute top-[30%] right-[45%] h-10 w-10 text-white animate-subtle-pulse" style={{ animationDuration: '5.5s', animationDelay: '2.5s' }} />
+          <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400" />
+          <Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white" />
+          <CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white" />
+          <Megaphone className="absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-white" />
+          <Radio className="absolute top-[10%] right-[10%] h-12 w-12 text-white" />
+           <Newspaper className="absolute bottom-[10%] left-[30%] h-14 w-14 text-white" />
+          <CalendarDays className="absolute top-[30%] right-[45%] h-10 w-10 text-white" />
         </div>
 
         {/* Content Area */}
@@ -97,24 +96,19 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
           </div>
         </Section>
         
-        <Section id="social-media" className="py-12">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-                <div>
-                     <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center text-foreground">
-                        <Rss className="h-8 w-8 text-primary mr-3" />
-                        Conectate con Nosotros
-                    </h2>
-                    <p className="font-body text-lg text-muted-foreground mb-6">
-                        No te pierdas ninguna de nuestras actualizaciones y participá de la conversación en nuestras redes sociales.
-                    </p>
-                    <div className="flex flex-wrap gap-4">
-                        <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white"><Link href="#"><Facebook className="mr-2"/>Facebook</Link></Button>
-                        <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white"><Link href="#"><Twitter className="mr-2"/>Twitter / X</Link></Button>
-                        <Button asChild className="bg-rose-500 hover:bg-rose-600 text-white"><Link href="#"><Instagram className="mr-2"/>Instagram</Link></Button>
-                        <Button asChild className="bg-red-600 hover:bg-red-700 text-white"><Link href="#"><Youtube className="mr-2"/>YouTube</Link></Button>
-                    </div>
-                </div>
-                <SocialWidget />
+        <Section id="social-media" className="py-12 text-center bg-card/50">
+             <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center justify-center text-foreground">
+                <Rss className="h-8 w-8 text-primary mr-3" />
+                Conectate con Nosotros
+            </h2>
+            <p className="font-body text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+                No te pierdas ninguna de nuestras actualizaciones y participá de la conversación en nuestras redes sociales.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg"><Link href="https://www.facebook.com/PLMisiones/" target="_blank" rel="noopener noreferrer"><Facebook className="mr-2"/>Facebook</Link></Button>
+                <Button asChild className="bg-sky-500 hover:bg-sky-600 text-white shadow-lg"><Link href="https://x.com/PLMisiones" target="_blank" rel="noopener noreferrer"><Twitter className="mr-2"/>Twitter / X</Link></Button>
+                <Button asChild className="bg-rose-500 hover:bg-rose-600 text-white shadow-lg"><Link href="https://www.instagram.com/plmisiones/" target="_blank" rel="noopener noreferrer"><Instagram className="mr-2"/>Instagram</Link></Button>
+                <Button asChild className="bg-red-600 hover:bg-red-700 text-white shadow-lg"><Link href="https://www.youtube.com/@partidolibertariomisiones" target="_blank" rel="noopener noreferrer"><Youtube className="mr-2"/>YouTube</Link></Button>
             </div>
         </Section>
 
