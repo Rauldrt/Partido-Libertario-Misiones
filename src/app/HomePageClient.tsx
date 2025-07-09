@@ -245,7 +245,7 @@ export default function HomePageClient({ children, slides, tiles, events }: Prop
           </p>
         </div>
 
-        <div className="max-w-7xl mx-auto mb-16 grid lg:grid-cols-2 gap-8 items-stretch">
+        <div className="max-w-7xl mx-auto mb-16 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
             <SocialWidget />
             {events}
         </div>
