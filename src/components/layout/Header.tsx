@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import React from 'react';
+import { useSocialModal } from '@/context/SocialModalContext';
 
 const navItems = [
   { label: 'Inicio', href: '/', icon: <Home className="mr-2 h-5 w-5" /> },
@@ -30,6 +31,14 @@ const socialLinks = [
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const { openModal } = useSocialModal();
+
+  const handleSocialClick = (e: React.MouseEvent, href: string, label: string) => {
+    e.preventDefault();
+    openModal(href, `Visitanos en ${label}`);
+    setIsMobileMenuOpen(false);
+  };
+
 
   return (
     <>
@@ -136,17 +145,14 @@ export function Header() {
             <DropdownMenuSeparator className="my-1 bg-white/20" />
             <div className="flex justify-around items-center py-2 px-2">
               {socialLinks.map((social) => (
-                <Link 
+                <button 
                   key={social.label} 
-                  href={social.href} 
                   aria-label={social.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => handleSocialClick(e, social.href, social.label)}
                 >
                   {React.cloneElement(social.icon, { className: "h-7 w-7" })}
-                </Link>
+                </button>
               ))}
             </div>
           </DropdownMenuContent>

@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeManager } from '@/components/layout/ThemeManager';
+import { SocialModalProvider } from '@/context/SocialModalContext';
 
 export const metadata: Metadata = {
   title: 'Partido Libertario Misiones',
@@ -26,14 +27,16 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-gradient-to-b from-black via-purple-950 to-fuchsia-500 overflow-x-hidden">
         <ThemeManager />
-        <Header />
-        <div className="flex-grow flex flex-col">
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
+        <SocialModalProvider>
+          <Header />
+          <div className="flex-grow flex flex-col">
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <Toaster />
+        </SocialModalProvider>
       </body>
     </html>
   );

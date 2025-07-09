@@ -4,6 +4,7 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
+import { useSocialModal } from '@/context/SocialModalContext';
 
 const socialLinks = [
   { label: 'Facebook', href: 'https://www.facebook.com/PLMisiones/', icon: <Facebook className="h-6 w-6" /> },
@@ -13,6 +14,12 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const { openModal } = useSocialModal();
+
+  const handleSocialClick = (e: React.MouseEvent, href: string, label: string) => {
+    e.preventDefault();
+    openModal(href, `Visitanos en ${label}`);
+  };
 
   return (
     <>
@@ -20,16 +27,14 @@ export function Footer() {
         <div className="container mx-auto px-4 md:px-6 text-center">
           <div className="flex justify-center gap-6 mb-4">
             {socialLinks.map((social) => (
-              <Link 
+              <button 
                 key={social.label}
-                href={social.href} 
                 aria-label={social.label}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="hover:text-primary transition-colors"
+                onClick={(e) => handleSocialClick(e, social.href, social.label)}
               >
                 {social.icon}
-              </Link>
+              </button>
             ))}
           </div>
           <p className="font-body text-sm">
