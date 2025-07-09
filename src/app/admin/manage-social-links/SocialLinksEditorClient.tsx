@@ -50,7 +50,7 @@ export function SocialLinksEditorClient({ initialLinks }: { initialLinks: Social
           <AlertTitle>¿Cómo funciona esto?</AlertTitle>
           <AlertDescription>
             <p>Para cada red social, puedes pegar el **código de inserción completo** (embed) o **solo la URL** que se debe mostrar en el iframe.</p>
-             <p className="mt-2">Si pegás solo una URL (ej. `https://www.youtube.com/embed/...`), el sistema creará un `<iframe>` responsivo por vos.</p>
+            <p className="mt-2">Si pegás solo una URL (ej. `https://www.youtube.com/embed/...`), el sistema creará un `&lt;iframe&gt;` responsivo por vos.</p>
           </AlertDescription>
         </Alert>
 
