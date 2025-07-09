@@ -7,10 +7,17 @@ import { Button } from '@/components/ui/button';
 
 export async function LatestNews() {
   const allNews = await getNewsItems();
-  const latestNews = allNews.filter(item => item.published).slice(0, 3);
+  const latestNews = allNews.filter(item => item.type === 'news' && item.published).slice(0, 3);
+
+  if (latestNews.length === 0) {
+    return null; // Don't render the section if there's no news
+  }
 
   return (
-    <>
+    <div className="max-w-5xl mx-auto">
+      <h3 className="font-headline text-3xl font-bold text-white text-center mb-8">
+        Últimas Noticias
+      </h3>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {latestNews.map((item) => (
           <NewsCard key={item.id} {...item} />
@@ -21,6 +28,6 @@ export async function LatestNews() {
           <Link href="/news">Ver Todas las Noticias <ArrowRight className="ml-2 h-5 w-5" /></Link>
         </Button>
       </div>
-    </>
+    </div>
   );
 }
