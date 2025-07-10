@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Goal, Eye, Users as ValuesIcon, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss, Star } from 'lucide-react';
+import { Goal, Eye, Users as ValuesIcon, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -236,7 +236,7 @@ export default function HomePageClient({ children, slides, tiles, events, social
              <div className="mt-8 text-center">
                 <Button asChild>
                     <Link href="/referentes">
-                        <Star className="mr-2 h-5 w-5" />
+                        <Users className="mr-2 h-5 w-5" />
                         Nuestros Referentes
                     </Link>
                 </Button>
