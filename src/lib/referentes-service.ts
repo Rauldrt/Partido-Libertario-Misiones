@@ -17,8 +17,8 @@ export async function getReferentes(): Promise<ReferenteData[]> {
   try {
     const data = await fs.readFile(referentesFilePath, 'utf-8');
     const items: Omit<ReferenteData, 'id'>[] = JSON.parse(data);
-    // Add unique IDs for React keys
-    return items.map((item, index) => ({ id: `ref-${index}`, ...item }));
+    // Add unique IDs for React keys and dnd-kit
+    return items.map((item, index) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
   } catch (error: any) {
     if (error.code === 'ENOENT') {
       await fs.writeFile(referentesFilePath, JSON.stringify([], null, 2), 'utf-8');
@@ -29,9 +29,11 @@ export async function getReferentes(): Promise<ReferenteData[]> {
   }
 }
 
-export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
+export async function saveReferentes(referentes: ReferenteData[]): Promise<void> {
     try {
-        await fs.writeFile(referentesFilePath, JSON.stringify(referentes, null, 2), 'utf-8');
+        // Strip the temporary 'id' field before writing back to the file
+        const dataToSave = referentes.map(({ id, ...rest }) => rest);
+        await fs.writeFile(referentesFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
     } catch (error) {
         console.error('Failed to write referentes data:', error);
         throw new Error('Could not save referentes.');

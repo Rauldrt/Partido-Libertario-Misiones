@@ -1,7 +1,11 @@
 
+import { getReferentes } from '@/lib/referentes-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ReferentesEditorClient } from './ReferentesEditorClient';
 
 export default async function ManageReferentesPage() {
+  const referentes = await getReferentes();
+
   return (
     <Card>
       <CardHeader>
@@ -11,9 +15,7 @@ export default async function ManageReferentesPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-center h-48 border-2 border-dashed rounded-lg">
-            <p className="text-muted-foreground">Funcionalidad de gestión de referentes en desarrollo.</p>
-        </div>
+        <ReferentesEditorClient initialReferentes={referentes} />
       </CardContent>
     </Card>
   );
