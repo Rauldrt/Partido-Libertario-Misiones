@@ -7,16 +7,16 @@
   {
     "id": "x",
     "label": "X (Twitter)",
-    "embedCode": "<a class=\"twitter-timeline\" href=\"https://twitter.com/PLMisiones?ref_src=twsrc%5Etfw\">Tweets by PLMisiones</a> <script async src=\"https://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>"
+    "embedCode": "<!-- Elfsight Twitter Feed | Untitled Twitter Feed -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-177e6f4c-8c95-47f2-8d35-13dde78a394f\" data-elfsight-app-lazy></div>"
   },
   {
     "id": "instagram",
     "label": "Instagram",
-    "embedCode": "\nhttps://8d36f94382d94ee19c2dc4ddfa7b45a1.elf.site"
+    "embedCode": "\n<!-- Elfsight Instagram Feed | Untitled Instagram Feed -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-594a1fcf-15e8-4863-8c53-b1880c9478da\" data-elfsight-app-lazy></div>"
   },
   {
     "id": "youtube",
     "label": "YouTube",
-    "embedCode": "<!-- Elfsight YouTube Gallery | Untitled YouTube Gallery -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-25a9663d-bb59-4e73-b86f-edcda5b6eccb\" data-elfsight-app-lazy></div>"
+    "embedCode": "<!-- Elfsight YouTube Gallery | Untitled YouTube Gallery -->\n<script src=\"https://static.elfsight.com/platform/platform.js\" async></script>\n<div class=\"elfsight-app-51aea782-1a42-40e8-bf13-9c87000dcf56\" data-elfsight-app-lazy></div>\n      "
   }
 ]
