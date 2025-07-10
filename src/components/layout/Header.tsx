@@ -103,7 +103,7 @@ export function Header() {
         <DropdownMenu open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="bg-gradient-to-br from-purple-950 to-orange-600 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75"
+              className="relative bg-gradient-to-br from-purple-950 to-orange-600 text-white hover:from-purple-950 hover:to-orange-600 group rounded-full w-16 h-16 shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white/75"
               aria-label={isMobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
             >
               {isMobileMenuOpen ? (
