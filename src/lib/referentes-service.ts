@@ -6,20 +6,19 @@ import path from 'path';
 
 export interface ReferenteData {
   id: string;
+  locality: string;
   name: string;
-  role: string;
-  imageUrl: string;
-  bio: string;
-  twitterUrl?: string;
-  instagramUrl?: string;
+  phone: string; // WhatsApp number, e.g., 5493764123456
 }
 
 const referentesFilePath = path.join(process.cwd(), 'data', 'referentes.json');
 
-async function getReferentes(): Promise<ReferenteData[]> {
+export async function getReferentes(): Promise<ReferenteData[]> {
   try {
     const data = await fs.readFile(referentesFilePath, 'utf-8');
-    return JSON.parse(data);
+    const items: Omit<ReferenteData, 'id'>[] = JSON.parse(data);
+    // Add unique IDs for React keys
+    return items.map((item, index) => ({ id: `ref-${index}`, ...item }));
   } catch (error: any) {
     if (error.code === 'ENOENT') {
       await fs.writeFile(referentesFilePath, JSON.stringify([], null, 2), 'utf-8');
@@ -30,7 +29,7 @@ async function getReferentes(): Promise<ReferenteData[]> {
   }
 }
 
-async function saveReferentes(referentes: ReferenteData[]): Promise<void> {
+export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
     try {
         await fs.writeFile(referentesFilePath, JSON.stringify(referentes, null, 2), 'utf-8');
     } catch (error) {

@@ -1,1 +1,18 @@
-[]
+
+[
+  {
+    "locality": "Posadas",
+    "name": "Juan Perez",
+    "phone": "5493764123456"
+  },
+  {
+    "locality": "Oberá",
+    "name": "Maria Gomez",
+    "phone": "5493755123456"
+  },
+  {
+    "locality": "Eldorado",
+    "name": "Carlos Schmidt",
+    "phone": "5493751123456"
+  }
+]
