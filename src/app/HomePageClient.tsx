@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss, Star } from 'lucide-react';
+import { Goal, Eye, Users as ValuesIcon, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -215,7 +215,7 @@ export default function HomePageClient({ children, slides, tiles, events, social
                     <Card className="shadow-lg w-full">
                         <AccordionTrigger className="p-6 hover:no-underline">
                             <div className="flex items-center gap-4 w-full">
-                                <Heart className="h-10 w-10 text-primary" />
+                                <ValuesIcon className="h-10 w-10 text-primary" />
                                 <span className="font-headline text-2xl text-foreground">Nuestros Valores</span>
                             </div>
                         </AccordionTrigger>
@@ -228,18 +228,19 @@ export default function HomePageClient({ children, slides, tiles, events, social
                                 </div>
                                 ))}
                             </div>
-                            <div className="mt-8 text-center">
-                                <Button asChild>
-                                    <Link href="/referentes">
-                                        <Star className="mr-2 h-5 w-5" />
-                                        Nuestros Referentes
-                                    </Link>
-                                </Button>
-                            </div>
                         </AccordionContent>
                     </Card>
                  </AccordionItem>
              </Accordion>
+
+             <div className="mt-8 text-center">
+                <Button asChild>
+                    <Link href="/referentes">
+                        <Star className="mr-2 h-5 w-5" />
+                        Nuestros Referentes
+                    </Link>
+                </Button>
+            </div>
         </div>
       </Section>
       
