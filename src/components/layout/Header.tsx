@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus, ShieldCheck } from 'lucide-react';
+import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus, ShieldCheck, Star, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +18,14 @@ import { getSocialLinks, type SocialLink } from '@/lib/social-links-service';
 
 const navItems = [
   { label: 'Inicio', href: '/', icon: <Home className="mr-2 h-5 w-5" /> },
-  { label: 'Quiénes Somos', href: '/about', icon: <Users className="mr-2 h-5 w-5" /> },
   { label: 'Noticias y Eventos', href: '/news', icon: <Newspaper className="mr-2 h-5 w-5" /> },
-  { label: 'Contacto', href: '/contact', icon: <Mail className="mr-2 h-5 w-5" /> },
 ];
+
+const dropdownNavItems = [
+    { label: 'Quiénes Somos', href: '/about', icon: <Users className="mr-2 h-5 w-5" /> },
+    { label: 'Nuestros Referentes', href: '/referentes', icon: <Star className="mr-2 h-5 w-5" /> },
+    { label: 'Contacto', href: '/contact', icon: <Mail className="mr-2 h-5 w-5" /> },
+]
 
 const iconMap: { [key: string]: React.ReactNode } = {
   facebook: <Facebook className="h-7 w-7" />,
@@ -82,6 +86,24 @@ export function Header() {
                 </Link>
               </Button>
             ))}
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 font-body text-base font-medium">
+                        Más
+                        <ChevronDown className="relative top-[1px] ml-1 h-4 w-4 transition duration-200 group-data-[state=open]:rotate-180" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-background/80 backdrop-blur-sm border-white/20 text-foreground">
+                    {dropdownNavItems.map((item) => (
+                        <DropdownMenuItem key={item.label} asChild>
+                            <Link href={item.href} className="flex items-center">
+                                {item.icon} {item.label}
+                            </Link>
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+
              <Button asChild className="bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105 ml-4">
                <Link href="/fiscalizacion">
                   <ShieldCheck className="mr-2 h-5 w-5" />
@@ -120,6 +142,19 @@ export function Header() {
             className="w-72 bg-[rgba(59,7,100,0.95)] shadow-xl rounded-lg p-2" 
           >
             {navItems.map((item) => (
+              <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
+                <Link
+                  href={item.href}
+                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 rounded-md" 
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}
+                  {item.label}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator className="my-1 bg-white/20" />
+            {dropdownNavItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}

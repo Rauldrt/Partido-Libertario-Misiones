@@ -1,4 +1,3 @@
-
 [
   {
     "locality": "Posadas",
@@ -14,5 +13,15 @@
     "locality": "Eldorado",
     "name": "Carlos Schmidt",
     "phone": "5493751123456"
+  },
+  {
+    "locality": "Wanda",
+    "name": "Miguel Duarte ",
+    "phone": "5493757508434"
+  },
+  {
+    "locality": "Wanda",
+    "name": "Raul Duarte",
+    "phone": "5493757629729"
   }
 ]
