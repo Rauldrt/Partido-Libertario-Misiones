@@ -76,8 +76,8 @@ export function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => (
-              <Button key={item.label} variant="ghost" asChild>
-                <Link href={item.href} className="font-body text-base font-medium hover:scale-105 transform transition-transform duration-150 ease-in-out">
+              <Button key={item.label} variant="ghost" asChild className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400">
+                <Link href={item.href} className="font-body text-base font-medium">
                   {item.label}
                 </Link>
               </Button>
@@ -123,7 +123,7 @@ export function Header() {
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-white/10 rounded-md" 
+                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}
