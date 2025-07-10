@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Goal, Eye, Users as ValuesIcon, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss } from 'lucide-react';
+import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -215,7 +215,7 @@ export default function HomePageClient({ children, slides, tiles, events, social
                     <Card className="shadow-lg w-full">
                         <AccordionTrigger className="p-6 hover:no-underline">
                             <div className="flex items-center gap-4 w-full">
-                                <ValuesIcon className="h-10 w-10 text-primary" />
+                                <Heart className="h-10 w-10 text-primary" />
                                 <span className="font-headline text-2xl text-foreground">Nuestros Valores</span>
                             </div>
                         </AccordionTrigger>
