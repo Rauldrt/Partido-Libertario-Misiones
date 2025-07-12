@@ -25,8 +25,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { deleteNewsItemAction, reorderNewsItemsAction, togglePublishStatusAction } from './actions';
-import { FilePenLine, GripVertical, Loader2, Trash2 } from 'lucide-react';
+import { deleteNewsItemAction, reorderNewsItemsAction, togglePublishStatusAction, duplicateNewsItemAction } from './actions';
+import { Copy, FilePenLine, GripVertical, Loader2, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -37,11 +37,13 @@ const SortableRow = ({
   item,
   handlePublishToggle,
   handleDeleteClick,
+  handleDuplicateClick,
   isPending
 }: {
   item: NewsCardData;
   handlePublishToggle: (id: string, currentStatus: boolean) => void;
   handleDeleteClick: (item: NewsCardData) => void;
+  handleDuplicateClick: (id: string) => void;
   isPending: boolean;
 }) => {
   const {
@@ -85,11 +87,15 @@ const SortableRow = ({
             aria-label="Publicar"
             disabled={isPending}
             />
-             <Button asChild variant="outline" size="icon" disabled={isPending}>
+            <Button asChild variant="outline" size="icon" disabled={isPending}>
                 <Link href={`/admin/news-generator?edit=${item.id}`}>
                     <FilePenLine className="h-4 w-4" />
                     <span className="sr-only">Editar</span>
                 </Link>
+            </Button>
+            <Button variant="outline" size="icon" onClick={() => handleDuplicateClick(item.id)} disabled={isPending}>
+                <Copy className="h-4 w-4" />
+                <span className="sr-only">Copiar</span>
             </Button>
             <Button
             variant="destructive"
@@ -130,6 +136,25 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
         });
         // Revert optimistic update on failure
         setItems(originalItems);
+      }
+    });
+  };
+
+  const handleDuplicateClick = (id: string) => {
+    startTransition(async () => {
+      const result = await duplicateNewsItemAction(id);
+      if(result.success && result.newItem) {
+        setItems(currentItems => [result.newItem!, ...currentItems]);
+        toast({
+          title: 'Contenido Duplicado',
+          description: `Se creó una copia llamada "${result.newItem.title}". Está oculta por defecto.`,
+        });
+      } else {
+         toast({
+          variant: 'destructive',
+          title: 'Error al duplicar',
+          description: result.message,
+        });
       }
     });
   };
@@ -216,6 +241,7 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
                             item={item}
                             handlePublishToggle={handlePublishToggle}
                             handleDeleteClick={handleDeleteClick}
+                            handleDuplicateClick={handleDuplicateClick}
                             isPending={isPending}
                         />
                     ))}

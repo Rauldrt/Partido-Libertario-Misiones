@@ -145,3 +145,32 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
     throw new Error('Could not save the reordered items.');
   }
 }
+
+
+export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
+  const allItems = await getNewsItems();
+  const originalItem = allItems.find(i => i.id === id);
+
+  if (!originalItem) {
+    throw new Error(`Item with id ${id} not found.`);
+  }
+
+  const newItemId = Date.now().toString();
+  const newItem: NewsCardData = {
+    ...originalItem,
+    id: newItemId,
+    title: `(Copia) ${originalItem.title}`,
+    published: false, // Make the copy unpublished by default
+    linkUrl: `/news/${newItemId}`,
+  };
+
+  const updatedItems = [newItem, ...allItems];
+
+  try {
+    await fs.writeFile(newsFilePath, JSON.stringify(updatedItems, null, 2), 'utf-8');
+    return newItem;
+  } catch (error) {
+    console.error('Failed to duplicate news item:', error);
+    throw new Error('Could not save the duplicated item.');
+  }
+}

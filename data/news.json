@@ -1,5 +1,18 @@
-
 [
+  {
+    "title": "Nueva edición del streaming libertario de la tierra colorada",
+    "date": "12/07/25",
+    "summary": "Con Ninfa y Julio desde esta Ágora para toda la provincia",
+    "content": "",
+    "imageUrl": "https://placehold.co/600x400.png",
+    "imageHint": "keyword1 keyword2",
+    "type": "event",
+    "youtubeVideoId": "54WLa9xCsi8",
+    "embedCode": "",
+    "id": "1752328115554",
+    "linkUrl": "/news/1752328115554",
+    "published": true
+  },
   {
     "title": "Acto día de la Independencia",
     "date": "09/07/25",
@@ -12,34 +25,6 @@
     "embedCode": "",
     "id": "1752066530103",
     "linkUrl": "/news/1752066530103",
-    "published": true
-  },
-  {
-    "title": "Acto día de la independencia",
-    "date": "09/07/25 ",
-    "summary": "Conmemoramos un aniversario mas de nuestra independencia con un acto en la plaza Central",
-    "content": "",
-    "imageUrl": "https://placehold.co/600x400.png",
-    "imageHint": "keyword1 keyword2",
-    "type": "event",
-    "youtubeVideoId": "",
-    "embedCode": "",
-    "id": "1752066259520",
-    "linkUrl": "/news/1752066259520",
-    "published": true
-  },
-  {
-    "title": "Título del Contenido",
-    "date": "08 83 July, 2025",
-    "summary": "Este es un resumen breve. Atrae al lector para que haga clic y lea más.",
-    "content": "Este es el contenido completo. Puede ser más largo y detallado que el resumen.",
-    "imageUrl": "https://placehold.co/600x400.png",
-    "imageHint": "keyword1 keyword2",
-    "type": "news",
-    "youtubeVideoId": "",
-    "embedCode": "",
-    "id": "1751978867556",
-    "linkUrl": "/news/1751978867556",
     "published": true
   },
   {
@@ -183,5 +168,3 @@
     "published": false
   }
 ]
-
-    
