@@ -104,7 +104,7 @@ export async function getAccordionItems(): Promise<AccordionItemData[]> {
   // Dynamically generate `value` from title for accordion functionality
   return items.map(item => ({
     ...item,
-    value: item.title.toLowerCase().replace(/\s+/g, '-')
+    value: item.title.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   }));
 }
 

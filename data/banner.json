@@ -1,20 +1,21 @@
+
 [
   {
     "title": "Nuestra Misión",
-    "description": "Promover y defender principios de una Misiones libre, desarraigado el feudo implícito impuesto por este gobierno provincial que no representa los intereses de los Misioneros ",
+    "description": "Promover y defender los principios de una Misiones libre, desarraigado el feudo implícito impuesto por este gobierno provincial que no representa los intereses de los Misioneros ",
     "cta": {
       "text": "Conocer Más",
       "link": "#accordion-info",
-      "accordionTarget": "mission"
+      "accordionTarget": "nuestra-misión"
     }
   },
   {
     "title": "Nuestra Visión",
-    "description": "Dar a la política el rumbo que le corresponde y liderar la transformación hacia una provincia donde la libertad sea el motor del progreso, la innovación y la calidad de vida.",
+    "description": "Que la política deje de ser sólo para políticos, poniendo los intereses del misionero en primer lugar.",
     "cta": {
       "text": "Ver Detalles",
       "link": "#accordion-info",
-      "accordionTarget": "vision"
+      "accordionTarget": "nuestra-visión"
     }
   },
   {
@@ -23,7 +24,7 @@
     "cta": {
       "text": "Explorar Principios",
       "link": "#accordion-info",
-      "accordionTarget": "values"
+      "accordionTarget": "nuestros-valores"
     }
   },
   {
