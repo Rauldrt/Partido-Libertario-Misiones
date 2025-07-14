@@ -12,7 +12,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, LayoutDashboard, LayoutGrid, Link2, ListChecks, Rss, Server, Star } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutDashboard, LayoutGrid, Link2, ListChecks, PanelsTopLeft, Rss, Server, Star } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
@@ -57,6 +57,14 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                   <Link href="/admin/manage-banner">
                     <GalleryHorizontal />
                     Gestionar Banner
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/manage-accordion">
+                    <PanelsTopLeft />
+                    Gestionar Acordeón
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

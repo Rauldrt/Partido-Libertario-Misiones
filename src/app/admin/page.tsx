@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, LayoutGrid, Link2, ListChecks, Rss, Server, Star } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, LayoutGrid, Link2, ListChecks, Rss, Server, Star, PanelsTopLeft } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -59,6 +59,23 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-banner">
                 <GalleryHorizontal className="mr-2 h-4 w-4" />
                 Editar Banner
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Acordeón</CardTitle>
+            <CardDescription>Edita los paneles informativos (Misión, Visión, etc.) de la página de inicio.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Controla los paneles de información que se muestran en la sección "El Camino de la Libertad".
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-accordion">
+                <PanelsTopLeft className="mr-2 h-4 w-4" />
+                Editar Acordeón
               </Link>
             </Button>
           </CardContent>

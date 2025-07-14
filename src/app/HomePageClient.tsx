@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { type PropsWithChildren, useState, useEffect } from 'react';
+import React, { type PropsWithChildren, useState, useEffect, createElement } from 'react';
 import { Section } from '@/components/ui/Section';
 import { Banner } from '@/components/Banner';
 import {
@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Goal, Eye, Heart, MessageSquare, Users, CheckCircle, ShieldCheck, Lightbulb, UserPlus, Rss } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -19,26 +19,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { BannerSlideData, MosaicImageData, MosaicTileData } from '@/lib/homepage-service';
-
-const values = [
-  {
-    icon: <CheckCircle className="h-6 w-6 text-primary" />,
-    title: 'Libertad Individual',
-  },
-  {
-    icon: <ShieldCheck className="h-6 w-6 text-primary" />,
-    title: 'Propiedad Privada',
-  },
-  {
-    icon: <Lightbulb className="h-6 w-6 text-primary" />,
-    title: 'Libre Mercado',
-  },
-  {
-    icon: <Users className="h-6 w-6 text-primary" />,
-    title: 'Gobierno Limitado',
-  },
-];
+import type { BannerSlideData, MosaicImageData, MosaicTileData, AccordionItemData } from '@/lib/homepage-service';
 
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
@@ -88,7 +69,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 };
 
 
-export default function HomePageClient({ children, slides, tiles, events, socialWidget }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], events: React.ReactNode, socialWidget: React.ReactNode }>) {
+export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode }>) {
   const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
 
@@ -96,6 +77,14 @@ export default function HomePageClient({ children, slides, tiles, events, social
     if (accordionTarget) {
       setOpenAccordionItem(accordionTarget);
     }
+  };
+
+  const DynamicIcon = ({ name }: { name: string }) => {
+    const IconComponent = (LucideIcons as any)[name];
+    if (!IconComponent) {
+      return <LucideIcons.HelpCircle className="h-10 w-10 text-primary" />; // Fallback icon
+    }
+    return createElement(IconComponent, { className: 'h-10 w-10 text-primary' });
   };
 
   return (
@@ -144,13 +133,13 @@ export default function HomePageClient({ children, slides, tiles, events, social
         <div className="absolute bottom-36 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
             <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/fiscalizacion">
-                  <ShieldCheck className="mr-2 h-5 w-5" />
+                  <LucideIcons.ShieldCheck className="mr-2 h-5 w-5" />
                   <span>Fiscalizá</span>
               </Link>
             </Button>
             <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/afiliacion">
-                  <UserPlus className="mr-2 h-5 w-5" />
+                  <LucideIcons.UserPlus className="mr-2 h-5 w-5" />
                   <span>Afiliate</span>
               </Link>
             </Button>
@@ -179,64 +168,29 @@ export default function HomePageClient({ children, slides, tiles, events, social
                 onValueChange={(value) => setOpenAccordionItem(value || '')} 
                 className="w-full space-y-4"
               >
-                 <AccordionItem value="mission" className="border-b-0">
-                     <Card className="shadow-lg w-full">
-                         <AccordionTrigger className="p-6 hover:no-underline">
-                             <div className="flex items-center gap-4 w-full">
-                                 <Goal className="h-10 w-10 text-primary" />
-                                 <span className="font-headline text-2xl text-foreground">Nuestra Misión</span>
-                             </div>
-                         </AccordionTrigger>
-                         <AccordionContent className="px-6 pb-6">
-                             <p className="font-body text-lg">
-                                 Promover y defender los principios de una sociedad libre, impulsando políticas que garanticen los derechos individuales, la propiedad privada, el libre mercado y un gobierno limitado, para generar prosperidad y bienestar en Misiones.
-                             </p>
-                         </AccordionContent>
-                     </Card>
-                 </AccordionItem>
-
-                 <AccordionItem value="vision" className="border-b-0">
-                     <Card className="shadow-lg w-full">
-                         <AccordionTrigger className="p-6 hover:no-underline">
-                             <div className="flex items-center gap-4 w-full">
-                                 <Eye className="h-10 w-10 text-primary" />
-                                 <span className="font-headline text-2xl text-foreground">Nuestra Visión</span>
-                             </div>
-                         </AccordionTrigger>
-                         <AccordionContent className="px-6 pb-6">
-                             <p className="font-body text-lg">
-                                 Ser la fuerza política que lidere la transformación hacia una provincia donde la libertad sea el motor del progreso, la innovación y la calidad de vida.
-                             </p>
-                         </AccordionContent>
-                     </Card>
-                 </AccordionItem>
-                 
-                 <AccordionItem value="values" className="border-b-0">
-                    <Card className="shadow-lg w-full">
-                        <AccordionTrigger className="p-6 hover:no-underline">
-                            <div className="flex items-center gap-4 w-full">
-                                <Heart className="h-10 w-10 text-primary" />
-                                <span className="font-headline text-2xl text-foreground">Nuestros Valores</span>
-                            </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-6 pb-6">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
-                                {values.map((value) => (
-                                <div key={value.title} className="flex flex-col items-center text-center gap-2">
-                                    {value.icon}
-                                    <p className="font-body font-semibold">{value.title}</p>
+                {accordionItems.map(item => (
+                    <AccordionItem key={item.id} value={item.value} className="border-b-0">
+                        <Card className="shadow-lg w-full">
+                            <AccordionTrigger className="p-6 hover:no-underline">
+                                <div className="flex items-center gap-4 w-full">
+                                    <DynamicIcon name={item.icon} />
+                                    <span className="font-headline text-2xl text-foreground">{item.title}</span>
                                 </div>
-                                ))}
-                            </div>
-                        </AccordionContent>
-                    </Card>
-                 </AccordionItem>
+                            </AccordionTrigger>
+                            <AccordionContent className="px-6 pb-6">
+                                <p className="font-body text-lg">
+                                    {item.content}
+                                </p>
+                            </AccordionContent>
+                        </Card>
+                    </AccordionItem>
+                ))}
              </Accordion>
 
              <div className="mt-8 text-center">
                 <Button asChild>
                     <Link href="/referentes">
-                        <Users className="mr-2 h-5 w-5" />
+                        <LucideIcons.Users className="mr-2 h-5 w-5" />
                         Nuestros Referentes
                     </Link>
                 </Button>
@@ -258,7 +212,7 @@ export default function HomePageClient({ children, slides, tiles, events, social
                  <Card className="shadow-lg w-full">
                     <CardHeader>
                         <CardTitle className="flex items-center">
-                            <Rss className="h-6 w-6 text-primary mr-3" />
+                            <LucideIcons.Rss className="h-6 w-6 text-primary mr-3" />
                             Conectate en Redes
                         </CardTitle>
                         <CardDescription>
@@ -287,7 +241,7 @@ export default function HomePageClient({ children, slides, tiles, events, social
                   <Card className="shadow-lg w-full">
                       <AccordionTrigger className="p-6 hover:no-underline">
                           <div className="flex items-center gap-4 w-full">
-                              <MessageSquare className="h-10 w-10 text-primary" />
+                              <LucideIcons.MessageSquare className="h-10 w-10 text-primary" />
                               <span className="font-headline text-2xl text-foreground">Sumate y Contactanos</span>
                           </div>
                       </AccordionTrigger>

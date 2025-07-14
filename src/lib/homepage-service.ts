@@ -3,6 +3,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import type { LucideIcon } from 'lucide-react';
 
 // Types for Banner Slides
 export interface BannerCtaData {
@@ -35,9 +36,19 @@ export interface MosaicTileData {
     images: MosaicImageData[];
 }
 
+// Types for Accordion Items
+export interface AccordionItemData {
+    id: string;
+    value: string;
+    title: string;
+    icon: string; // Icon name from lucide-react
+    content: string;
+}
+
 
 const bannerFilePath = path.join(process.cwd(), 'data', 'banner.json');
 const mosaicFilePath = path.join(process.cwd(), 'data', 'mosaic.json');
+const accordionFilePath = path.join(process.cwd(), 'data', 'accordion.json');
 
 
 async function readData<T>(filePath: string): Promise<T[]> {
@@ -45,7 +56,7 @@ async function readData<T>(filePath: string): Promise<T[]> {
     const data = await fs.readFile(filePath, 'utf-8');
     const items: T[] = JSON.parse(data);
     // Add unique IDs if they don't exist, for dnd-kit compatibility
-    return items.map((item, index) => ({ id: index.toString(), ...item }));
+    return items.map((item, index) => ({ id: (item as any).id || `${filePath}-${index}-${Date.now()}`, ...item }));
   } catch (error: any) {
     if (error.code === 'ENOENT') {
       await fs.writeFile(filePath, JSON.stringify([], null, 2), 'utf-8');
@@ -59,8 +70,8 @@ async function readData<T>(filePath: string): Promise<T[]> {
 async function writeData<T>(filePath: string, data: T[]): Promise<void> {
     try {
         // Strip the temporary 'id' field before writing back to the file
-        const dataWithoutIds = data.map(({ id, ...rest }: any) => rest);
-        await fs.writeFile(filePath, JSON.stringify(dataWithoutIds, null, 2), 'utf-8');
+        const dataToSave = data.map(({ id, ...rest }: any) => rest);
+        await fs.writeFile(filePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
     } catch (error) {
         console.error(`Failed to write data to ${filePath}:`, error);
         throw new Error(`Could not save items to ${filePath}.`);
@@ -85,4 +96,20 @@ export async function getMosaicTiles(): Promise<MosaicTileData[]> {
 
 export async function saveMosaicTiles(tiles: MosaicTileData[]): Promise<void> {
   await writeData(mosaicFilePath, tiles);
+}
+
+// Accordion Functions
+export async function getAccordionItems(): Promise<AccordionItemData[]> {
+  const items = await readData<Omit<AccordionItemData, 'value'>>(accordionFilePath);
+  // Dynamically generate `value` from title for accordion functionality
+  return items.map(item => ({
+    ...item,
+    value: item.title.toLowerCase().replace(/\s+/g, '-')
+  }));
+}
+
+export async function saveAccordionItems(items: AccordionItemData[]): Promise<void> {
+    // Strip id and value before saving
+    const dataToSave = items.map(({ id, value, ...rest }) => rest);
+    await fs.writeFile(accordionFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
 }
