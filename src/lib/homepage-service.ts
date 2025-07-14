@@ -45,10 +45,17 @@ export interface AccordionItemData {
     content: string;
 }
 
+// Types for Info Section
+export interface InfoSectionData {
+    title: string;
+    description: string;
+}
+
 
 const bannerFilePath = path.join(process.cwd(), 'data', 'banner.json');
 const mosaicFilePath = path.join(process.cwd(), 'data', 'mosaic.json');
 const accordionFilePath = path.join(process.cwd(), 'data', 'accordion.json');
+const infoSectionFilePath = path.join(process.cwd(), 'data', 'info-section.json');
 
 
 async function readData<T>(filePath: string): Promise<T[]> {
@@ -112,4 +119,32 @@ export async function saveAccordionItems(items: AccordionItemData[]): Promise<vo
     // Strip id and value before saving
     const dataToSave = items.map(({ id, value, ...rest }) => rest);
     await fs.writeFile(accordionFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
+}
+
+// Info Section Functions
+export async function getInfoSectionData(): Promise<InfoSectionData> {
+    try {
+        const data = await fs.readFile(infoSectionFilePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error: any) {
+        if (error.code === 'ENOENT') {
+            const defaultData: InfoSectionData = {
+                title: 'El Camino de la Libertad',
+                description: 'Nuestros principios y cómo podés participar.'
+            };
+            await fs.writeFile(infoSectionFilePath, JSON.stringify(defaultData, null, 2), 'utf-8');
+            return defaultData;
+        }
+        console.error(`Failed to read data from ${infoSectionFilePath}:`, error);
+        throw new Error(`Could not retrieve data from ${infoSectionFilePath}.`);
+    }
+}
+
+export async function saveInfoSectionData(data: InfoSectionData): Promise<void> {
+    try {
+        await fs.writeFile(infoSectionFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error(`Failed to write data to ${infoSectionFilePath}:`, error);
+        throw new Error(`Could not save data to ${infoSectionFilePath}.`);
+    }
 }

@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, LayoutGrid, Link2, ListChecks, Rss, Server, Star, PanelsTopLeft } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Star, PanelsTopLeft } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -93,6 +93,23 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-mosaic">
                 <LayoutGrid className="mr-2 h-4 w-4" />
                 Editar Mosaico
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Sección Info</CardTitle>
+            <CardDescription>Edita el título y subtítulo de la sección "El Camino de la Libertad".</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Modifica los textos introductorios de esta sección en la página principal.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-info-section">
+                <Info className="mr-2 h-4 w-4" />
+                Editar Sección
               </Link>
             </Button>
           </CardContent>

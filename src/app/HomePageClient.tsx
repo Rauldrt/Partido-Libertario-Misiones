@@ -19,7 +19,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import type { BannerSlideData, MosaicImageData, MosaicTileData, AccordionItemData } from '@/lib/homepage-service';
+import type { BannerSlideData, MosaicImageData, MosaicTileData, AccordionItemData, InfoSectionData } from '@/lib/homepage-service';
 
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
@@ -69,7 +69,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 };
 
 
-export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode }>) {
+export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget, infoSectionData }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode, infoSectionData: InfoSectionData }>) {
   const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
 
@@ -148,8 +148,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
       
       <Section id="info" className="py-16 md:py-24">
         <div className="text-center mb-12">
-            <h2 className="font-headline text-4xl font-bold text-white">El Camino de la Libertad</h2>
-            <p className="font-body text-lg text-white/90 mt-2">Nuestros principios y cómo podés participar.</p>
+            <h2 className="font-headline text-4xl font-bold text-white">{infoSectionData.title}</h2>
+            <p className="font-body text-lg text-white/90 mt-2">{infoSectionData.description}</p>
         </div>
 
         <div className="max-w-5xl mx-auto mb-16 px-4">
