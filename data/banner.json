@@ -32,7 +32,23 @@
     "description": "Mantenete al día con nuestras actividades, comunicados y los próximos eventos en Misiones.",
     "cta": {
       "text": "Ir a Noticias",
-      "link": "#latest-news"
+      "link": "/news"
+    }
+  },
+  {
+    "title": "Promocioná tu Trabajo",
+    "description": "Un espacio para que los misioneros emprendedores puedan mostrar sus oficios y servicios a toda la comunidad.",
+    "cta": {
+      "text": "Ir a Promociones",
+      "link": "/promociona"
+    }
+  },
+  {
+    "title": "Tienda Online Libertaria",
+    "description": "Encontrá productos y merchandising oficial del partido para apoyar nuestras ideas y llevar la libertad a todas partes.",
+    "cta": {
+      "text": "Visitar Tienda",
+      "link": "/tienda"
     }
   }
 ]
