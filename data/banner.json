@@ -6,7 +6,7 @@
     "cta": {
       "text": "Conocer Más",
       "link": "#accordion-info",
-      "accordionTarget": "nuestra-misión"
+      "accordionTarget": "nuestra-mision"
     }
   },
   {
@@ -15,7 +15,7 @@
     "cta": {
       "text": "Ver Detalles",
       "link": "#accordion-info",
-      "accordionTarget": "nuestra-visión"
+      "accordionTarget": "nuestra-vision"
     }
   },
   {
