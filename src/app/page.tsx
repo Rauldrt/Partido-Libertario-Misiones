@@ -8,12 +8,22 @@ import { SocialWidget } from '@/components/SocialWidget';
 
 // This is a Server Component by default
 export default async function HomePage() {
-  const slides = await getBannerSlides();
+  const allSlides = await getBannerSlides();
   const tiles = await getMosaicTiles();
   const accordionItems = await getAccordionItems();
   const infoSectionData = await getInfoSectionData();
   const allItems = await getNewsItems();
   const events = allItems.filter(item => item.type === 'event' && item.published);
+
+  // Filter out expired slides
+  const now = new Date();
+  const slides = allSlides.filter(slide => {
+    if (!slide.expiresAt) return true; // Keep slides that don't have an expiration date
+    // The date from the input is YYYY-MM-DD. We need to parse it correctly.
+    // Appending T00:00:00 and specifying UTC ensures consistent parsing.
+    const expiryDate = new Date(`${slide.expiresAt}T23:59:59Z`); // Consider the date to expire at the end of the day in UTC
+    return expiryDate >= now;
+  });
 
   return (
     // We render the Client Component and pass server components

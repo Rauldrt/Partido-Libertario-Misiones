@@ -77,6 +77,11 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
                     <Label htmlFor={`description-${slide.id}`}>Descripción</Label>
                     <Textarea id={`description-${slide.id}`} value={slide.description} onChange={(e) => handleInputChange('description', e.target.value)} />
                 </div>
+                <div className="space-y-2">
+                    <Label htmlFor={`expiresAt-${slide.id}`}>Fecha de Expiración (Opcional)</Label>
+                    <Input id={`expiresAt-${slide.id}`} type="date" value={slide.expiresAt || ''} onChange={(e) => handleInputChange('expiresAt', e.target.value)} />
+                     <p className="text-xs text-muted-foreground">La diapositiva se ocultará después de esta fecha. Dejar en blanco para que nunca expire.</p>
+                </div>
                  <Accordion type="single" collapsible>
                     <AccordionItem value="item-1">
                         <AccordionTrigger>Editar Acción (CTA)</AccordionTrigger>
@@ -128,7 +133,8 @@ export function BannerEditorClient({ initialSlides }: { initialSlides: BannerSli
             text: 'Saber Más',
             link: '#',
             accordionTarget: ''
-        }
+        },
+        expiresAt: '',
     };
     setSlides(prev => [...prev, newSlide]);
   };

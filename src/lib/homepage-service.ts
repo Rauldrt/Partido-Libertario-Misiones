@@ -17,6 +17,7 @@ export interface BannerSlideData {
     title: string;
     description: string;
     cta: BannerCtaData;
+    expiresAt?: string; // Optional expiration date string (e.g., "YYYY-MM-DD")
 }
 
 // Types for Mosaic Tiles
