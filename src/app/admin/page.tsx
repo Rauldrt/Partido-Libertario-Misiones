@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Star, PanelsTopLeft } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Sparkles, Star, PanelsTopLeft } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -12,6 +12,23 @@ export default function AdminDashboardPage() {
         Desde aquí podés gestionar el contenido y las herramientas del sitio.
       </p>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>Asistente de IA</CardTitle>
+            <CardDescription>Interactuá con una IA para generar y mejorar contenido.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Pedile ideas, resúmenes, o que analice URLs para crear borradores.
+            </p>
+            <Button asChild>
+              <Link href="/admin/ai-assistant">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Ir al Asistente
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle>Crear Contenido</CardTitle>

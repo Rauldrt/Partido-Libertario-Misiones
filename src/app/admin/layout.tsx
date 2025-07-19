@@ -12,7 +12,7 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, PanelsTopLeft, Rss, Server, Star } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, PanelsTopLeft, Rss, Server, Sparkles, Star } from 'lucide-react';
 import Image from 'next/image';
 
 export default function AdminLayout({ children }: PropsWithChildren) {
@@ -33,6 +33,14 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                   <Link href="/admin">
                     <LayoutDashboard />
                     Dashboard
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/ai-assistant">
+                    <Sparkles />
+                    Asistente de IA
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
