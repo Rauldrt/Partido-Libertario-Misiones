@@ -113,8 +113,10 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                     return (
                         <CarouselItem key={index} className="pl-0 relative flex items-center justify-center">
                           {slide.embedCode ? (
-                              <div className="w-full h-full max-h-full max-w-4xl mx-auto p-4 flex items-center justify-center">
+                              <div className="w-full h-[80%] max-h-[600px] max-w-4xl mx-auto p-4 flex items-center justify-center">
+                                <div className="w-full h-full border rounded-lg border-white/20 bg-black/20 backdrop-blur-sm p-1 overflow-hidden">
                                   <EmbedDisplay embedCode={slide.embedCode} />
+                                </div>
                               </div>
                           ) : (
                               <div className="relative z-20 h-full flex items-center justify-center w-full">
