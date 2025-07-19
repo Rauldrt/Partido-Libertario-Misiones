@@ -142,7 +142,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
             </div>
         </Carousel>
 
-        <div className="absolute bottom-36 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
             <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/fiscalizacion">
                   <LucideIcons.ShieldCheck className="mr-2 h-5 w-5" />
