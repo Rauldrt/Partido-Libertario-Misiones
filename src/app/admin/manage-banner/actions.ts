@@ -6,8 +6,8 @@ import { saveBannerSlides, type BannerSlideData } from '@/lib/homepage-service';
 import { revalidatePath } from 'next/cache';
 
 const CtaSchema = z.object({
-  text: z.string().optional().or(z.literal('')),
-  link: z.string().optional().or(z.literal('')),
+  text: z.string(),
+  link: z.string(),
   accordionTarget: z.string().optional(),
 });
 
