@@ -17,7 +17,7 @@ const BannerSlideSchema = z.object({
   description: z.string().optional().or(z.literal('')),
   cta: CtaSchema,
   expiresAt: z.string().optional().or(z.literal('')),
-  imageUrl: z.string().url("Debe ser una URL válida.").or(z.literal('')).optional(),
+  imageUrl: z.string().optional().or(z.literal('')), // Make it truly optional and allow empty string
   videoUrl: z.string().optional().or(z.literal('')),
   embedCode: z.string().optional().or(z.literal('')),
 });
@@ -30,7 +30,7 @@ export async function saveBannerAction(data: BannerSlideData[]) {
     const dataWithDefaults = data.map(slide => ({
         ...slide,
         cta: {
-            text: slide.cta.text || '',
+            text: slide.cta.text || 'Saber Más',
             link: slide.cta.link || '#',
             accordionTarget: slide.cta.accordionTarget || ''
         }
