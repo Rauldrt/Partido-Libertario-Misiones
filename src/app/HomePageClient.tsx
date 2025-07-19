@@ -94,7 +94,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
         id="hero" 
         videoSrc="/background.mp4"
         backgroundOverlay="bg-black/60"
-        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
+        className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-start md:items-center justify-center p-0 pt-16 md:pt-0"
       >
         <Carousel
             plugins={[
