@@ -136,10 +136,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                     )
                 })}
             </CarouselContent>
-            <div className="absolute z-30 bottom-32 left-1/2 -translate-x-1/2 flex items-center justify-center w-full">
-              <CarouselPrevious className="static translate-y-0 mx-2 bg-background/50 hover:bg-background/80 text-foreground" />
-              <CarouselNext className="static translate-y-0 mx-2 bg-background/50 hover:bg-background/80 text-foreground" />
-            </div>
+            <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 bg-background/50 hover:bg-background/80 text-foreground" />
+            <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 bg-background/50 hover:bg-background/80 text-foreground" />
         </Carousel>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
