@@ -17,9 +17,9 @@ const BannerSlideSchema = z.object({
   description: z.string().min(1, 'La descripción es requerida.'),
   cta: CtaSchema,
   expiresAt: z.string().optional().or(z.literal('')),
-  // Corrected validation: Allow empty string or a valid URL.
+  // Corrected validation: Allow empty string or a valid URL, and make it fully optional.
   imageUrl: z.string().url("Debe ser una URL válida.").or(z.literal('')).optional(),
-  videoUrl: z.string().or(z.literal('')).optional(),
+  videoUrl: z.string().optional().or(z.literal('')),
   embedCode: z.string().optional().or(z.literal('')),
 });
 
