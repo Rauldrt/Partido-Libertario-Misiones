@@ -92,6 +92,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
     <>
       <Section 
         id="hero" 
+        videoSrc="/background.mp4"
+        backgroundOverlay="bg-black/60"
         className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
       >
         <Carousel
@@ -115,31 +117,6 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                                   <EmbedDisplay embedCode={slide.embedCode} />
                               </div>
                           ) : (
-                            <>
-                              {/* Per-slide background */}
-                              {slide.videoUrl ? (
-                                  <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
-                                      <source src={slide.videoUrl} type="video/mp4" />
-                                  </video>
-                              ) : slide.imageUrl ? (
-                                  <Image
-                                      src={slide.imageUrl}
-                                      alt={slide.title}
-                                      layout="fill"
-                                      objectFit="cover"
-                                      className="absolute z-0"
-                                      priority={index === 0}
-                                  />
-                              ) : (
-                                  // Fallback to section-wide background if slide has no media
-                                  <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
-                                      <source src="/background.mp4" type="video/mp4" />
-                                  </video>
-                              )}
-                              {/* Overlay */}
-                              <div className="absolute inset-0 bg-black/60 z-10" />
-
-                              {/* Banner Content */}
                               <div className="relative z-20 h-full flex items-center justify-center w-full">
                                   <Banner
                                       title={slide.title}
@@ -154,7 +131,6 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                                       priority={index === 0}
                                   />
                               </div>
-                            </>
                           )}
                         </CarouselItem>
                     )

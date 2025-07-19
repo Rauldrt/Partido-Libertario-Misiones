@@ -8,8 +8,7 @@
       "link": "#accordion-info",
       "accordionTarget": "nuestra-mision"
     },
-    "imageUrl": "/banner1.jpg",
-    "videoUrl": ""
+    "imageUrl": "/banner1.jpg"
   },
   {
     "title": "Nuestra Visión",
@@ -19,8 +18,7 @@
       "link": "#accordion-info",
       "accordionTarget": "nuestra-vision"
     },
-    "imageUrl": "/banner2.jpg",
-    "videoUrl": ""
+    "imageUrl": "/banner2.jpg"
   },
   {
     "title": "Nuestros Valores",
@@ -30,38 +28,46 @@
       "link": "#accordion-info",
       "accordionTarget": "nuestros-valores"
     },
-    "imageUrl": "/banner3.jpg",
-    "videoUrl": ""
+    "imageUrl": "/banner3.jpg"
   },
   {
     "title": "Últimas Noticias",
     "description": "Mantenete al día con nuestras actividades, comunicados y los próximos eventos en Misiones.",
     "cta": {
       "text": "Ir a Noticias",
-      "link": "/news"
-    },
-    "imageUrl": "",
-    "videoUrl": ""
+      "link": "/news",
+      "accordionTarget": ""
+    }
   },
   {
     "title": "Promocioná tu Trabajo",
     "description": "Un espacio para que los misioneros emprendedores puedan mostrar sus oficios y servicios a toda la comunidad.",
     "cta": {
       "text": "Ir a Promociones",
-      "link": "/promociona"
-    },
-    "imageUrl": "",
-    "videoUrl": ""
+      "link": "/promociona",
+      "accordionTarget": ""
+    }
   },
   {
     "title": "Tienda Online Libertaria",
     "description": "Encontrá productos y merchandising oficial del partido para apoyar nuestras ideas y llevar la libertad a todas partes.",
     "cta": {
       "text": "Visitar Tienda",
-      "link": "/tienda"
+      "link": "/tienda",
+      "accordionTarget": ""
+    }
+  },
+  {
+    "title": "Nueva Edición de Ágora Libertaria",
+    "description": "El streaming libertario de la tierra colorada",
+    "cta": {
+      "text": "Saber Más",
+      "link": "#",
+      "accordionTarget": ""
     },
+    "expiresAt": "",
     "imageUrl": "",
     "videoUrl": "",
-    "embedCode": ""
+    "embedCode": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Mum6EcirpEc?si=OE0cteqPFtODp_nf\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
   }
 ]
