@@ -92,9 +92,6 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
       <Section 
         id="hero" 
         className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-center justify-center p-0"
-        videoSrc="/background.mp4"
-        backgroundOverlay="bg-black/60"
-        containerClassName="w-full h-full px-4 relative flex items-center justify-center"
       >
         <Carousel
             plugins={[
@@ -103,31 +100,62 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                     stopOnInteraction: true,
                 }),
             ]}
-            className="w-full max-w-5xl mb-32"
+            className="w-full h-full"
             opts={{
                 loop: true,
             }}
         >
-            <CarouselContent className="ml-0">
-                {slides.map((slide, index) => (
-                    <CarouselItem key={index} className="pl-0">
-                        <Banner
-                            title={slide.title}
-                            description={slide.description}
-                            ctas={[{ 
-                                text: slide.cta.text, 
-                                link: slide.cta.link, 
-                                className: 'bg-primary text-primary-foreground hover:bg-primary/90',
-                                onClick: () => handleBannerCtaClick(slide.cta.accordionTarget) 
-                            }]}
-                            textAlignment="center"
-                            priority={index === 0}
-                        />
-                    </CarouselItem>
-                ))}
+            <CarouselContent className="ml-0 h-full">
+                {slides.map((slide, index) => {
+                    const hasMedia = slide.videoUrl || slide.imageUrl;
+                    return (
+                        <CarouselItem key={index} className="pl-0 relative">
+                            {/* Per-slide background */}
+                            {slide.videoUrl ? (
+                                <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
+                                    <source src={slide.videoUrl} type="video/mp4" />
+                                </video>
+                            ) : slide.imageUrl ? (
+                                <Image
+                                    src={slide.imageUrl}
+                                    alt={slide.title}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="absolute z-0"
+                                    priority={index === 0}
+                                />
+                            ) : (
+                                // Fallback to section-wide background if slide has no media
+                                <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
+                                    <source src="/background.mp4" type="video/mp4" />
+                                </video>
+                            )}
+                            {/* Overlay */}
+                            <div className="absolute inset-0 bg-black/60 z-10" />
+
+                            {/* Banner Content */}
+                            <div className="relative z-20 h-full flex items-center justify-center">
+                                 <Banner
+                                    title={slide.title}
+                                    description={slide.description}
+                                    ctas={[{ 
+                                        text: slide.cta.text, 
+                                        link: slide.cta.link, 
+                                        className: 'bg-primary text-primary-foreground hover:bg-primary/90',
+                                        onClick: () => handleBannerCtaClick(slide.cta.accordionTarget) 
+                                    }]}
+                                    textAlignment="center"
+                                    priority={index === 0}
+                                />
+                            </div>
+                        </CarouselItem>
+                    )
+                })}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
-            <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-background/50 hover:bg-background/80 text-foreground" />
+            <div className="absolute z-30 bottom-32 left-1/2 -translate-x-1/2 flex items-center justify-center w-full">
+              <CarouselPrevious className="static translate-y-0 mx-2 bg-background/50 hover:bg-background/80 text-foreground" />
+              <CarouselNext className="static translate-y-0 mx-2 bg-background/50 hover:bg-background/80 text-foreground" />
+            </div>
         </Carousel>
 
         <div className="absolute bottom-36 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">

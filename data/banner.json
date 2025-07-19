@@ -7,7 +7,9 @@
       "text": "Conocer Más",
       "link": "#accordion-info",
       "accordionTarget": "nuestra-mision"
-    }
+    },
+    "imageUrl": "/banner1.jpg",
+    "videoUrl": ""
   },
   {
     "title": "Nuestra Visión",
@@ -16,7 +18,9 @@
       "text": "Ver Detalles",
       "link": "#accordion-info",
       "accordionTarget": "nuestra-vision"
-    }
+    },
+    "imageUrl": "/banner2.jpg",
+    "videoUrl": ""
   },
   {
     "title": "Nuestros Valores",
@@ -25,7 +29,9 @@
       "text": "Explorar Principios",
       "link": "#accordion-info",
       "accordionTarget": "nuestros-valores"
-    }
+    },
+    "imageUrl": "/banner3.jpg",
+    "videoUrl": ""
   },
   {
     "title": "Últimas Noticias",
@@ -33,7 +39,9 @@
     "cta": {
       "text": "Ir a Noticias",
       "link": "/news"
-    }
+    },
+    "imageUrl": "",
+    "videoUrl": ""
   },
   {
     "title": "Promocioná tu Trabajo",
@@ -41,7 +49,9 @@
     "cta": {
       "text": "Ir a Promociones",
       "link": "/promociona"
-    }
+    },
+    "imageUrl": "",
+    "videoUrl": ""
   },
   {
     "title": "Tienda Online Libertaria",
@@ -49,6 +59,8 @@
     "cta": {
       "text": "Visitar Tienda",
       "link": "/tienda"
-    }
+    },
+    "imageUrl": "",
+    "videoUrl": ""
   }
 ]

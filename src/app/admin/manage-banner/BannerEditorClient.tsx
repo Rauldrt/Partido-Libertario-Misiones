@@ -77,14 +77,23 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
                     <Label htmlFor={`description-${slide.id}`}>Descripción</Label>
                     <Textarea id={`description-${slide.id}`} value={slide.description} onChange={(e) => handleInputChange('description', e.target.value)} />
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor={`expiresAt-${slide.id}`}>Fecha de Expiración (Opcional)</Label>
-                    <Input id={`expiresAt-${slide.id}`} type="date" value={slide.expiresAt || ''} onChange={(e) => handleInputChange('expiresAt', e.target.value)} />
-                     <p className="text-xs text-muted-foreground">La diapositiva se ocultará después de esta fecha. Dejar en blanco para que nunca expire.</p>
-                </div>
-                 <Accordion type="single" collapsible>
-                    <AccordionItem value="item-1">
-                        <AccordionTrigger>Editar Acción (CTA)</AccordionTrigger>
+                 <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="media">
+                        <AccordionTrigger>Fondo Multimedia (Opcional)</AccordionTrigger>
+                        <AccordionContent className="grid gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor={`imageUrl-${slide.id}`}>URL de Imagen de Fondo</Label>
+                                <Input id={`imageUrl-${slide.id}`} value={slide.imageUrl || ''} onChange={(e) => handleInputChange('imageUrl', e.target.value)} placeholder="https://ejemplo.com/imagen.jpg" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor={`videoUrl-${slide.id}`}>URL de Video de Fondo</Label>
+                                <Input id={`videoUrl-${slide.id}`} value={slide.videoUrl || ''} onChange={(e) => handleInputChange('videoUrl', e.target.value)} placeholder="/video.mp4" />
+                                <p className="text-xs text-muted-foreground">Si se proporcionan ambos, el video tendrá prioridad.</p>
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="cta">
+                        <AccordionTrigger>Acción (CTA) y Expiración</AccordionTrigger>
                         <AccordionContent className="grid gap-4">
                             <div className="space-y-2">
                                 <Label htmlFor={`cta-text-${slide.id}`}>Texto del Botón</Label>
@@ -97,6 +106,11 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
                             <div className="space-y-2">
                                 <Label htmlFor={`cta-target-${slide.id}`}>ID del Acordeón (Opcional)</Label>
                                 <Input id={`cta-target-${slide.id}`} value={slide.cta.accordionTarget || ''} onChange={(e) => handleInputChange('cta.accordionTarget', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor={`expiresAt-${slide.id}`}>Fecha de Expiración (Opcional)</Label>
+                                <Input id={`expiresAt-${slide.id}`} type="date" value={slide.expiresAt || ''} onChange={(e) => handleInputChange('expiresAt', e.target.value)} />
+                                <p className="text-xs text-muted-foreground">La diapositiva se ocultará después de esta fecha. Dejar en blanco para que nunca expire.</p>
                             </div>
                         </AccordionContent>
                     </AccordionItem>
@@ -135,6 +149,8 @@ export function BannerEditorClient({ initialSlides }: { initialSlides: BannerSli
             accordionTarget: ''
         },
         expiresAt: '',
+        imageUrl: '',
+        videoUrl: '',
     };
     setSlides(prev => [...prev, newSlide]);
   };

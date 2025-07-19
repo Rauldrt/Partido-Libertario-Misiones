@@ -16,7 +16,9 @@ const BannerSlideSchema = z.object({
   title: z.string().min(1, 'El título es requerido.'),
   description: z.string().min(1, 'La descripción es requerida.'),
   cta: CtaSchema,
-  expiresAt: z.string().optional(),
+  expiresAt: z.string().optional().or(z.literal('')),
+  imageUrl: z.string().url().optional().or(z.literal('')),
+  videoUrl: z.string().optional().or(z.literal('')),
 });
 
 const BannerSlidesSchema = z.array(BannerSlideSchema);
