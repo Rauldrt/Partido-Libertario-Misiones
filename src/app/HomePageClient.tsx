@@ -20,6 +20,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { BannerSlideData, MosaicImageData, MosaicTileData, AccordionItemData, InfoSectionData } from '@/lib/homepage-service';
+import { EmbedDisplay } from '@/components/EmbedDisplay';
 
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
@@ -107,47 +108,54 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
         >
             <CarouselContent className="ml-0 h-full">
                 {slides.map((slide, index) => {
-                    const hasMedia = slide.videoUrl || slide.imageUrl;
                     return (
-                        <CarouselItem key={index} className="pl-0 relative">
-                            {/* Per-slide background */}
-                            {slide.videoUrl ? (
-                                <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
-                                    <source src={slide.videoUrl} type="video/mp4" />
-                                </video>
-                            ) : slide.imageUrl ? (
-                                <Image
-                                    src={slide.imageUrl}
-                                    alt={slide.title}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="absolute z-0"
-                                    priority={index === 0}
-                                />
-                            ) : (
-                                // Fallback to section-wide background if slide has no media
-                                <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
-                                    <source src="/background.mp4" type="video/mp4" />
-                                </video>
-                            )}
-                            {/* Overlay */}
-                            <div className="absolute inset-0 bg-black/60 z-10" />
+                        <CarouselItem key={index} className="pl-0 relative flex items-center justify-center">
+                          {slide.embedCode ? (
+                              <div className="w-full h-full max-h-full max-w-4xl mx-auto p-4 flex items-center justify-center">
+                                  <EmbedDisplay embedCode={slide.embedCode} />
+                              </div>
+                          ) : (
+                            <>
+                              {/* Per-slide background */}
+                              {slide.videoUrl ? (
+                                  <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
+                                      <source src={slide.videoUrl} type="video/mp4" />
+                                  </video>
+                              ) : slide.imageUrl ? (
+                                  <Image
+                                      src={slide.imageUrl}
+                                      alt={slide.title}
+                                      layout="fill"
+                                      objectFit="cover"
+                                      className="absolute z-0"
+                                      priority={index === 0}
+                                  />
+                              ) : (
+                                  // Fallback to section-wide background if slide has no media
+                                  <video className="absolute top-0 left-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
+                                      <source src="/background.mp4" type="video/mp4" />
+                                  </video>
+                              )}
+                              {/* Overlay */}
+                              <div className="absolute inset-0 bg-black/60 z-10" />
 
-                            {/* Banner Content */}
-                            <div className="relative z-20 h-full flex items-center justify-center">
-                                 <Banner
-                                    title={slide.title}
-                                    description={slide.description}
-                                    ctas={[{ 
-                                        text: slide.cta.text, 
-                                        link: slide.cta.link, 
-                                        className: 'bg-primary text-primary-foreground hover:bg-primary/90',
-                                        onClick: () => handleBannerCtaClick(slide.cta.accordionTarget) 
-                                    }]}
-                                    textAlignment="center"
-                                    priority={index === 0}
-                                />
-                            </div>
+                              {/* Banner Content */}
+                              <div className="relative z-20 h-full flex items-center justify-center w-full">
+                                  <Banner
+                                      title={slide.title}
+                                      description={slide.description}
+                                      ctas={[{ 
+                                          text: slide.cta.text, 
+                                          link: slide.cta.link, 
+                                          className: 'bg-primary text-primary-foreground hover:bg-primary/90',
+                                          onClick: () => handleBannerCtaClick(slide.cta.accordionTarget) 
+                                      }]}
+                                      textAlignment="center"
+                                      priority={index === 0}
+                                  />
+                              </div>
+                            </>
+                          )}
                         </CarouselItem>
                     )
                 })}

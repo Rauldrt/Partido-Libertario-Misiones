@@ -19,6 +19,7 @@ const BannerSlideSchema = z.object({
   expiresAt: z.string().optional().or(z.literal('')),
   imageUrl: z.string().url().optional().or(z.literal('')),
   videoUrl: z.string().optional().or(z.literal('')),
+  embedCode: z.string().optional().or(z.literal('')),
 });
 
 const BannerSlidesSchema = z.array(BannerSlideSchema);

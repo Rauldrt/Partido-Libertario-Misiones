@@ -20,6 +20,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlideData, setSlides: React.Dispatch<React.SetStateAction<BannerSlideData[]>>, isPending: boolean }) => {
   const {
@@ -79,8 +80,19 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
                 </div>
                  <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="media">
-                        <AccordionTrigger>Fondo Multimedia (Opcional)</AccordionTrigger>
-                        <AccordionContent className="grid gap-4">
+                        <AccordionTrigger>Fondo Multimedia o Contenido Incrustado (Opcional)</AccordionTrigger>
+                        <AccordionContent className="grid gap-4 pt-4">
+                            <Alert>
+                                <AlertTitle>Modo de Funcionamiento</AlertTitle>
+                                <AlertDescription>
+                                    <p>Si rellenas el **Código de Inserción**, este tendrá prioridad y se mostrará en lugar del título, la descripción, los botones y el fondo multimedia.</p>
+                                    <p className="mt-2">Si el código está vacío, se mostrará el texto sobre el video (si existe) o la imagen de fondo.</p>
+                                </AlertDescription>
+                            </Alert>
+                             <div className="space-y-2">
+                                <Label htmlFor={`embedCode-${slide.id}`}>Código de Inserción (Opcional)</Label>
+                                <Textarea id={`embedCode-${slide.id}`} value={slide.embedCode || ''} onChange={(e) => handleInputChange('embedCode', e.target.value)} placeholder="<iframe src='...'></iframe>" className="font-mono text-xs" />
+                            </div>
                             <div className="space-y-2">
                                 <Label htmlFor={`imageUrl-${slide.id}`}>URL de Imagen de Fondo</Label>
                                 <Input id={`imageUrl-${slide.id}`} value={slide.imageUrl || ''} onChange={(e) => handleInputChange('imageUrl', e.target.value)} placeholder="https://ejemplo.com/imagen.jpg" />
@@ -88,13 +100,12 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
                             <div className="space-y-2">
                                 <Label htmlFor={`videoUrl-${slide.id}`}>URL de Video de Fondo</Label>
                                 <Input id={`videoUrl-${slide.id}`} value={slide.videoUrl || ''} onChange={(e) => handleInputChange('videoUrl', e.target.value)} placeholder="/video.mp4" />
-                                <p className="text-xs text-muted-foreground">Si se proporcionan ambos, el video tendrá prioridad.</p>
                             </div>
                         </AccordionContent>
                     </AccordionItem>
                     <AccordionItem value="cta">
                         <AccordionTrigger>Acción (CTA) y Expiración</AccordionTrigger>
-                        <AccordionContent className="grid gap-4">
+                        <AccordionContent className="grid gap-4 pt-4">
                             <div className="space-y-2">
                                 <Label htmlFor={`cta-text-${slide.id}`}>Texto del Botón</Label>
                                 <Input id={`cta-text-${slide.id}`} value={slide.cta.text} onChange={(e) => handleInputChange('cta.text', e.target.value)} />
@@ -151,6 +162,7 @@ export function BannerEditorClient({ initialSlides }: { initialSlides: BannerSli
         expiresAt: '',
         imageUrl: '',
         videoUrl: '',
+        embedCode: '',
     };
     setSlides(prev => [...prev, newSlide]);
   };

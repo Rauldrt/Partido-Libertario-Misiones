@@ -20,6 +20,7 @@ export interface BannerSlideData {
     expiresAt?: string; // Optional expiration date string (e.g., "YYYY-MM-DD")
     imageUrl?: string;
     videoUrl?: string;
+    embedCode?: string; // Optional embed code for YouTube, social media, etc.
 }
 
 // Types for Mosaic Tiles
