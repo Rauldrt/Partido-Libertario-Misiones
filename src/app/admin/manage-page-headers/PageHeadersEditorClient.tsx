@@ -93,30 +93,26 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                       placeholder="Ej: Newspaper, Users, Star"
                     />
                   </div>
-                  {'backgroundImage' in pageData && (
-                     <div className="space-y-2">
-                        <Label htmlFor={`backgroundImage-${pageKey}`}>URL de Imagen de Fondo</Label>
-                        <Input
-                        id={`backgroundImage-${pageKey}`}
-                        value={pageData.backgroundImage || ''}
-                        onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
-                        disabled={isPending}
-                        placeholder="Ej: /background.jpg"
-                        />
-                    </div>
-                  )}
-                   {'featuredImage' in pageData && (
-                     <div className="space-y-2">
-                        <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada</Label>
-                        <Input
-                        id={`featuredImage-${pageKey}`}
-                        value={pageData.featuredImage || ''}
-                        onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
-                        disabled={isPending}
-                        placeholder="Ej: /divider.webp"
-                        />
-                    </div>
-                  )}
+                  <div className="space-y-2">
+                    <Label htmlFor={`backgroundImage-${pageKey}`}>URL de Imagen de Fondo (Opcional)</Label>
+                    <Input
+                    id={`backgroundImage-${pageKey}`}
+                    value={pageData.backgroundImage || ''}
+                    onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
+                    disabled={isPending}
+                    placeholder="Ej: /background.jpg"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada (Opcional)</Label>
+                    <Input
+                    id={`featuredImage-${pageKey}`}
+                    value={pageData.featuredImage || ''}
+                    onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
+                    disabled={isPending}
+                    placeholder="Ej: /divider.webp"
+                    />
+                  </div>
                 </CardContent>
               </Card>
             </AccordionContent>
