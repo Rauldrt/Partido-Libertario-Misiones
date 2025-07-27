@@ -9,6 +9,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { getPageHeaderData } from '@/lib/page-headers-service';
+import { notFound } from 'next/navigation';
 
 const values = [
   {
@@ -33,7 +35,12 @@ const values = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const headerData = await getPageHeaderData('about');
+  if (!headerData) {
+    notFound();
+  }
+
   return (
     <>
       <Section 
@@ -45,9 +52,9 @@ export default function AboutPage() {
       >
         <div className="text-center">
           <Users className="h-20 w-20 text-accent mx-auto mb-6" />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4 text-primary-foreground">Quiénes Somos</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4 text-primary-foreground">{headerData.title}</h1>
           <p className="font-body text-xl text-primary-foreground/90 max-w-3xl mx-auto">
-            El Partido Libertario de Misiones es un espacio de ciudadanos comprometidos con las ideas de la libertad, la república y la prosperidad. Buscamos transformar nuestra provincia a través de la defensa de los derechos individuales y la promoción de un entorno favorable para el desarrollo.
+            {headerData.description}
           </p>
         </div>
       </Section>

@@ -2,8 +2,15 @@
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
+import { getPageHeaderData } from '@/lib/page-headers-service';
+import { notFound } from 'next/navigation';
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const headerData = await getPageHeaderData('contact');
+  if (!headerData) {
+    notFound();
+  }
+
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2"; // URL de ejemplo
 
@@ -11,9 +18,9 @@ export default function ContactPage() {
     <Section id="contact" className="">
       <div className="text-center mb-12">
         <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
-        <h1 className="font-headline text-4xl md:text-5xl font-bold">Ponete en Contacto</h1>
+        <h1 className="font-headline text-4xl md:text-5xl font-bold">{headerData.title}</h1>
         <p className="font-body text-xl text-muted-foreground mt-2">
-          Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.
+          {headerData.description}
         </p>
       </div>
 

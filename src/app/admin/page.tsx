@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Sparkles, Star, PanelsTopLeft } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Sparkles, Star, PanelsTopLeft, Type } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   return (
@@ -59,6 +59,23 @@ export default function AdminDashboardPage() {
               <Link href="/admin/manage-content">
                 <ListChecks className="mr-2 h-4 w-4" />
                 Ir al Gestor
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gestionar Encabezados</CardTitle>
+            <CardDescription>Edita los títulos y descripciones de las páginas estáticas.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">
+              Controla los encabezados de las páginas como "Quiénes Somos", "Contacto", etc.
+            </p>
+            <Button asChild>
+              <Link href="/admin/manage-page-headers">
+                <Type className="mr-2 h-4 w-4" />
+                Editar Encabezados
               </Link>
             </Button>
           </CardContent>

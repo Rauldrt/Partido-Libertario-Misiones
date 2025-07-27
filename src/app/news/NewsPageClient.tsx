@@ -4,15 +4,24 @@
 import { NewsCard } from '@/components/NewsCard';
 import { Section } from '@/components/ui/Section';
 import type { NewsCardData } from '@/lib/news-service';
-import { Newspaper, CalendarDays, Megaphone, Radio, Rss } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { Banner } from '@/components/Banner';
 import React from 'react';
 import { SocialWidget } from '@/components/SocialWidget';
+import type { PageHeaderData } from '@/lib/page-headers-service';
 
-export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[] }) {
+export default function NewsPageClient({ newsItems, headerData }: { newsItems: NewsCardData[], headerData: PageHeaderData }) {
   const carouselNewsItems = newsItems.slice(0, 4);
+
+  const DynamicIcon = ({ name }: { name: string }) => {
+    const IconComponent = (LucideIcons as any)[name];
+    if (!IconComponent) {
+      return <LucideIcons.HelpCircle className="h-12 w-12 text-accent" />; // Fallback icon
+    }
+    return React.createElement(IconComponent, { className: 'h-12 w-12 text-accent' });
+  };
   
   return (
     <>
@@ -20,22 +29,22 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
         {/* Animated Background and Icons Container */}
         <div className="absolute inset-0 z-0">
           <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400" />
-          <Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white" />
-          <CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white" />
-          <Megaphone className="absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-white" />
-          <Radio className="absolute top-[10%] right-[10%] h-12 w-12 text-white" />
-           <Newspaper className="absolute bottom-[10%] left-[30%] h-14 w-14 text-white" />
-          <CalendarDays className="absolute top-[30%] right-[45%] h-10 w-10 text-white" />
+          <LucideIcons.Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white" />
+          <LucideIcons.CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white" />
+          <LucideIcons.Megaphone className="absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-white" />
+          <LucideIcons.Radio className="absolute top-[10%] right-[10%] h-12 w-12 text-white" />
+           <LucideIcons.Newspaper className="absolute bottom-[10%] left-[30%] h-14 w-14 text-white" />
+          <LucideIcons.CalendarDays className="absolute top-[30%] right-[45%] h-10 w-10 text-white" />
         </div>
 
         {/* Content Area */}
         <div className="text-center mb-12 relative z-10">
           <div className="inline-flex items-center justify-center p-3 rounded-full mb-4">
-           <Newspaper className="h-12 w-12 text-accent" />
+           <DynamicIcon name={headerData.icon} />
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary-foreground">Noticias y Eventos</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary-foreground">{headerData.title}</h1>
           <p className="font-body text-xl text-primary-foreground/90 mt-2 max-w-3xl mx-auto">
-            Mantenete al tanto de las últimas novedades y próximos encuentros del Partido Libertario de Misiones.
+            {headerData.description}
           </p>
         </div>
       </Section>
@@ -81,7 +90,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
         <Section id="events-list" className="!py-0">
           <div className="mb-12">
             <h2 className="font-headline text-3xl font-semibold mb-6 flex items-center text-foreground">
-              <CalendarDays className="h-8 w-8 text-primary mr-3" />
+              <LucideIcons.CalendarDays className="h-8 w-8 text-primary mr-3" />
               Próximos Eventos
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -97,7 +106,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
         
         <Section id="social-media" className="py-12 text-center bg-card/50">
             <h2 className="font-headline text-3xl font-semibold mb-2 flex items-center justify-center text-foreground">
-                <Rss className="h-8 w-8 text-primary mr-3" />
+                <LucideIcons.Rss className="h-8 w-8 text-primary mr-3" />
                 Conectate con Nosotros
             </h2>
             <p className="font-body text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
@@ -111,7 +120,7 @@ export default function NewsPageClient({ newsItems }: { newsItems: NewsCardData[
         <Section id="news-list-items" className="!pt-12 !pb-0">
           <div>
             <h2 className="font-headline text-3xl font-semibold mb-6 flex items-center text-foreground">
-              <Newspaper className="h-8 w-8 text-primary mr-3" />
+              <LucideIcons.Newspaper className="h-8 w-8 text-primary mr-3" />
               Últimas Noticias
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
