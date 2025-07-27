@@ -25,7 +25,7 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const handleInputChange = (page: string, field: 'title' | 'description' | 'icon', value: string) => {
+  const handleInputChange = (page: string, field: 'title' | 'description' | 'icon' | 'backgroundImage' | 'featuredImage', value: string) => {
     setData(prev => ({
       ...prev,
       [page]: {
@@ -93,6 +93,30 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                       placeholder="Ej: Newspaper, Users, Star"
                     />
                   </div>
+                  {pageData.backgroundImage !== undefined && (
+                     <div className="space-y-2">
+                        <Label htmlFor={`backgroundImage-${pageKey}`}>URL de Imagen de Fondo</Label>
+                        <Input
+                        id={`backgroundImage-${pageKey}`}
+                        value={pageData.backgroundImage}
+                        onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
+                        disabled={isPending}
+                        placeholder="Ej: /background.jpg"
+                        />
+                    </div>
+                  )}
+                   {pageData.featuredImage !== undefined && (
+                     <div className="space-y-2">
+                        <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada</Label>
+                        <Input
+                        id={`featuredImage-${pageKey}`}
+                        value={pageData.featuredImage}
+                        onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
+                        disabled={isPending}
+                        placeholder="Ej: /divider.webp"
+                        />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </AccordionContent>
