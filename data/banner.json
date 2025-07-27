@@ -90,5 +90,18 @@
     "imageUrl": "",
     "videoUrl": "",
     "embedCode": "<iframe src=\"https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Ftodonoticias%2Fposts%2Fpfbid02RYPSitYVJAuPgwKgeKwtTqP7rYVpF5UZTjDfFbeTP6SZJVdZmRkRVq6DSvdRtXgxl&show_text=true&width=500\" width=\"100%\" height=\"629\" style=\"border:none;overflow:hidden\" scrolling=\"no\" frameborder=\"0\" allowfullscreen=\"true\" allow=\"autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share\"></iframe>"
+  },
+  {
+    "title": "Nueva Diapositiva",
+    "description": "Descripción de la nueva diapositiva.",
+    "cta": {
+      "text": "Saber Más",
+      "link": "#",
+      "accordionTarget": ""
+    },
+    "expiresAt": "",
+    "imageUrl": "",
+    "videoUrl": "",
+    "embedCode": "<iframe src=\"https://9000-firebase-studio-1752939453869.cluster-kc2r6y3mtba5mswcmol45orivs.cloudworkstations.dev/view?title=De+Florencio+Varela+a+Palermo%3A+Cita+fallida+y+decepci%C3%B3n+viralizada&description=Un+joven+de+Florencio+Varela+viaj%C3%B3+a+Palermo+para+su+primera+cita%2C+llevando+un+regalo%2C+pero+qued%C3%B3+decepcionado.+La+historia+se+viraliz%C3%B3+en+redes+sociales%2C+generando+debate+sobre+las+expectativas+en+las+citas+online+y+la+importancia+de+la+sinceridad.&mediaType=image&url=https%3A%2F%2Ftn.com.ar%2Ftecno%2Fredes-sociales%2F2025%2F07%2F18%2Fvideo-viajo-de-florencio-varela-a-palermo-para-su-primera-cita-y-le-llevo-un-regalo-pero-lo-decepcionaron%2F%3Ffbclid%3DIwY2xjawLoosdleHRuA2FlbQIxMABicmlkETFJeDNXZFprSGdCcElsbHhUAR52xf3BeTIDS1bqBPjNRBWDT-JYS6vSz7NXOjp_AQbJE5U5AJyn22FIkDzCJg_aem_U3WF-yhiBWP_VbplUhMXBQ&mediaUrl=https%3A%2F%2Ftn.com.ar%2Fresizer%2Fv2%2Fhttps%253A%252F%252Fthumbs.vodgc.net%252F1-14-80rlel1752851996191-1752852572.jpg%3Fauth%3D2cde5d7d4855db9cdff181329517bd0150aee65435c1b3c7de98c0954ad63861%26width%3D1440\" width=\"100%\" height=\"600\" style=\"border:none; max-width: 512px; border-radius: 0.8rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);\" allowfullscreen></iframe>"
   }
 ]

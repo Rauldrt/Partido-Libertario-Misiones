@@ -246,7 +246,6 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
           <Accordion 
               type="single" 
               collapsible 
-              defaultValue="contact"
               className="w-full"
             >
               <AccordionItem value="contact" className="border-b-0">
