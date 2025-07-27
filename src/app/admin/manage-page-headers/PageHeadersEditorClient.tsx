@@ -93,24 +93,24 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                       placeholder="Ej: Newspaper, Users, Star"
                     />
                   </div>
-                  {pageData.backgroundImage !== undefined && (
+                  {'backgroundImage' in pageData && (
                      <div className="space-y-2">
                         <Label htmlFor={`backgroundImage-${pageKey}`}>URL de Imagen de Fondo</Label>
                         <Input
                         id={`backgroundImage-${pageKey}`}
-                        value={pageData.backgroundImage}
+                        value={pageData.backgroundImage || ''}
                         onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
                         disabled={isPending}
                         placeholder="Ej: /background.jpg"
                         />
                     </div>
                   )}
-                   {pageData.featuredImage !== undefined && (
+                   {'featuredImage' in pageData && (
                      <div className="space-y-2">
                         <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada</Label>
                         <Input
                         id={`featuredImage-${pageKey}`}
-                        value={pageData.featuredImage}
+                        value={pageData.featuredImage || ''}
                         onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
                         disabled={isPending}
                         placeholder="Ej: /divider.webp"
