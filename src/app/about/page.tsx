@@ -170,15 +170,15 @@ export default async function AboutPage() {
       </Section>
       
       {headerData.featuredImage && (
-        <Section id="image-divider" className="py-8 md:py-12">
-            <div className="relative h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-xl max-w-5xl mx-auto">
-            <Image src={headerData.featuredImage} alt="Misiones Landscape" layout="fill" objectFit="cover" data-ai-hint="Misiones landscape" />
-            <div className="absolute inset-0 bg-primary/30 flex items-center justify-center">
-                <h2 className="font-headline text-4xl text-white font-bold text-center p-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>
-                Un Futuro Libre para Misiones
-                </h2>
-            </div>
-            </div>
+        <Section 
+            id="image-divider"
+            backgroundImage={headerData.featuredImage}
+            backgroundOverlay="bg-primary/30"
+            className="py-24 md:py-32 bg-cover bg-center"
+        >
+            <h2 className="font-headline text-4xl text-white font-bold text-center p-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>
+            Un Futuro Libre para Misiones
+            </h2>
         </Section>
       )}
     </>
