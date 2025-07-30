@@ -61,6 +61,12 @@ const nextConfig = {
         hostname: 'elbibliote.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'realpolitik.com.ar',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
