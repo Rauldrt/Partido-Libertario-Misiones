@@ -1,4 +1,3 @@
-
 {
   "news": {
     "title": "Noticias y Eventos",
@@ -29,7 +28,8 @@
     "title": "Sumate Libertario",
     "description": "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.",
     "icon": "UserPlus",
-    "backgroundImage": "/afilia1.webp"
+    "backgroundImage": "/afilia1.webp",
+    "featuredImage": "https://realpolitik.com.ar/uploads/noticias/social/2021/08/20210812113230_san-martin-portada.webp.jpg"
   },
   "fiscalizacion": {
     "title": "Defendé el Voto",
