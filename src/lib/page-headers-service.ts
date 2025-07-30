@@ -41,6 +41,16 @@ const defaultData: PageHeadersData = {
       title: 'Ponete en Contacto',
       description: 'Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.',
       icon: 'MessageSquare',
+    },
+    afiliacion: {
+      title: "Sumate Libertario",
+      description: "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo.",
+      icon: "UserPlus"
+    },
+    fiscalizacion: {
+      title: "Defendé el Voto",
+      description: "Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
+      icon: "ShieldCheck"
     }
 };
 

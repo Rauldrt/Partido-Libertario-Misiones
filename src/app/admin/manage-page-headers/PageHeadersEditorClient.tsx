@@ -18,6 +18,8 @@ const PAGE_NAMES: { [key: string]: string } = {
     about: 'Quiénes Somos',
     referentes: 'Nuestros Referentes',
     contact: 'Contacto',
+    afiliacion: 'Página de Afiliación',
+    fiscalizacion: 'Página de Fiscalización',
 };
 
 export function PageHeadersEditorClient({ initialData }: { initialData: PageHeadersData }) {

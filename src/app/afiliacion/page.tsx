@@ -1,20 +1,34 @@
+
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { getPageHeaderData } from '@/lib/page-headers-service';
+import { notFound } from 'next/navigation';
 import { UserPlus } from 'lucide-react';
 import Image from 'next/image';
 
-export default function AfiliacionPage() {
+export default async function AfiliacionPage() {
+  const headerData = await getPageHeaderData('afiliacion');
+  if (!headerData) {
+    notFound();
+  }
+
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=afilicion+res&view=afiliate";
 
   return (
     <>
-      <Section id="afiliacion-header" className="py-12 md:py-16 bg-gradient-to-br from-purple-800 to-cyan-700 text-white">
+      <Section 
+        id="afiliacion-header" 
+        className="py-12 md:py-16 text-white"
+        backgroundImage={headerData.backgroundImage}
+        backgroundOverlay="bg-black/60"
+        parallax={true}
+      >
         <div className="text-center">
           <UserPlus className="h-20 w-20 text-accent mx-auto mb-6" />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">Sumate Libertario</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{headerData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
-            Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.
+            {headerData.description}
           </p>
         </div>
       </Section>

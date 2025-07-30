@@ -3,19 +3,32 @@ import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
+import { getPageHeaderData } from '@/lib/page-headers-service';
+import { notFound } from 'next/navigation';
 
-export default function FiscalizacionPage() {
+export default async function FiscalizacionPage() {
+  const headerData = await getPageHeaderData('fiscalizacion');
+  if (!headerData) {
+    notFound();
+  }
+
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Fiscales+2025&view=fiscales+2025";
 
   return (
     <>
-      <Section id="fiscalizacion-header" className="py-12 md:py-16 bg-gradient-to-br from-orange-700 to-amber-500 text-white">
+      <Section 
+        id="fiscalizacion-header" 
+        className="py-12 md:py-16 text-white"
+        backgroundImage={headerData.backgroundImage}
+        backgroundOverlay="bg-black/60"
+        parallax={true}
+      >
         <div className="text-center">
           <ShieldCheck className="h-20 w-20 text-accent mx-auto mb-6" />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">Defendé el Voto</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{headerData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
-            La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!
+            {headerData.description}
           </p>
         </div>
       </Section>
