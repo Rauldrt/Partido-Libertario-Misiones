@@ -17,7 +17,9 @@ export default function NewsPageClient({ newsItems, headerData }: { newsItems: N
   const carouselNewsItems = newsItems.slice(0, 4);
 
   const DynamicIcon = ({ name }: { name: string }) => {
-    const IconComponent = (LucideIcons as any)[name];
+    // Capitalize the first letter to match lucide-react's PascalCase naming convention
+    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+    const IconComponent = (LucideIcons as any)[capitalizedName];
     if (!IconComponent) {
       return <LucideIcons.HelpCircle className="h-12 w-12 text-accent" />; // Fallback icon
     }

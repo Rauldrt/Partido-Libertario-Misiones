@@ -45,7 +45,9 @@ export default async function AboutPage() {
   }
   
   const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
-    const IconComponent = (LucideIcons as any)[name];
+    // Capitalize the first letter to match lucide-react's PascalCase naming convention
+    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+    const IconComponent = (LucideIcons as any)[capitalizedName];
     if (!IconComponent) {
       return <HelpCircle className={cn("h-10 w-10 text-primary", className)} />; // Fallback icon
     }
