@@ -2,9 +2,12 @@
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { getPageHeaderData } from '@/lib/page-headers-service';
-import { UserPlus } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import Image from 'next/image';
 import type { PageHeaderData } from '@/lib/page-headers-service';
+import * as LucideIcons from 'lucide-react';
+import { createElement } from 'react';
+import { cn } from '@/lib/utils';
 
 export default async function AfiliacionPage() {
   const headerData = await getPageHeaderData('afiliacion');
@@ -16,6 +19,15 @@ export default async function AfiliacionPage() {
     icon: "UserPlus",
     backgroundImage: "/afilia1.webp"
   };
+  
+  const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
+    const IconComponent = (LucideIcons as any)[name];
+    if (!IconComponent) {
+      return <HelpCircle className={cn("h-20 w-20 text-accent mx-auto mb-6", className)} />; // Fallback icon
+    }
+    return createElement(IconComponent, { className: cn("h-20 w-20 text-accent mx-auto mb-6", className) });
+  };
+
 
   // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=afilicion+res&view=afiliate";
@@ -30,7 +42,7 @@ export default async function AfiliacionPage() {
         parallax={true}
       >
         <div className="text-center">
-          <UserPlus className="h-20 w-20 text-accent mx-auto mb-6" />
+          <DynamicIcon name={pageData.icon} />
           <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{pageData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
             {pageData.description}

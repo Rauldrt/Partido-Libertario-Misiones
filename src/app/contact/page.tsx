@@ -1,16 +1,27 @@
 
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageSquare, HelpCircle } from 'lucide-react';
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import * as LucideIcons from 'lucide-react';
+import { createElement } from 'react';
+import { cn } from '@/lib/utils';
 
 export default async function ContactPage() {
   const headerData = await getPageHeaderData('contact');
   if (!headerData) {
     notFound();
   }
+  
+  const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
+    const IconComponent = (LucideIcons as any)[name];
+    if (!IconComponent) {
+      return <HelpCircle className={cn("h-16 w-16 text-primary mx-auto mb-6", className)} />; // Fallback icon
+    }
+    return createElement(IconComponent, { className: cn("h-16 w-16 text-primary mx-auto mb-6", className) });
+  };
 
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2"; // URL de ejemplo
@@ -25,7 +36,7 @@ export default async function ContactPage() {
         className="pt-20 pb-10"
       >
         <div className="text-center text-primary-foreground">
-          <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
+          <DynamicIcon name={headerData.icon} />
           <h1 className="font-headline text-4xl md:text-5xl font-bold">{headerData.title}</h1>
           <p className="font-body text-xl text-primary-foreground/90 mt-2">
             {headerData.description}

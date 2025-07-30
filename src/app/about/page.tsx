@@ -1,7 +1,7 @@
 
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Goal, Eye, Heart, Activity, CheckCircle, ShieldCheck, Lightbulb } from 'lucide-react';
+import { Users, Goal, Eye, Heart, Activity, CheckCircle, ShieldCheck, Lightbulb, HelpCircle } from 'lucide-react';
 import Image from 'next/image';
 import {
   Accordion,
@@ -12,6 +12,8 @@ import {
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import * as LucideIcons from 'lucide-react';
+import { createElement } from 'react';
 
 const values = [
   {
@@ -41,6 +43,15 @@ export default async function AboutPage() {
   if (!headerData) {
     notFound();
   }
+  
+  const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
+    const IconComponent = (LucideIcons as any)[name];
+    if (!IconComponent) {
+      return <HelpCircle className={cn("h-10 w-10 text-primary", className)} />; // Fallback icon
+    }
+    return createElement(IconComponent, { className: cn("h-10 w-10 text-primary", className) });
+  };
+
 
   return (
     <>
@@ -50,12 +61,11 @@ export default async function AboutPage() {
         backgroundOverlay="bg-black/60"
         parallax={true}
         className={cn(
-            "pt-20 pb-10",
-            headerData.backgroundImage && "bg-cover bg-no-repeat"
+            "pt-20 pb-10"
         )}
       >
         <div className="text-center">
-          <Users className="h-20 w-20 text-accent mx-auto mb-6" />
+          <DynamicIcon name={headerData.icon} className="h-20 w-20 text-accent mx-auto mb-6" />
           <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4 text-primary-foreground">{headerData.title}</h1>
           <p className="font-body text-xl text-primary-foreground/90 max-w-3xl mx-auto">
             {headerData.description}
@@ -174,7 +184,7 @@ export default async function AboutPage() {
             id="image-divider"
             backgroundImage={headerData.featuredImage}
             backgroundOverlay="bg-primary/30"
-            className="py-24 md:py-32 bg-cover bg-center bg-no-repeat"
+            className="py-24 md:py-32 bg-cover bg-center"
         >
           {headerData.featuredImageTitle && (
             <h2 className="font-headline text-4xl text-white font-bold text-center p-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>

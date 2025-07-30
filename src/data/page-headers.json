@@ -4,39 +4,48 @@
     "title": "Noticias y Eventos",
     "description": "Mantenete al tanto de las últimas novedades y próximos encuentros del Partido Libertario de Misiones.",
     "icon": "Newspaper",
-    "backgroundImage": ""
+    "backgroundImage": "https://static.wixstatic.com/media/67dd23_355ce234cb76492aa41023f632130afe~mv2.jpg",
+    "featuredImage": "https://static.wixstatic.com/media/67dd23_355ce234cb76492aa41023f632130afe~mv2.jpg",
+    "featuredImageTitle": "Hay un futuro y es libertario"
   },
   "about": {
     "title": "Quiénes Somos",
     "description": "El Partido Libertario de Misiones es un espacio de ciudadanos comprometidos con las ideas de la libertad, la república y la prosperidad. Buscamos transformar nuestra provincia a través de la defensa de los derechos individuales y la promoción de un entorno favorable para el desarrollo.",
     "icon": "Users",
-    "backgroundImage": "",
-    "featuredImage": ""
+    "backgroundImage": "https://static.wixstatic.com/media/67dd23_355ce234cb76492aa41023f632130afe~mv2.jpg",
+    "featuredImage": "https://cdn2.opendemocracy.net/media/original_images/GettyImages-1351753916.jpg",
+    "featuredImageTitle": "El futuro es Libertario"
   },
   "referentes": {
     "title": "Nuestros Referentes",
     "description": "Conocé a las personas que lideran e inspiran nuestro movimiento en la provincia de Misiones.",
     "icon": "Star",
-    "backgroundImage": "",
-    "featuredImage": ""
+    "backgroundImage": "https://fotos.perfil.com/2022/05/31/trim/987/555/milei-acto-31052022-1365070.jpg",
+    "featuredImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky",
+    "featuredImageTitle": "Líderes de la Libertad"
   },
   "contact": {
     "title": "Ponete en Contacto",
     "description": "Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.",
     "icon": "MessageSquare",
-    "backgroundImage": "",
-    "featuredImage": ""
+    "backgroundImage": "https://t3.ftcdn.net/jpg/05/30/96/04/360_F_530960431_c8fPd3HansYvrSJ4fJxZqp9OhjQmYoll.jpg",
+    "featuredImage": "",
+    "featuredImageTitle": ""
   },
   "afiliacion": {
     "title": "Sumate Libertario",
     "description": "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.",
     "icon": "UserPlus",
-    "backgroundImage": "/afilia1.webp"
+    "backgroundImage": "https://media.ambito.com/p/ffa8ca919c354780ed8978552be8dc64/adjuntos/239/imagenes/036/910/0036910941/1200x675/smart/san-martinjpg.jpg",
+    "featuredImage": "https://realpolitik.com.ar/uploads/noticias/social/2021/08/20210812113230_san-martin-portada.webp.jpg",
+    "featuredImageTitle": "La Libertad Avanza"
   },
   "fiscalizacion": {
     "title": "Defendé el Voto",
     "description": "La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
     "icon": "ShieldCheck",
-    "backgroundImage": "/banner2.jpg"
+    "backgroundImage": "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg",
+    "featuredImage": "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg",
+    "featuredImageTitle": "Somos Libertarios"
   }
 }

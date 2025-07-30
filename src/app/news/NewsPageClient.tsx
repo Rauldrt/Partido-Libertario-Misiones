@@ -11,6 +11,7 @@ import { Banner } from '@/components/Banner';
 import React from 'react';
 import { SocialWidget } from '@/components/SocialWidget';
 import type { PageHeaderData } from '@/lib/page-headers-service';
+import { createElement } from 'react';
 
 export default function NewsPageClient({ newsItems, headerData }: { newsItems: NewsCardData[], headerData: PageHeaderData }) {
   const carouselNewsItems = newsItems.slice(0, 4);
@@ -20,7 +21,7 @@ export default function NewsPageClient({ newsItems, headerData }: { newsItems: N
     if (!IconComponent) {
       return <LucideIcons.HelpCircle className="h-12 w-12 text-accent" />; // Fallback icon
     }
-    return React.createElement(IconComponent, { className: 'h-12 w-12 text-accent' });
+    return createElement(IconComponent, { className: 'h-12 w-12 text-accent' });
   };
   
   return (
