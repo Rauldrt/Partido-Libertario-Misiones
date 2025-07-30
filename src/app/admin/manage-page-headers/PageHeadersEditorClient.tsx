@@ -59,10 +59,10 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
     <div className="space-y-6">
       <Accordion type="single" collapsible className="w-full" defaultValue={Object.keys(data)[0]}>
         {Object.keys(PAGE_NAMES).map((pageKey) => {
-          const pageData = data[pageKey];
-          // If for some reason data for a page doesn't exist, skip rendering it to avoid errors
-          if (!pageData) return null;
-
+          // Ensure pageData exists, even if it's not in the initial file data.
+          // This makes the form robust and always shows all manageable pages.
+          const pageData = data[pageKey] || { title: '', description: '', icon: '' };
+          
           return (
             <AccordionItem key={pageKey} value={pageKey}>
               <AccordionTrigger>
