@@ -36,11 +36,13 @@ const defaultData: PageHeadersData = {
       title: 'Nuestros Referentes',
       description: 'Conocé a las personas que lideran e inspiran nuestro movimiento en la provincia de Misiones.',
       icon: 'Star',
+      featuredImage: '',
     },
     contact: {
       title: 'Ponete en Contacto',
       description: 'Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.',
       icon: 'MessageSquare',
+      featuredImage: '',
     },
     afiliacion: {
       title: "Sumate Libertario",

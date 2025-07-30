@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Mail, Phone, MapPin, MessageSquare } from 'lucide-react';
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 export default async function ContactPage() {
   const headerData = await getPageHeaderData('contact');
@@ -21,7 +22,7 @@ export default async function ContactPage() {
         backgroundImage={headerData.backgroundImage}
         backgroundOverlay="bg-black/60"
         parallax={true}
-        className="pt-20 pb-10"
+        className="pt-20 pb-10 bg-cover"
       >
         <div className="text-center">
           <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
@@ -92,6 +93,12 @@ export default async function ContactPage() {
               </CardContent>
             </Card>
             
+            {headerData.featuredImage && (
+                <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
+                    <Image src={headerData.featuredImage} alt="Imagen destacada de contacto" layout="fill" objectFit="cover" data-ai-hint="contact us team" />
+                </div>
+            )}
+
             <Card className="shadow-lg">
                <CardHeader>
                 <CardTitle className="font-headline text-2xl">Horarios de Atención</CardTitle>
