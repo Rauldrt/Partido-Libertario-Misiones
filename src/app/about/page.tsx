@@ -51,7 +51,7 @@ export default async function AboutPage() {
         parallax={true}
         className={cn(
             "pt-20 pb-10",
-            headerData.backgroundImage && "bg-cover"
+            headerData.backgroundImage && "bg-cover bg-no-repeat"
         )}
       >
         <div className="text-center">
@@ -174,11 +174,13 @@ export default async function AboutPage() {
             id="image-divider"
             backgroundImage={headerData.featuredImage}
             backgroundOverlay="bg-primary/30"
-            className="py-24 md:py-32 bg-cover bg-center"
+            className="py-24 md:py-32 bg-cover bg-center bg-no-repeat"
         >
+          {headerData.featuredImageTitle && (
             <h2 className="font-headline text-4xl text-white font-bold text-center p-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>
-            Un Futuro Libre para Misiones
+              {headerData.featuredImageTitle}
             </h2>
+          )}
         </Section>
       )}
     </>

@@ -11,6 +11,7 @@ const PageHeaderSchema = z.object({
   icon: z.string(),
   backgroundImage: z.string().optional(),
   featuredImage: z.string().optional(),
+  featuredImageTitle: z.string().optional(),
 });
 
 export type PageHeaderData = z.infer<typeof PageHeaderSchema>;
@@ -31,28 +32,33 @@ const defaultData: PageHeadersData = {
       title: 'Quiénes Somos',
       description: 'El Partido Libertario de Misiones es un espacio de ciudadanos comprometidos con las ideas de la libertad, la república y la prosperidad.',
       icon: 'Users',
+      featuredImageTitle: 'Un Futuro Libre para Misiones',
     },
     referentes: {
       title: 'Nuestros Referentes',
       description: 'Conocé a las personas que lideran e inspiran nuestro movimiento en la provincia de Misiones.',
       icon: 'Star',
       featuredImage: '',
+      featuredImageTitle: '',
     },
     contact: {
       title: 'Ponete en Contacto',
       description: 'Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.',
       icon: 'MessageSquare',
       featuredImage: '',
+      featuredImageTitle: '',
     },
     afiliacion: {
       title: "Sumate Libertario",
       description: "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo.",
-      icon: "UserPlus"
+      icon: "UserPlus",
+      featuredImageTitle: 'La Libertad Avanza',
     },
     fiscalizacion: {
       title: "Defendé el Voto",
       description: "Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
-      icon: "ShieldCheck"
+      icon: "ShieldCheck",
+      featuredImageTitle: 'Cada Voto Cuenta',
     }
 };
 

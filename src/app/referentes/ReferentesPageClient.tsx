@@ -100,6 +100,13 @@ export function ReferentesPageClient({ initialReferentes, headerData }: { initia
             {headerData.featuredImage && (
               <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-xl">
                 <Image src={headerData.featuredImage} alt="Nuestros Referentes" layout="fill" objectFit="cover" data-ai-hint="team leaders" />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
+                    {headerData.featuredImageTitle && (
+                        <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
+                            {headerData.featuredImageTitle}
+                        </h3>
+                    )}
+                </div>
               </div>
             )}
             <Card className="shadow-lg">

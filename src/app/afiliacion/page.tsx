@@ -2,7 +2,6 @@
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { getPageHeaderData } from '@/lib/page-headers-service';
-import { notFound } from 'next/navigation';
 import { UserPlus } from 'lucide-react';
 import Image from 'next/image';
 import type { PageHeaderData } from '@/lib/page-headers-service';
@@ -85,7 +84,11 @@ export default async function AfiliacionPage() {
                 <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
                     <Image src={pageData.featuredImage} alt="Militantes y simpatizantes unidos" layout="fill" objectFit="cover" data-ai-hint="community people" />
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-                        <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>La Libertad Avanza</h3>
+                      {pageData.featuredImageTitle && (
+                        <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
+                          {pageData.featuredImageTitle}
+                        </h3>
+                      )}
                     </div>
                 </div>
             )}

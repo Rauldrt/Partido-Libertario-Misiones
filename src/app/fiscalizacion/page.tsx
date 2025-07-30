@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import { getPageHeaderData } from '@/lib/page-headers-service';
-import { notFound } from 'next/navigation';
 import type { PageHeaderData } from '@/lib/page-headers-service';
 
 export default async function FiscalizacionPage() {
@@ -85,7 +84,11 @@ export default async function FiscalizacionPage() {
               <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
                   <Image src={pageData.featuredImage} alt="Personas en una mesa de votación" layout="fill" objectFit="cover" data-ai-hint="election polling station" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-                      <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>Cada Voto Cuenta</h3>
+                    {pageData.featuredImageTitle && (
+                      <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
+                        {pageData.featuredImageTitle}
+                      </h3>
+                    )}
                   </div>
               </div>
             )}

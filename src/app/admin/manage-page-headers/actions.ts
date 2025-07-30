@@ -11,6 +11,7 @@ const PageHeaderSchema = z.object({
   icon: z.string().min(1, 'El ícono es requerido.'),
   backgroundImage: z.string().optional(),
   featuredImage: z.string().optional(),
+  featuredImageTitle: z.string().optional(),
 });
 
 const AllHeadersSchema = z.record(z.string(), PageHeaderSchema);
@@ -30,6 +31,8 @@ export async function savePageHeadersAction(data: unknown) {
         revalidatePath('/about');
         revalidatePath('/referentes');
         revalidatePath('/contact');
+        revalidatePath('/afiliacion');
+        revalidatePath('/fiscalizacion');
         
         return { success: true, message: '¡Encabezados guardados con éxito!' };
     } catch (error) {

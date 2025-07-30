@@ -22,7 +22,7 @@ export default async function ContactPage() {
         backgroundImage={headerData.backgroundImage}
         backgroundOverlay="bg-black/60"
         parallax={true}
-        className="pt-20 pb-10 bg-cover"
+        className="pt-20 pb-10 bg-cover bg-no-repeat"
       >
         <div className="text-center">
           <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
@@ -96,6 +96,13 @@ export default async function ContactPage() {
             {headerData.featuredImage && (
                 <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
                     <Image src={headerData.featuredImage} alt="Imagen destacada de contacto" layout="fill" objectFit="cover" data-ai-hint="contact us team" />
+                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
+                        {headerData.featuredImageTitle && (
+                            <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
+                                {headerData.featuredImageTitle}
+                            </h3>
+                        )}
+                    </div>
                 </div>
             )}
 

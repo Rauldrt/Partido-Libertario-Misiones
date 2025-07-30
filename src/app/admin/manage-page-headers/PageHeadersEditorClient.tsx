@@ -27,7 +27,7 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const handleInputChange = (page: string, field: 'title' | 'description' | 'icon' | 'backgroundImage' | 'featuredImage', value: string) => {
+  const handleInputChange = (page: string, field: 'title' | 'description' | 'icon' | 'backgroundImage' | 'featuredImage' | 'featuredImageTitle', value: string) => {
     setData(prev => ({
       ...prev,
       [page]: {
@@ -72,7 +72,7 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                 <Card className="border-0 shadow-none">
                   <CardContent className="pt-4 grid gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor={`title-${pageKey}`}>Título</Label>
+                      <Label htmlFor={`title-${pageKey}`}>Título de la Página</Label>
                       <Input
                         id={`title-${pageKey}`}
                         value={pageData.title}
@@ -111,16 +111,29 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                       />
                       <p className="text-xs text-muted-foreground">Ruta local (ej. /fondo.jpg) o URL completa.</p>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada (Opcional)</Label>
-                      <Input
-                      id={`featuredImage-${pageKey}`}
-                      value={pageData.featuredImage || ''}
-                      onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
-                      disabled={isPending}
-                      placeholder="Ej: /divider.webp o https://..."
-                      />
-                       <p className="text-xs text-muted-foreground">Ruta local (ej. /destacada.jpg) o URL completa.</p>
+                     <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada (Opcional)</Label>
+                          <Input
+                          id={`featuredImage-${pageKey}`}
+                          value={pageData.featuredImage || ''}
+                          onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
+                          disabled={isPending}
+                          placeholder="Ej: /divider.webp o https://..."
+                          />
+                           <p className="text-xs text-muted-foreground">Ruta local (ej. /destacada.jpg) o URL completa.</p>
+                        </div>
+                         <div className="space-y-2">
+                          <Label htmlFor={`featuredImageTitle-${pageKey}`}>Título de Imagen Destacada (Opcional)</Label>
+                          <Input
+                          id={`featuredImageTitle-${pageKey}`}
+                          value={pageData.featuredImageTitle || ''}
+                          onChange={(e) => handleInputChange(pageKey, 'featuredImageTitle', e.target.value)}
+                          disabled={isPending}
+                          placeholder="Texto que va sobre la imagen"
+                          />
+                           <p className="text-xs text-muted-foreground">Este texto se superpone a la imagen.</p>
+                        </div>
                     </div>
                   </CardContent>
                 </Card>
