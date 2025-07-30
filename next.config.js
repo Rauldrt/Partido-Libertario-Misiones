@@ -55,6 +55,12 @@ const nextConfig = {
         hostname: 'misionescuatro.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'elbibliote.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

@@ -1,3 +1,4 @@
+
 {
   "news": {
     "title": "Noticias y Eventos",
@@ -24,10 +25,16 @@
     "icon": "MessageSquare",
     "backgroundImage": "https://t3.ftcdn.net/jpg/05/30/96/04/360_F_530960431_c8fPd3HansYvrSJ4fJxZqp9OhjQmYoll.jpg"
   },
+  "afiliacion": {
+    "title": "Sumate Libertario",
+    "description": "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.",
+    "icon": "UserPlus",
+    "backgroundImage": "/afilia1.webp"
+  },
   "fiscalizacion": {
     "title": "Defendé el Voto",
     "description": "La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
-    "icon": "shield-check",
+    "icon": "ShieldCheck",
     "backgroundImage": "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg",
     "featuredImage": "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg"
   }
