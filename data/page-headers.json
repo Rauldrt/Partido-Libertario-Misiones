@@ -23,5 +23,12 @@
     "description": "Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.",
     "icon": "MessageSquare",
     "backgroundImage": "https://t3.ftcdn.net/jpg/05/30/96/04/360_F_530960431_c8fPd3HansYvrSJ4fJxZqp9OhjQmYoll.jpg"
+  },
+  "fiscalizacion": {
+    "title": "Defendé el Voto",
+    "description": "La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
+    "icon": "shield-check",
+    "backgroundImage": "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg",
+    "featuredImage": "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg"
   }
 }

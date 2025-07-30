@@ -64,7 +64,7 @@ export default async function AfiliacionPage() {
                 </iframe>
               </div>
                <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-bold">Nota:</span> Para obtener el enlace, andá a tu Google Form, hacé clic en "Enviar", seleccioná la pestaña "&lt; &gt;" y copiá la URL del atributo <code className="bg-muted px-1 rounded-sm">src</code>.
+                <span className="font-bold">Nota:</span> Usamos un formulario para gestionar los contactos.
               </p>
             </CardContent>
           </Card>
@@ -81,12 +81,14 @@ export default async function AfiliacionPage() {
                     <p>✓ Ser la voz de la libertad en tu barrio.</p>
                 </CardContent>
             </Card>
-            <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
-                 <Image src="/afilia1.webp" alt="Militantes y simpatizantes unidos" layout="fill" objectFit="cover" data-ai-hint="community people" />
-                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-                     <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>La Libertad Avanza</h3>
-                 </div>
-            </div>
+            {pageData.featuredImage && (
+                <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
+                    <Image src={pageData.featuredImage} alt="Militantes y simpatizantes unidos" layout="fill" objectFit="cover" data-ai-hint="community people" />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
+                        <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>La Libertad Avanza</h3>
+                    </div>
+                </div>
+            )}
           </div>
         </div>
       </Section>

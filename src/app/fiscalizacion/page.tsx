@@ -18,7 +18,7 @@ export default async function FiscalizacionPage() {
     backgroundImage: "/banner2.jpg"
   };
 
-  // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
+  // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Fiscales+2025&view=fiscales+2025";
 
   return (
@@ -64,7 +64,7 @@ export default async function FiscalizacionPage() {
                 </iframe>
               </div>
                <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-bold">Nota:</span> Para obtener el enlace, andá a tu Google Form, hacé clic en "Enviar", seleccioná la pestaña "&lt; &gt;" y copiá la URL del atributo <code className="bg-muted px-1 rounded-sm">src</code>.
+                <span className="font-bold">Nota:</span> Usamos un formulario para gestionar los contactos.
               </p>
             </CardContent>
           </Card>
@@ -81,12 +81,14 @@ export default async function FiscalizacionPage() {
                     <p>✓ Ser los ojos del partido en cada escuela.</p>
                 </CardContent>
             </Card>
-            <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
-                 <Image src="/banner2.jpg" alt="Personas en una mesa de votación" layout="fill" objectFit="cover" data-ai-hint="election polling station" />
-                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
-                     <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>Cada Voto Cuenta</h3>
-                 </div>
-            </div>
+            {pageData.featuredImage && (
+              <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
+                  <Image src={pageData.featuredImage} alt="Personas en una mesa de votación" layout="fill" objectFit="cover" data-ai-hint="election polling station" />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
+                      <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>Cada Voto Cuenta</h3>
+                  </div>
+              </div>
+            )}
           </div>
         </div>
       </Section>
