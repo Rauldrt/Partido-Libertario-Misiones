@@ -22,7 +22,13 @@ export function ReferentesPageClient({ initialReferentes, headerData }: { initia
 
   return (
     <>
-      <Section id="referentes-header" className="py-12 md:py-16 bg-gradient-to-br from-blue-800 to-indigo-700 text-white">
+      <Section 
+        id="referentes-header" 
+        className="py-12 md:py-16 text-white"
+        backgroundImage={headerData.backgroundImage}
+        backgroundOverlay="bg-black/60"
+        parallax={true}
+      >
         <div className="text-center">
           <Star className="h-20 w-20 text-accent mx-auto mb-6" />
           <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{headerData.title}</h1>

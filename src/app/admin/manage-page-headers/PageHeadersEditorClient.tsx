@@ -100,8 +100,9 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                     value={pageData.backgroundImage || ''}
                     onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
                     disabled={isPending}
-                    placeholder="Ej: /background.jpg"
+                    placeholder="Ej: /background.jpg o https://..."
                     />
+                    <p className="text-xs text-muted-foreground">Ruta local (ej. /fondo.jpg) o URL completa.</p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada (Opcional)</Label>
@@ -110,8 +111,9 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
                     value={pageData.featuredImage || ''}
                     onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
                     disabled={isPending}
-                    placeholder="Ej: /divider.webp"
+                    placeholder="Ej: /divider.webp o https://..."
                     />
+                     <p className="text-xs text-muted-foreground">Ruta local (ej. /destacada.jpg) o URL completa.</p>
                   </div>
                 </CardContent>
               </Card>

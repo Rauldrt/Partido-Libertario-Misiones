@@ -31,8 +31,6 @@ const defaultData: PageHeadersData = {
       title: 'Quiénes Somos',
       description: 'El Partido Libertario de Misiones es un espacio de ciudadanos comprometidos con las ideas de la libertad, la república y la prosperidad.',
       icon: 'Users',
-      backgroundImage: '/grupo.webp',
-      featuredImage: '/grupo.webp',
     },
     referentes: {
       title: 'Nuestros Referentes',

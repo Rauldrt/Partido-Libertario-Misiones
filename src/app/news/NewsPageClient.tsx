@@ -25,19 +25,13 @@ export default function NewsPageClient({ newsItems, headerData }: { newsItems: N
   
   return (
     <>
-      <Section id="news-and-events-header" className="overflow-hidden relative">
-        {/* Animated Background and Icons Container */}
-        <div className="absolute inset-0 z-0">
-          <div className="h-full w-full bg-gradient-to-br from-purple-700 via-orange-500 to-yellow-400" />
-          <LucideIcons.Newspaper className="absolute top-[20%] left-[15%] h-24 w-24 text-white" />
-          <LucideIcons.CalendarDays className="absolute bottom-[15%] right-[20%] h-20 w-20 text-white" />
-          <LucideIcons.Megaphone className="absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 h-16 w-16 text-white" />
-          <LucideIcons.Radio className="absolute top-[10%] right-[10%] h-12 w-12 text-white" />
-           <LucideIcons.Newspaper className="absolute bottom-[10%] left-[30%] h-14 w-14 text-white" />
-          <LucideIcons.CalendarDays className="absolute top-[30%] right-[45%] h-10 w-10 text-white" />
-        </div>
-
-        {/* Content Area */}
+      <Section 
+        id="news-and-events-header" 
+        className="overflow-hidden relative"
+        backgroundImage={headerData.backgroundImage}
+        backgroundOverlay="bg-black/60"
+        parallax={true}
+      >
         <div className="text-center mb-12 relative z-10">
           <div className="inline-flex items-center justify-center p-3 rounded-full mb-4">
            <DynamicIcon name={headerData.icon} />
