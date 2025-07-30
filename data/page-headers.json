@@ -1,4 +1,3 @@
-
 {
   "news": {
     "title": "Noticias y Eventos",
@@ -15,11 +14,14 @@
   "referentes": {
     "title": "Nuestros Referentes",
     "description": "Conocé a las personas que lideran e inspiran nuestro movimiento en la provincia de Misiones.",
-    "icon": "Star"
+    "icon": "Star",
+    "backgroundImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky",
+    "featuredImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky"
   },
   "contact": {
     "title": "Ponete en Contacto",
     "description": "Estamos para escucharte. Envianos tu consulta, propuesta o sumate a nuestro equipo.",
-    "icon": "MessageSquare"
+    "icon": "MessageSquare",
+    "backgroundImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky"
   }
 }

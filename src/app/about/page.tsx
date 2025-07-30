@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const values = [
   {
@@ -48,7 +49,10 @@ export default async function AboutPage() {
         backgroundImage={headerData.backgroundImage}
         backgroundOverlay="bg-black/60"
         parallax={true}
-        className="pt-20 pb-10 bg-cover"
+        className={cn(
+            "pt-20 pb-10",
+            headerData.backgroundImage && "bg-cover"
+        )}
       >
         <div className="text-center">
           <Users className="h-20 w-20 text-accent mx-auto mb-6" />
