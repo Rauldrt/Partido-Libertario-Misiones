@@ -1,13 +1,10 @@
 
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { HelpCircle } from 'lucide-react';
 import Image from 'next/image';
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import type { PageHeaderData } from '@/lib/page-headers-service';
-import * as LucideIcons from 'lucide-react';
-import { createElement } from 'react';
-import { cn } from '@/lib/utils';
+import { DynamicIcon } from '@/components/DynamicIcon';
 
 export default async function FiscalizacionPage() {
   const headerData = await getPageHeaderData('fiscalizacion');
@@ -19,17 +16,6 @@ export default async function FiscalizacionPage() {
     icon: "ShieldCheck",
     backgroundImage: "/banner2.jpg"
   };
-  
-  const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
-    // Capitalize the first letter to match lucide-react's PascalCase naming convention
-    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-    const IconComponent = (LucideIcons as any)[capitalizedName];
-    if (!IconComponent) {
-      return <HelpCircle className={cn("h-20 w-20 text-accent mx-auto mb-6", className)} />; // Fallback icon
-    }
-    return createElement(IconComponent, { className: cn("h-20 w-20 text-accent mx-auto mb-6", className) });
-  };
-
 
   // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Fiscales+2025&view=fiscales+2025";
@@ -44,7 +30,7 @@ export default async function FiscalizacionPage() {
         parallax={true}
       >
         <div className="text-center">
-          <DynamicIcon name={pageData.icon} />
+          <DynamicIcon name={pageData.icon} className="h-20 w-20 text-accent mx-auto mb-6" />
           <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{pageData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
             {pageData.description}

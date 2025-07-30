@@ -1,7 +1,7 @@
 
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Goal, Eye, Heart, Activity, CheckCircle, ShieldCheck, Lightbulb, HelpCircle } from 'lucide-react';
+import { Users, Goal, Eye, Heart, Activity, CheckCircle, ShieldCheck, Lightbulb } from 'lucide-react';
 import Image from 'next/image';
 import {
   Accordion,
@@ -12,8 +12,8 @@ import {
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import * as LucideIcons from 'lucide-react';
-import { createElement } from 'react';
+import { DynamicIcon } from '@/components/DynamicIcon';
+
 
 const values = [
   {
@@ -43,17 +43,6 @@ export default async function AboutPage() {
   if (!headerData) {
     notFound();
   }
-  
-  const DynamicIcon = ({ name, className }: { name: string, className?: string }) => {
-    // Capitalize the first letter to match lucide-react's PascalCase naming convention
-    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-    const IconComponent = (LucideIcons as any)[capitalizedName];
-    if (!IconComponent) {
-      return <HelpCircle className={cn("h-10 w-10 text-primary", className)} />; // Fallback icon
-    }
-    return createElement(IconComponent, { className: cn("h-10 w-10 text-primary", className) });
-  };
-
 
   return (
     <>
@@ -186,7 +175,7 @@ export default async function AboutPage() {
             id="image-divider"
             backgroundImage={headerData.featuredImage}
             backgroundOverlay="bg-primary/30"
-            className="py-24 md:py-32 bg-cover bg-center"
+            className="py-24 md:py-32"
         >
           {headerData.featuredImageTitle && (
             <h2 className="font-headline text-4xl text-white font-bold text-center p-4" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.5)'}}>

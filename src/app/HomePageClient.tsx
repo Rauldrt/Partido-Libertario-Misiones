@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import type { BannerSlideData, MosaicImageData, MosaicTileData, AccordionItemData, InfoSectionData } from '@/lib/homepage-service';
 import { EmbedDisplay } from '@/components/EmbedDisplay';
+import { DynamicIcon } from '@/components/DynamicIcon';
 
 // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
 const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
@@ -78,14 +79,6 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
     if (accordionTarget) {
       setOpenAccordionItem(accordionTarget);
     }
-  };
-
-  const DynamicIcon = ({ name }: { name: string }) => {
-    const IconComponent = (LucideIcons as any)[name];
-    if (!IconComponent) {
-      return <LucideIcons.HelpCircle className="h-10 w-10 text-primary" />; // Fallback icon
-    }
-    return createElement(IconComponent, { className: 'h-10 w-10 text-primary' });
   };
 
   return (
@@ -185,7 +178,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                         <Card className="shadow-lg w-full">
                             <AccordionTrigger className="p-6 hover:no-underline">
                                 <div className="flex items-center gap-4 w-full">
-                                    <DynamicIcon name={item.icon} />
+                                    <DynamicIcon name={item.icon} className="h-10 w-10 text-primary" />
                                     <span className="font-headline text-2xl text-foreground">{item.title}</span>
                                 </div>
                             </AccordionTrigger>

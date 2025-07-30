@@ -11,20 +11,10 @@ import { Banner } from '@/components/Banner';
 import React from 'react';
 import { SocialWidget } from '@/components/SocialWidget';
 import type { PageHeaderData } from '@/lib/page-headers-service';
-import { createElement } from 'react';
+import { DynamicIcon } from '@/components/DynamicIcon';
 
 export default function NewsPageClient({ newsItems, headerData }: { newsItems: NewsCardData[], headerData: PageHeaderData }) {
   const carouselNewsItems = newsItems.slice(0, 4);
-
-  const DynamicIcon = ({ name }: { name: string }) => {
-    // Capitalize the first letter to match lucide-react's PascalCase naming convention
-    const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-    const IconComponent = (LucideIcons as any)[capitalizedName];
-    if (!IconComponent) {
-      return <LucideIcons.HelpCircle className="h-12 w-12 text-accent" />; // Fallback icon
-    }
-    return createElement(IconComponent, { className: 'h-12 w-12 text-accent' });
-  };
   
   return (
     <>
@@ -37,7 +27,7 @@ export default function NewsPageClient({ newsItems, headerData }: { newsItems: N
       >
         <div className="text-center mb-12 relative z-10">
           <div className="inline-flex items-center justify-center p-3 rounded-full mb-4">
-           <DynamicIcon name={headerData.icon} />
+           <DynamicIcon name={headerData.icon} className="h-12 w-12 text-accent" />
           </div>
           <h1 className="font-headline text-4xl md:text-5xl font-bold text-primary-foreground">{headerData.title}</h1>
           <p className="font-body text-xl text-primary-foreground/90 mt-2 max-w-3xl mx-auto">
