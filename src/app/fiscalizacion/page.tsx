@@ -5,12 +5,18 @@ import { ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
+import type { PageHeaderData } from '@/lib/page-headers-service';
 
 export default async function FiscalizacionPage() {
   const headerData = await getPageHeaderData('fiscalizacion');
-  if (!headerData) {
-    notFound();
-  }
+
+  // Use default data if none is found to prevent crashing
+  const pageData: PageHeaderData = headerData || {
+    title: "Defendé el Voto",
+    description: "La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
+    icon: "ShieldCheck",
+    backgroundImage: "/banner2.jpg"
+  };
 
   // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Fiscales+2025&view=fiscales+2025";
@@ -20,15 +26,15 @@ export default async function FiscalizacionPage() {
       <Section 
         id="fiscalizacion-header" 
         className="py-12 md:py-16 text-white"
-        backgroundImage={headerData.backgroundImage}
+        backgroundImage={pageData.backgroundImage}
         backgroundOverlay="bg-black/60"
         parallax={true}
       >
         <div className="text-center">
           <ShieldCheck className="h-20 w-20 text-accent mx-auto mb-6" />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{headerData.title}</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{pageData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
-            {headerData.description}
+            {pageData.description}
           </p>
         </div>
       </Section>

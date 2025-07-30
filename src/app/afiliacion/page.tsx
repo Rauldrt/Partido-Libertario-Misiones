@@ -5,14 +5,20 @@ import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
 import { UserPlus } from 'lucide-react';
 import Image from 'next/image';
+import type { PageHeaderData } from '@/lib/page-headers-service';
 
 export default async function AfiliacionPage() {
   const headerData = await getPageHeaderData('afiliacion');
-  if (!headerData) {
-    notFound();
-  }
+  
+  // Use default data if none is found to prevent crashing
+  const pageData: PageHeaderData = headerData || {
+    title: "Sumate Libertario",
+    description: "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.",
+    icon: "UserPlus",
+    backgroundImage: "/afilia1.webp"
+  };
 
-  // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
+  // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
   const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=afilicion+res&view=afiliate";
 
   return (
@@ -20,15 +26,15 @@ export default async function AfiliacionPage() {
       <Section 
         id="afiliacion-header" 
         className="py-12 md:py-16 text-white"
-        backgroundImage={headerData.backgroundImage}
+        backgroundImage={pageData.backgroundImage}
         backgroundOverlay="bg-black/60"
         parallax={true}
       >
         <div className="text-center">
           <UserPlus className="h-20 w-20 text-accent mx-auto mb-6" />
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{headerData.title}</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{pageData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
-            {headerData.description}
+            {pageData.description}
           </p>
         </div>
       </Section>
