@@ -27,11 +27,39 @@ export async function getAllowedHosts(): Promise<HostPattern[]> {
     const match = fileContent.match(remotePatternsRegex);
 
     if (match && match[1]) {
-      const arrayString = match[1];
-      // Safely evaluate the JavaScript array string from the config file using `new Function`.
-      // This is safer than `eval` and can parse the JavaScript object literal format.
-      const patterns = new Function(`return ${arrayString}`)();
-      return patterns || [];
+      // This is a safer way to parse a string that looks like a JS array of objects.
+      // It avoids using eval() or new Function(). It's not perfect but works for this format.
+      const arrayString = match[1]
+        .replace(/(\w+):/g, '"$1":') // add quotes to keys
+        .replace(/'/g, '"'); // replace single quotes with double quotes
+
+      // A simple eval-like function just for this purpose.
+      // This is still risky if the config file has malicious content.
+      // A more robust solution would be a proper JS parser like acorn or esprima.
+      // For this specific use case, it's a calculated risk.
+      try {
+        const patterns = JSON.parse(
+          arrayString
+            .replace(/,\s*\]/g, ']') // remove trailing commas before closing bracket
+            .replace(/,\s*}/g, '}') // remove trailing commas before closing brace
+        );
+        return patterns || [];
+      } catch (e) {
+         console.warn("Could not parse remotePatterns with JSON.parse, trying regex fallback", e);
+         // Fallback to regex for simpler cases if JSON parsing fails
+          const hostNameRegex = /hostname:\s*'([^']+)'/g;
+          let hostMatch;
+          const patterns: HostPattern[] = [];
+          while ((hostMatch = hostNameRegex.exec(arrayString)) !== null) {
+              patterns.push({
+                  protocol: 'https',
+                  hostname: hostMatch[1],
+                  port: '',
+                  pathname: '/**',
+              });
+          }
+          return patterns;
+      }
     }
 
     // If no match is found, return an empty array.

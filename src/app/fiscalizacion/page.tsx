@@ -14,7 +14,9 @@ export default async function FiscalizacionPage() {
     title: "Defendé el Voto",
     description: "La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
     icon: "ShieldCheck",
-    backgroundImage: "/banner2.jpg"
+    backgroundImage: "/banner2.jpg",
+    featuredImage: "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg",
+    featuredImageTitle: "Somos Libertarios"
   };
 
   // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
@@ -82,7 +84,7 @@ export default async function FiscalizacionPage() {
             </Card>
             {pageData.featuredImage && (
               <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-xl">
-                  <Image src={pageData.featuredImage} alt="Personas en una mesa de votación" layout="fill" objectFit="cover" data-ai-hint="election polling station" />
+                  <Image src={pageData.featuredImage} alt={pageData.featuredImageTitle || "Personas en una mesa de votación"} layout="fill" objectFit="cover" data-ai-hint="election polling station" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
                     {pageData.featuredImageTitle && (
                       <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
