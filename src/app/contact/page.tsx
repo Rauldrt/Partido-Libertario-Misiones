@@ -22,12 +22,12 @@ export default async function ContactPage() {
         backgroundImage={headerData.backgroundImage}
         backgroundOverlay="bg-black/60"
         parallax={true}
-        className="pt-20 pb-10 bg-cover bg-no-repeat"
+        className="pt-20 pb-10"
       >
-        <div className="text-center">
+        <div className="text-center text-primary-foreground">
           <MessageSquare className="h-16 w-16 text-primary mx-auto mb-6" />
           <h1 className="font-headline text-4xl md:text-5xl font-bold">{headerData.title}</h1>
-          <p className="font-body text-xl text-muted-foreground mt-2">
+          <p className="font-body text-xl text-primary-foreground/90 mt-2">
             {headerData.description}
           </p>
         </div>

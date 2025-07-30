@@ -11,8 +11,6 @@ interface SectionProps extends PropsWithChildren {
   backgroundOverlay?: string;
 }
 
-// NOTE: Parallax functionality has been removed to resolve a persistent CSS build error.
-// The `parallax` prop is now ignored.
 export function Section({ 
   children, 
   className, 
@@ -20,6 +18,7 @@ export function Section({
   id, 
   backgroundImage, 
   videoSrc,
+  parallax = false,
   backgroundOverlay
 }: SectionProps) {
   const sectionStyle: React.CSSProperties = backgroundImage && !videoSrc
@@ -34,6 +33,7 @@ export function Section({
       className={cn(
         'relative py-12 md:py-16 lg:py-20',
         backgroundImage && !videoSrc && 'bg-[image:var(--bg-image)] bg-center bg-cover',
+        parallax && backgroundImage && 'bg-fixed',
         className
       )}
       style={sectionStyle}
