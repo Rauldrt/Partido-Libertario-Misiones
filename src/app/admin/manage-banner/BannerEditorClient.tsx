@@ -80,26 +80,18 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
                 </div>
                  <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="media">
-                        <AccordionTrigger>Fondo Multimedia o Contenido Incrustado (Opcional)</AccordionTrigger>
+                        <AccordionTrigger>Contenido Incrustado (Opcional)</AccordionTrigger>
                         <AccordionContent className="grid gap-4 pt-4">
                             <Alert>
                                 <AlertTitle>Modo de Funcionamiento</AlertTitle>
                                 <AlertDescription>
-                                    <p>Si rellenas el **Código de Inserción**, este tendrá prioridad y se mostrará en lugar del título, la descripción, los botones y el fondo multimedia.</p>
-                                    <p className="mt-2">Si el código está vacío, se mostrará el texto sobre el video (si existe) o la imagen de fondo.</p>
+                                    <p>Si rellenas el **Código de Inserción**, este tendrá prioridad y se mostrará en lugar del título y la descripción.</p>
+                                    <p className="mt-2">Es ideal para incrustar videos de YouTube, publicaciones de redes sociales, etc.</p>
                                 </AlertDescription>
                             </Alert>
                              <div className="space-y-2">
                                 <Label htmlFor={`embedCode-${slide.id}`}>Código de Inserción (Opcional)</Label>
                                 <Textarea id={`embedCode-${slide.id}`} value={slide.embedCode || ''} onChange={(e) => handleInputChange('embedCode', e.target.value)} placeholder="<iframe src='...'></iframe>" className="font-mono text-xs" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor={`imageUrl-${slide.id}`}>URL de Imagen de Fondo</Label>
-                                <Input id={`imageUrl-${slide.id}`} value={slide.imageUrl || ''} onChange={(e) => handleInputChange('imageUrl', e.target.value)} placeholder="https://ejemplo.com/imagen.jpg" />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor={`videoUrl-${slide.id}`}>URL de Video de Fondo</Label>
-                                <Input id={`videoUrl-${slide.id}`} value={slide.videoUrl || ''} onChange={(e) => handleInputChange('videoUrl', e.target.value)} placeholder="/video.mp4" />
                             </div>
                         </AccordionContent>
                     </AccordionItem>

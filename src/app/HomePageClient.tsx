@@ -78,6 +78,11 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
   const handleBannerCtaClick = (accordionTarget?: string) => {
     if (accordionTarget) {
       setOpenAccordionItem(accordionTarget);
+      
+      const element = document.getElementById('accordion-info');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -118,9 +123,9 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                                       description={slide.description}
                                       ctas={[{ 
                                           text: slide.cta.text, 
-                                          link: slide.cta.link, 
+                                          link: slide.cta.link,
+                                          'data-accordion-target': slide.cta.accordionTarget, 
                                           className: 'bg-primary text-primary-foreground hover:bg-primary/90',
-                                          onClick: () => handleBannerCtaClick(slide.cta.accordionTarget) 
                                       }]}
                                       textAlignment="center"
                                       priority={index === 0}

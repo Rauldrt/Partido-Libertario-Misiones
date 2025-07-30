@@ -9,7 +9,7 @@ interface Cta {
   text: string;
   link: string;
   className?: string;
-  onClick?: () => void;
+  [key: string]: any; // Allow other attributes like data-*
 }
 
 interface BannerProps {
@@ -66,9 +66,8 @@ export function Banner({
                 "shadow-md transition-transform hover:scale-105 w-full md:w-auto", 
                 cta.className
               )}
-              onClick={cta.onClick}
             >
-              <Link href={cta.link}>{cta.text}</Link>
+              <Link href={cta.link} {...cta}>{cta.text}</Link>
             </Button>
           ))}
 
