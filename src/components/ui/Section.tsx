@@ -33,7 +33,7 @@ export function Section({
       id={id} 
       className={cn(
         'relative py-12 md:py-16 lg:py-20',
-        backgroundImage && !videoSrc && 'bg-[image:var(--bg-image)] bg-center bg-no-repeat',
+        backgroundImage && !videoSrc && 'bg-[image:var(--bg-image)] bg-center bg-cover',
         className
       )}
       style={sectionStyle}
