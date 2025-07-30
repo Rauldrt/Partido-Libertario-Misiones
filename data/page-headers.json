@@ -1,3 +1,4 @@
+
 {
   "news": {
     "title": "Noticias y Eventos",
@@ -7,14 +8,14 @@
   "about": {
     "title": "Quiénes Somos",
     "description": "El Partido Libertario de Misiones es un espacio de ciudadanos comprometidos con las ideas de la libertad, la república y la prosperidad. Buscamos transformar nuestra provincia a través de la defensa de los derechos individuales y la promoción de un entorno favorable para el desarrollo.",
-    "icon": "Users"
+    "icon": "Users",
+    "backgroundImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky",
+    "featuredImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky"
   },
   "referentes": {
     "title": "Nuestros Referentes",
     "description": "Conocé a las personas que lideran e inspiran nuestro movimiento en la provincia de Misiones.",
-    "icon": "Star",
-    "backgroundImage": "/banner1.jpg",
-    "featuredImage": "/banner1.jpg"
+    "icon": "Star"
   },
   "contact": {
     "title": "Ponete en Contacto",
