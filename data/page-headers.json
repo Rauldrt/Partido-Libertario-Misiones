@@ -2,14 +2,14 @@
   "news": {
     "title": "Noticias y Eventos",
     "description": "Mantenete al tanto de las últimas novedades y próximos encuentros del Partido Libertario de Misiones.",
-    "icon": "NEWSPAPER",
+    "icon": "newspaper",
     "featuredImage": "https://static.wixstatic.com/media/67dd23_355ce234cb76492aa41023f632130afe~mv2.jpg",
     "featuredImageTitle": "Hay un futuro y es libertario"
   },
   "about": {
     "title": "Quiénes Somos",
     "description": "El Partido Libertario de Misiones es un espacio de ciudadanos comprometidos con las ideas de la libertad, la república y la prosperidad. Buscamos transformar nuestra provincia a través de la defensa de los derechos individuales y la promoción de un entorno favorable para el desarrollo.",
-    "icon": "Users",
+    "icon": "users",
     "backgroundImage": "https://static.wixstatic.com/media/67dd23_355ce234cb76492aa41023f632130afe~mv2.jpg",
     "featuredImage": "https://cdn2.opendemocracy.net/media/original_images/GettyImages-1351753916.jpg",
     "featuredImageTitle": "El futuro es Libertario"
@@ -17,7 +17,7 @@
   "referentes": {
     "title": "Nuestros Referentes",
     "description": "Conocé a las personas que lideran e inspiran nuestro movimiento en la provincia de Misiones.",
-    "icon": "combine",
+    "icon": "cpu",
     "backgroundImage": "https://fotos.perfil.com/2022/05/31/trim/987/555/milei-acto-31052022-1365070.jpg",
     "featuredImage": "https://drive.google.com/uc?id=1yz_I5ae05FrqGCWeU3Sh0E6GAUFVY9ky"
   },

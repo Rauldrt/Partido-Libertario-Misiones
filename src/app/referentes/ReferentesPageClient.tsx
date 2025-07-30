@@ -7,10 +7,11 @@ import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
-import { Star, MessageCircle, Search } from 'lucide-react';
+import { MessageCircle, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import type { PageHeaderData } from '@/lib/page-headers-service';
 import Image from 'next/image';
+import { DynamicIcon } from '@/components/DynamicIcon';
 
 export function ReferentesPageClient({ initialReferentes, headerData }: { initialReferentes: ReferenteData[], headerData: PageHeaderData }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,7 +32,7 @@ export function ReferentesPageClient({ initialReferentes, headerData }: { initia
         parallax={true}
       >
         <div className="text-center">
-          <Star className="h-20 w-20 text-accent mx-auto mb-6" />
+          <DynamicIcon name={headerData.icon} className="h-20 w-20 text-accent mx-auto mb-6" />
           <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">{headerData.title}</h1>
           <p className="font-body text-xl max-w-3xl mx-auto text-primary-foreground/90">
             {headerData.description}
@@ -99,7 +100,7 @@ export function ReferentesPageClient({ initialReferentes, headerData }: { initia
           <div className="md:col-span-2 space-y-8">
             {headerData.featuredImage && (
               <div className="relative h-96 w-full rounded-lg overflow-hidden shadow-xl">
-                <Image src={headerData.featuredImage} alt="Nuestros Referentes" layout="fill" objectFit="cover" data-ai-hint="team leaders" />
+                <Image src={headerData.featuredImage} alt={headerData.featuredImageTitle || "Imagen destacada de referentes"} layout="fill" objectFit="cover" data-ai-hint="team leaders" />
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-4">
                     {headerData.featuredImageTitle && (
                         <h3 className="font-headline text-3xl text-white font-bold text-center" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.7)'}}>
