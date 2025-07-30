@@ -58,70 +58,76 @@ export function PageHeadersEditorClient({ initialData }: { initialData: PageHead
   return (
     <div className="space-y-6">
       <Accordion type="single" collapsible className="w-full" defaultValue={Object.keys(data)[0]}>
-        {Object.entries(data).map(([pageKey, pageData]) => (
-          <AccordionItem key={pageKey} value={pageKey}>
-            <AccordionTrigger>
-              <span className="text-lg font-medium">{PAGE_NAMES[pageKey] || pageKey}</span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <Card className="border-0 shadow-none">
-                <CardContent className="pt-4 grid gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor={`title-${pageKey}`}>Título</Label>
-                    <Input
-                      id={`title-${pageKey}`}
-                      value={pageData.title}
-                      onChange={(e) => handleInputChange(pageKey, 'title', e.target.value)}
+        {Object.keys(PAGE_NAMES).map((pageKey) => {
+          const pageData = data[pageKey];
+          // If for some reason data for a page doesn't exist, skip rendering it to avoid errors
+          if (!pageData) return null;
+
+          return (
+            <AccordionItem key={pageKey} value={pageKey}>
+              <AccordionTrigger>
+                <span className="text-lg font-medium">{PAGE_NAMES[pageKey]}</span>
+              </AccordionTrigger>
+              <AccordionContent>
+                <Card className="border-0 shadow-none">
+                  <CardContent className="pt-4 grid gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor={`title-${pageKey}`}>Título</Label>
+                      <Input
+                        id={`title-${pageKey}`}
+                        value={pageData.title}
+                        onChange={(e) => handleInputChange(pageKey, 'title', e.target.value)}
+                        disabled={isPending}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`description-${pageKey}`}>Descripción</Label>
+                      <Textarea
+                        id={`description-${pageKey}`}
+                        value={pageData.description}
+                        onChange={(e) => handleInputChange(pageKey, 'description', e.target.value)}
+                        disabled={isPending}
+                        rows={3}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`icon-${pageKey}`}>Icono (de Lucide-React)</Label>
+                      <Input
+                        id={`icon-${pageKey}`}
+                        value={pageData.icon}
+                        onChange={(e) => handleInputChange(pageKey, 'icon', e.target.value)}
+                        disabled={isPending}
+                        placeholder="Ej: Newspaper, Users, Star"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`backgroundImage-${pageKey}`}>URL de Imagen de Fondo (Opcional)</Label>
+                      <Input
+                      id={`backgroundImage-${pageKey}`}
+                      value={pageData.backgroundImage || ''}
+                      onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
                       disabled={isPending}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`description-${pageKey}`}>Descripción</Label>
-                    <Textarea
-                      id={`description-${pageKey}`}
-                      value={pageData.description}
-                      onChange={(e) => handleInputChange(pageKey, 'description', e.target.value)}
+                      placeholder="Ej: /background.jpg o https://..."
+                      />
+                      <p className="text-xs text-muted-foreground">Ruta local (ej. /fondo.jpg) o URL completa.</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada (Opcional)</Label>
+                      <Input
+                      id={`featuredImage-${pageKey}`}
+                      value={pageData.featuredImage || ''}
+                      onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
                       disabled={isPending}
-                      rows={3}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`icon-${pageKey}`}>Icono (de Lucide-React)</Label>
-                    <Input
-                      id={`icon-${pageKey}`}
-                      value={pageData.icon}
-                      onChange={(e) => handleInputChange(pageKey, 'icon', e.target.value)}
-                      disabled={isPending}
-                      placeholder="Ej: Newspaper, Users, Star"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`backgroundImage-${pageKey}`}>URL de Imagen de Fondo (Opcional)</Label>
-                    <Input
-                    id={`backgroundImage-${pageKey}`}
-                    value={pageData.backgroundImage || ''}
-                    onChange={(e) => handleInputChange(pageKey, 'backgroundImage', e.target.value)}
-                    disabled={isPending}
-                    placeholder="Ej: /background.jpg o https://..."
-                    />
-                    <p className="text-xs text-muted-foreground">Ruta local (ej. /fondo.jpg) o URL completa.</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`featuredImage-${pageKey}`}>URL de Imagen Destacada (Opcional)</Label>
-                    <Input
-                    id={`featuredImage-${pageKey}`}
-                    value={pageData.featuredImage || ''}
-                    onChange={(e) => handleInputChange(pageKey, 'featuredImage', e.target.value)}
-                    disabled={isPending}
-                    placeholder="Ej: /divider.webp o https://..."
-                    />
-                     <p className="text-xs text-muted-foreground">Ruta local (ej. /destacada.jpg) o URL completa.</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
+                      placeholder="Ej: /divider.webp o https://..."
+                      />
+                       <p className="text-xs text-muted-foreground">Ruta local (ej. /destacada.jpg) o URL completa.</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </AccordionContent>
+            </AccordionItem>
+          );
+        })}
       </Accordion>
       <div className="flex justify-end pt-4 border-t">
         <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
