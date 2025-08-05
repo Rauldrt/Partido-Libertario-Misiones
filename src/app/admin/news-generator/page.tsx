@@ -19,7 +19,7 @@ import { getNewsItemForEditAction, saveNewsItemAction } from './actions';
 import { useSearchParams } from 'next/navigation';
 import { EmbedDisplay } from '@/components/EmbedDisplay';
 
-const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published' | 'createdAt'> = {
+const getEmptyNewsItem = (): Partial<NewsCardData> => ({
   title: 'Título del Contenido',
   date: format(new Date(), 'dd/MM/yyyy'),
   summary: 'Este es un resumen breve. Atrae al lector para que haga clic y lea más.',
@@ -29,14 +29,14 @@ const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published' | 'crea
   content: 'Este es el contenido completo. Puede ser más largo y detallado que el resumen.',
   youtubeVideoId: '',
   embedCode: '',
-};
+});
 
 export default function NewsGeneratorPage() {
   const searchParams = useSearchParams();
   const editId = searchParams.get('edit');
   const isEditing = !!editId;
 
-  const [newsData, setNewsData] = useState<Partial<NewsCardData>>(EMPTY_NEWS_ITEM);
+  const [newsData, setNewsData] = useState<Partial<NewsCardData>>(getEmptyNewsItem());
   const [aiUrl, setAiUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -60,7 +60,7 @@ export default function NewsGeneratorPage() {
         })
         .finally(() => setIsLoading(false));
     } else {
-      setNewsData(EMPTY_NEWS_ITEM);
+      setNewsData(getEmptyNewsItem());
       setIsLoading(false);
     }
   }, [editId, toast]);
@@ -83,7 +83,7 @@ export default function NewsGeneratorPage() {
         description: result.message,
       });
       if (!isEditing) {
-        setNewsData(EMPTY_NEWS_ITEM);
+        setNewsData(getEmptyNewsItem());
         setAiUrl('');
       }
     } else {
@@ -115,7 +115,7 @@ export default function NewsGeneratorPage() {
         summary: result.summary,
         content: result.summary,
         imageHint: result.imageHint,
-        imageUrl: result.imageUrl || EMPTY_NEWS_ITEM.imageUrl,
+        imageUrl: result.imageUrl || 'https://placehold.co/600x400.png',
         youtubeVideoId: result.youtubeVideoId || '',
         embedCode: result.embedCode || '',
         type: result.youtubeVideoId ? 'event' : 'news',
@@ -137,12 +137,19 @@ export default function NewsGeneratorPage() {
   };
 
   const previewData: NewsCardData = {
-    ...EMPTY_NEWS_ITEM,
-    ...newsData,
     id: newsData.id || 'preview-id',
     linkUrl: newsData.linkUrl || '/#',
     published: newsData.published ?? true,
     createdAt: newsData.createdAt || new Date().toISOString(),
+    title: newsData.title || '',
+    date: newsData.date || '',
+    summary: newsData.summary || '',
+    imageUrl: newsData.imageUrl || '',
+    imageHint: newsData.imageHint || '',
+    type: newsData.type || 'news',
+    content: newsData.content || '',
+    youtubeVideoId: newsData.youtubeVideoId || '',
+    embedCode: newsData.embedCode || '',
   }
 
   if (isLoading) {
@@ -191,7 +198,7 @@ export default function NewsGeneratorPage() {
               </div>
                <div className="space-y-2">
                 <Label htmlFor="embedCode">Código de Inserción (Opcional)</Label>
-                <Textarea id="embedCode" name="embedCode" value={newsData.embedCode || ''} onChange={handleInputChange} placeholder="<blockquote class='instagram-media' ...>...</blockquote>" className="font-mono text-xs" />
+                <Textarea id="embedCode" name="embedCode" value={newsData.embedCode || ''} onChange={handleInputChange} placeholder="&lt;blockquote class='instagram-media' ...&gt;...&lt;/blockquote&gt;" className="font-mono text-xs" />
                  <p className="text-xs text-muted-foreground">
                     Si rellenás esto, se mostrará en lugar del contenido principal, la imagen y el video de YouTube.
                 </p>
@@ -279,3 +286,5 @@ export default function NewsGeneratorPage() {
     </div>
   );
 }
+
+    
