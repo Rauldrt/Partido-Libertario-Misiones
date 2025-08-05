@@ -1,8 +1,6 @@
 
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApps } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp, getApps, getApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,12 +12,25 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
+// Function to check if all required Firebase config values are present
+function isFirebaseConfigValid(config: typeof firebaseConfig): boolean {
+    return Object.values(config).every(value => value);
+}
+
 // Initialize Firebase
 let app;
+
+// We only initialize the app on the server or client if it hasn't been initialized already.
 if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
+    if (isFirebaseConfigValid(firebaseConfig)) {
+        app = initializeApp(firebaseConfig);
+    } else {
+        // This log will appear in the server console during build/server-side rendering,
+        // and in the browser console on the client-side.
+        console.error("Firebase config is invalid. Some environment variables are missing. Please check your .env.local file.");
+    }
 } else {
-    app = getApps()[0];
+    app = getApp(); // Get the already-initialized app
 }
 
 export default app;
