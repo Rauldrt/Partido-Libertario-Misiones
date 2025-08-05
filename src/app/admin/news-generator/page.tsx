@@ -29,6 +29,7 @@ const getEmptyNewsItem = (): Partial<NewsCardData> => ({
   content: 'Este es el contenido completo. Puede ser más largo y detallado que el resumen.',
   youtubeVideoId: '',
   embedCode: '',
+  published: true, // Default to true for new items
 });
 
 export default function NewsGeneratorPage() {
@@ -138,7 +139,7 @@ export default function NewsGeneratorPage() {
 
   const previewData: NewsCardData = {
     id: newsData.id || 'preview-id',
-    linkUrl: newsData.linkUrl || '/#',
+    linkUrl: newsData.linkUrl || `news/${newsData.id || 'preview-id'}`,
     published: newsData.published ?? true,
     createdAt: newsData.createdAt || new Date().toISOString(),
     title: newsData.title || '',
@@ -273,18 +274,16 @@ export default function NewsGeneratorPage() {
          </Card>
          <Button className="w-full" onClick={handleSave} disabled={isSaving}>
            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-           {isEditing ? 'Guardar Cambios' : 'Guardar y Publicar'}
+           {isEditing ? 'Guardar Cambios' : 'Guardar Contenido'}
          </Button>
          <div className="text-sm text-muted-foreground p-4 border rounded-md bg-card">
               <p className="font-bold text-card-foreground">¿Cómo agregar o editar el contenido?</p>
               <p>1. Ajustá los datos usando el editor o la IA.</p>
-              <p>2. Hacé clic en "{isEditing ? 'Guardar Cambios' : 'Guardar y Publicar'}".</p>
-              <p>3. El contenido se guardará y será visible en el sitio.</p>
+              <p>2. Hacé clic en "{isEditing ? 'Guardar Cambios' : 'Guardar Contenido'}".</p>
+              <p>3. El contenido se guardará y será visible (o no) según su estado.</p>
               <p>4. Podés gestionar su visibilidad desde "Gestionar Contenido".</p>
          </div>
       </div>
     </div>
   );
 }
-
-    
