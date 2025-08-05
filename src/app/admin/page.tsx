@@ -1,4 +1,5 @@
 
+'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -17,7 +18,6 @@ export default function AdminDashboardPage() {
                 Desde aquí podés gestionar el contenido y las herramientas del sitio.
               </p>
           </div>
-          <FirebaseStatus />
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
