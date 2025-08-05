@@ -3,15 +3,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Sparkles, Star, PanelsTopLeft, Type } from 'lucide-react';
+import { FirebaseStatus } from '@/components/FirebaseStatus';
 
 export default function AdminDashboardPage() {
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Bienvenido al Panel de Administración</h2>
-      <p className="text-muted-foreground mb-8">
-        Desde aquí podés gestionar el contenido y las herramientas del sitio.
-      </p>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+            <h2 className="text-2xl font-bold">Bienvenido al Panel de Administración</h2>
+            <p className="text-muted-foreground mt-1">
+              Desde aquí podés gestionar el contenido y las herramientas del sitio.
+            </p>
+        </div>
+        <FirebaseStatus />
+      </div>
+      
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
         <Card>
           <CardHeader>
             <CardTitle>Asistente de IA</CardTitle>
