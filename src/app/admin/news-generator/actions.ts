@@ -19,7 +19,9 @@ const NewsItemSchema = z.object({
     embedCode: z.string().optional().default(''),
     linkUrl: z.string().optional(),
     published: z.boolean().optional(),
-    createdAt: z.any().optional(), // Allow createdAt from Firestore
+    // Allow createdAt from Firestore (which can be an object or a string) but mark it as optional.
+    // We will strip it before saving to avoid sending client-side dates back to the server.
+    createdAt: z.any().optional(), 
 });
 
 export async function saveNewsItemAction(data: Partial<NewsCardData>) {
@@ -30,10 +32,11 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
     }
 
     try {
-        if (validation.data.id) {
+        const { id, createdAt, ...saveData } = validation.data;
+
+        if (id) {
             // This is an update
-            const { id, ...updateData } = validation.data;
-            await updateNewsItem(id, updateData);
+            await updateNewsItem(id, saveData);
             
             revalidatePath('/');
             revalidatePath('/news');
@@ -43,7 +46,7 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
             return { success: true, message: '¡Contenido actualizado con éxito!' };
         } else {
             // This is a new item
-            const { id, linkUrl, published, createdAt, ...newsData } = validation.data;
+            const { linkUrl, published, ...newsData } = saveData;
             await addNewsItem(newsData);
             
             revalidatePath('/');

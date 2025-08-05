@@ -27,7 +27,7 @@ export interface NewsCardData {
   youtubeVideoId?: string;
   published: boolean;
   embedCode?: string;
-  createdAt: any; // Firestore timestamp
+  createdAt: any; // Firestore timestamp or ISO string
 }
 
 const NEWS_COLLECTION = 'news';
@@ -35,6 +35,7 @@ const NEWS_COLLECTION = 'news';
 function docToNewsItem(doc: any): NewsCardData {
     const data = doc.data();
     // Convert Firestore Timestamp to a serializable format (ISO string)
+    // This makes it safe for client components and server actions.
     const createdAt = data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : new Date().toISOString();
     
     return {
@@ -65,12 +66,10 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
   const newsCollection = collection(db, NEWS_COLLECTION);
 
   try {
-    // Get all documents from the collection without a specific order from the query.
     const newsSnapshot = await getDocs(newsCollection);
     const newsItems = newsSnapshot.docs.map(doc => docToNewsItem(doc));
     
     // Manually sort the items by date on the server.
-    // This avoids the need for a composite index in Firestore.
     newsItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     return newsItems;
@@ -138,7 +137,10 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
   
   try {
     const docRef = doc(db, NEWS_COLLECTION, id);
-    await updateDoc(docRef, updates);
+    // The 'createdAt' field should not be updated.
+    const { createdAt, ...restOfUpdates } = updates;
+    await updateDoc(docRef, restOfUpdates);
+
     const updatedDoc = await getNewsItemById(id);
     if (!updatedDoc) throw new Error("Could not retrieve updated item.");
     return updatedDoc;
@@ -173,12 +175,12 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
 
   try {
     const batch = writeBatch(db);
-    const totalItems = orderedIds.length;
-
+    
+    // We'll use a `createdAt` mock value to reorder. 
+    // The larger the timestamp, the newer the item.
     orderedIds.forEach((id, index) => {
       const docRef = doc(db, NEWS_COLLECTION, id);
-      // We'll use a `createdAt` mock value to reorder. 
-      // The larger the timestamp, the newer the item.
+      // To ensure newest is at the top, we subtract the index from the current time
       const mockTimestamp = new Date(Date.now() - index * 1000 * 60); // Subtract 1 minute for each position
       batch.update(docRef, { createdAt: mockTimestamp });
     });
