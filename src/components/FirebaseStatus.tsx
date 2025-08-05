@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { initializeApp, getApps, getApp, type FirebaseOptions } from "firebase/app";
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Your web app's Firebase configuration pulled directly from environment variables
 const firebaseConfig: FirebaseOptions = {
