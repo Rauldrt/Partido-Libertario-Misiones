@@ -19,9 +19,9 @@ import { getNewsItemForEditAction, saveNewsItemAction } from './actions';
 import { useSearchParams } from 'next/navigation';
 import { EmbedDisplay } from '@/components/EmbedDisplay';
 
-const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'> = {
+const EMPTY_NEWS_ITEM: Omit<NewsCardData, 'id' | 'linkUrl' | 'published' | 'createdAt'> = {
   title: 'Título del Contenido',
-  date: format(new Date(), 'dd de MMMM, yyyy'),
+  date: format(new Date(), 'dd/MM/yyyy'),
   summary: 'Este es un resumen breve. Atrae al lector para que haga clic y lea más.',
   imageUrl: 'https://placehold.co/600x400.png',
   imageHint: 'keyword1 keyword2',
@@ -142,6 +142,7 @@ export default function NewsGeneratorPage() {
     id: newsData.id || 'preview-id',
     linkUrl: newsData.linkUrl || '/#',
     published: newsData.published ?? true,
+    createdAt: newsData.createdAt || new Date().toISOString(),
   }
 
   if (isLoading) {

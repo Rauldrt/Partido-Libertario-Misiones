@@ -6,6 +6,8 @@ import { EventsCarousel } from '@/components/EventsCarousel';
 import { getNewsItems } from '@/lib/news-service';
 import { SocialWidget } from '@/components/SocialWidget';
 
+export const revalidate = 60; // Revalidate data every 60 seconds
+
 // This is a Server Component by default
 export default async function HomePage() {
   const allSlides = await getBannerSlides();

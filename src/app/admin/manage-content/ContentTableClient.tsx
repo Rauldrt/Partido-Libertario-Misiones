@@ -212,6 +212,11 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
                     description: result.message,
                 });
                 setItems(originalItems); // Revert on failure
+            } else {
+                 toast({
+                    title: 'Contenido Reordenado',
+                    description: 'El orden de las noticias ha sido actualizado.',
+                });
             }
         });
     }
@@ -256,7 +261,7 @@ export function ContentTableClient({ initialItems }: { initialItems: NewsCardDat
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción es permanente y no se puede deshacer. Esto eliminará el artículo <span className="font-bold">"{itemToDelete?.title}"</span> del sitio.
+              Esta acción es permanente y no se puede deshacer. Esto eliminará el artículo <span className="font-bold">"{itemToDelete?.title}"</span> de la base de datos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

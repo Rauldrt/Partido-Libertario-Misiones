@@ -1,5 +1,5 @@
 
-import { getNewsItems } from '@/lib/news-service';
+import { getNewsItems, getNewsItemById } from '@/lib/news-service';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
@@ -13,12 +13,21 @@ interface NewsArticlePageProps {
   params: { id: string };
 }
 
+export const revalidate = 60; // Revalidate data every 60 seconds
+
+// Generate static paths for all news items at build time
+export async function generateStaticParams() {
+  const allItems = await getNewsItems();
+  return allItems.map((item) => ({
+    id: item.id,
+  }));
+}
+
 export default async function NewsArticlePage({ params }: NewsArticlePageProps) {
   const { id } = params;
-  const allItems = await getNewsItems();
-  const article = allItems.find((item) => item.id === id);
+  const article = await getNewsItemById(id);
 
-  if (!article) {
+  if (!article || !article.published) {
     notFound(); 
   }
 

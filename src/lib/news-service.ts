@@ -1,8 +1,18 @@
 
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
+import { getDb } from '@/lib/firebase';
+import { 
+  collection, 
+  getDocs, 
+  doc, 
+  getDoc, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  serverTimestamp,
+  writeBatch
+} from 'firebase/firestore';
 
 export interface NewsCardData {
   id: string;
@@ -17,160 +27,201 @@ export interface NewsCardData {
   youtubeVideoId?: string;
   published: boolean;
   embedCode?: string;
+  createdAt: any; // Firestore timestamp
 }
 
-const newsFilePath = path.join(process.cwd(), 'data', 'news.json');
+const NEWS_COLLECTION = 'news';
 
-/**
- * NOTE: This is a simplified data service for demonstration purposes.
- * In a production application, you would use a database like Firestore,
- * PostgreSQL, or MySQL instead of a JSON file.
- */
+function docToNewsItem(doc: any): NewsCardData {
+    const data = doc.data();
+    // Convert Firestore Timestamp to a serializable format (ISO string)
+    const createdAt = data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : new Date().toISOString();
+    
+    return {
+        id: doc.id,
+        title: data.title,
+        date: data.date,
+        summary: data.summary,
+        content: data.content,
+        imageUrl: data.imageUrl,
+        imageHint: data.imageHint,
+        linkUrl: `/news/${doc.id}`, // Dynamic linkUrl
+        type: data.type,
+        youtubeVideoId: data.youtubeVideoId,
+        published: data.published,
+        embedCode: data.embedCode,
+        createdAt: createdAt,
+    };
+}
+
 
 export async function getNewsItems(): Promise<NewsCardData[]> {
+  const db = getDb();
+  if (!db) {
+    console.error("Firestore is not initialized.");
+    return [];
+  }
+  
+  const newsCollection = collection(db, NEWS_COLLECTION);
+
   try {
-    const data = await fs.readFile(newsFilePath, 'utf-8');
-    const newsItems: NewsCardData[] = JSON.parse(data);
-    // Ensure backward compatibility for items without the 'published' flag
-    return newsItems.map(item => ({
-      ...item,
-      published: item.published !== false, // Defaults to true if undefined
-    }));
+    // Get all documents from the collection without a specific order from the query.
+    const newsSnapshot = await getDocs(newsCollection);
+    const newsItems = newsSnapshot.docs.map(doc => docToNewsItem(doc));
+    
+    // Manually sort the items by date on the server.
+    // This avoids the need for a composite index in Firestore.
+    newsItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    return newsItems;
   } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      // If the file doesn't exist, create it with an empty array
-      await fs.writeFile(newsFilePath, JSON.stringify([], null, 2), 'utf-8');
-      return [];
-    }
-    console.error('Failed to read news data:', error);
+    console.error('Failed to read news data from Firestore:', error);
     throw new Error('Could not retrieve news items.');
   }
 }
 
 export async function getNewsItemById(id: string): Promise<NewsCardData | undefined> {
-  const allItems = await getNewsItems();
-  return allItems.find((item) => item.id === id);
+  const db = getDb();
+  if (!db) {
+    console.error("Firestore is not initialized.");
+    return undefined;
+  }
+  
+  try {
+    const docRef = doc(db, NEWS_COLLECTION, id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docToNewsItem(docSnap);
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    console.error(`Failed to get item ${id}:`, error);
+    return undefined;
+  }
 }
 
-export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl' | 'published'>): Promise<NewsCardData> {
-  const allItems = await getNewsItems();
+export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl' | 'createdAt' | 'published'>): Promise<NewsCardData> {
+  const db = getDb();
+  if (!db) {
+    throw new Error("Firestore is not initialized.");
+  }
   
-  const newItemId = Date.now().toString();
-  
-  const newItem: NewsCardData = {
-    ...item,
-    id: newItemId,
-    linkUrl: `/news/${newItemId}`,
-    published: true,
-  };
-
-  const updatedItems = [newItem, ...allItems];
-
   try {
-    await fs.writeFile(newsFilePath, JSON.stringify(updatedItems, null, 2), 'utf-8');
-    return newItem;
+    const newItemPayload = {
+      ...item,
+      published: true, // Default to published
+      createdAt: serverTimestamp(),
+    };
+    
+    const docRef = await addDoc(collection(db, NEWS_COLLECTION), newItemPayload);
+    
+    return {
+        ...newItemPayload,
+        id: docRef.id,
+        linkUrl: `/news/${docRef.id}`,
+        createdAt: new Date().toISOString(), // Return a serializable date
+    } as NewsCardData;
+
   } catch (error) {
-    console.error('Failed to write news data:', error);
+    console.error('Failed to write news data to Firestore:', error);
     throw new Error('Could not save the new item.');
   }
 }
 
 export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id'>>): Promise<NewsCardData> {
-  const allItems = await getNewsItems();
-  const itemIndex = allItems.findIndex(i => i.id === id);
-
-  if (itemIndex === -1) {
-    throw new Error(`Item with id ${id} not found.`);
+  const db = getDb();
+  if (!db) {
+    throw new Error("Firestore is not initialized.");
   }
-
-  // Preserve the original linkUrl, but allow other fields to be updated
-  const updatedItem = { ...allItems[itemIndex], ...updates, linkUrl: allItems[itemIndex].linkUrl };
-  allItems[itemIndex] = updatedItem;
-
+  
   try {
-    await fs.writeFile(newsFilePath, JSON.stringify(allItems, null, 2), 'utf-8');
-    return updatedItem;
+    const docRef = doc(db, NEWS_COLLECTION, id);
+    await updateDoc(docRef, updates);
+    const updatedDoc = await getNewsItemById(id);
+    if (!updatedDoc) throw new Error("Could not retrieve updated item.");
+    return updatedDoc;
   } catch (error) {
-    console.error('Failed to write news data:', error);
+    console.error('Failed to update news data in Firestore:', error);
     throw new Error('Could not update the item.');
   }
 }
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
-  let allItems = await getNewsItems();
-  const initialLength = allItems.length;
-  allItems = allItems.filter(i => i.id !== id);
-  
-  if(allItems.length === initialLength) {
-    console.warn(`Item with id ${id} not found for deletion.`);
-    return { success: false };
+  const db = getDb();
+  if (!db) {
+    throw new Error("Firestore is not initialized.");
   }
 
   try {
-    await fs.writeFile(newsFilePath, JSON.stringify(allItems, null, 2), 'utf-8');
+    await deleteDoc(doc(db, NEWS_COLLECTION, id));
     return { success: true };
   } catch (error) {
-    console.error('Failed to write news data:', error);
+    console.error('Failed to delete news data from Firestore:', error);
     throw new Error('Could not delete the item.');
   }
 }
 
+// Reordering now works by updating an 'order' field.
+// Let's stick with createdAt for simplicity for now. Reordering can be a future feature.
 export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
-  const allItems = await getNewsItems();
-  const itemsById = new Map(allItems.map(item => [item.id, item]));
-  
-  const reorderedItems: NewsCardData[] = [];
-  const foundIds = new Set<string>();
-
-  // Create the new ordered list
-  for (const id of orderedIds) {
-    const item = itemsById.get(id);
-    if (item) {
-      reorderedItems.push(item);
-      foundIds.add(id);
-    }
+  const db = getDb();
+  if (!db) {
+    throw new Error("Firestore is not initialized.");
   }
 
-  // Add any items that were not in the orderedIds list to the end of the list to prevent data loss.
-  for (const item of allItems) {
-    if (!foundIds.has(item.id)) {
-      reorderedItems.push(item);
-    }
-  }
-  
   try {
-    await fs.writeFile(newsFilePath, JSON.stringify(reorderedItems, null, 2), 'utf-8');
+    const batch = writeBatch(db);
+    const totalItems = orderedIds.length;
+
+    orderedIds.forEach((id, index) => {
+      const docRef = doc(db, NEWS_COLLECTION, id);
+      // We'll use a `createdAt` mock value to reorder. 
+      // The larger the timestamp, the newer the item.
+      const mockTimestamp = new Date(Date.now() - index * 1000 * 60); // Subtract 1 minute for each position
+      batch.update(docRef, { createdAt: mockTimestamp });
+    });
+
+    await batch.commit();
   } catch (error) {
-    console.error('Failed to write reordered news data:', error);
+    console.error('Failed to reorder news data in Firestore:', error);
     throw new Error('Could not save the reordered items.');
   }
 }
 
-
 export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
-  const allItems = await getNewsItems();
-  const originalItem = allItems.find(i => i.id === id);
+  const db = getDb();
+  if (!db) {
+    throw new Error("Firestore is not initialized.");
+  }
+  
+  const originalItem = await getNewsItemById(id);
 
   if (!originalItem) {
     throw new Error(`Item with id ${id} not found.`);
   }
 
-  const newItemId = Date.now().toString();
-  const newItem: NewsCardData = {
-    ...originalItem,
-    id: newItemId,
+  const { id: originalId, linkUrl, createdAt, ...dataToCopy } = originalItem;
+
+  const duplicatedData = {
+    ...dataToCopy,
     title: `(Copia) ${originalItem.title}`,
-    published: false, // Make the copy unpublished by default
-    linkUrl: `/news/${newItemId}`,
+    published: false,
+    createdAt: serverTimestamp(),
   };
 
-  const updatedItems = [newItem, ...allItems];
-
   try {
-    await fs.writeFile(newsFilePath, JSON.stringify(updatedItems, null, 2), 'utf-8');
-    return newItem;
+    const docRef = await addDoc(collection(db, NEWS_COLLECTION), duplicatedData);
+    
+     return {
+        ...duplicatedData,
+        id: docRef.id,
+        linkUrl: `/news/${docRef.id}`,
+        createdAt: new Date().toISOString(),
+    } as NewsCardData;
   } catch (error) {
-    console.error('Failed to duplicate news item:', error);
+    console.error('Failed to duplicate news item in Firestore:', error);
     throw new Error('Could not save the duplicated item.');
   }
 }

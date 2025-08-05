@@ -19,6 +19,7 @@ const NewsItemSchema = z.object({
     embedCode: z.string().optional().default(''),
     linkUrl: z.string().optional(),
     published: z.boolean().optional(),
+    createdAt: z.any().optional(), // Allow createdAt from Firestore
 });
 
 export async function saveNewsItemAction(data: Partial<NewsCardData>) {
@@ -42,7 +43,7 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
             return { success: true, message: '¡Contenido actualizado con éxito!' };
         } else {
             // This is a new item
-            const { id, linkUrl, ...newsData } = validation.data;
+            const { id, linkUrl, published, createdAt, ...newsData } = validation.data;
             await addNewsItem(newsData);
             
             revalidatePath('/');

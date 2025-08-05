@@ -11,7 +11,7 @@ export default async function ManageContentPage() {
       <CardHeader>
         <CardTitle>Gestionar Contenido</CardTitle>
         <CardDescription>
-          Aquí puedes ver, ocultar o eliminar las noticias y eventos existentes.
+          Aquí puedes ver, ocultar, eliminar y reordenar las noticias y eventos existentes. Los cambios se reflejarán inmediatamente en el sitio.
         </CardDescription>
       </CardHeader>
       <CardContent>
