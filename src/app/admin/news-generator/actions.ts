@@ -19,15 +19,20 @@ const NewsItemSchema = z.object({
     embedCode: z.string().optional().default(''),
     linkUrl: z.string().optional(),
     published: z.boolean().optional(),
-    // Allow createdAt from Firestore (which can be an object or a string) but mark it as optional.
-    // We will strip it before saving to avoid sending client-side dates back to the server.
     createdAt: z.any().optional(), 
 });
 
 export async function saveNewsItemAction(data: Partial<NewsCardData>) {
+    
+    // Ensure 'published' has a default value if it's a new item.
+    if (!data.id && data.published === undefined) {
+        data.published = true;
+    }
+    
     const validation = NewsItemSchema.safeParse(data);
 
     if (!validation.success) {
+        console.error("Zod validation failed:", validation.error.issues);
         return { success: false, message: 'Invalid data provided.', errors: validation.error.issues };
     }
 
@@ -46,7 +51,7 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
             return { success: true, message: '¡Contenido actualizado con éxito!' };
         } else {
             // This is a new item
-            const { linkUrl, published, ...newsData } = saveData;
+            const { linkUrl, ...newsData } = saveData;
             await addNewsItem(newsData);
             
             revalidatePath('/');
@@ -56,6 +61,7 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
             return { success: true, message: '¡Contenido guardado con éxito!' };
         }
     } catch (error) {
+        console.error("Error saving news item:", error);
         return { success: false, message: (error as Error).message };
     }
 }
