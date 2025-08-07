@@ -189,13 +189,13 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                 {accordionItems.map(item => (
                     <AccordionItem key={item.id} value={item.value} className="border-b-0">
                         <Card className="shadow-lg w-full">
-                             <div className="flex items-center gap-4 w-full p-6">
-                                <DynamicIcon name={item.icon} className="h-10 w-10 text-primary" />
-                                <AccordionTrigger className="p-0 hover:no-underline flex-1">
-                                    <span className="font-headline text-2xl text-foreground">{item.title}</span>
-                                </AccordionTrigger>
-                            </div>
-                            <AccordionContent className="px-6 pb-6 -mt-4">
+                             <AccordionTrigger className="p-6 hover:no-underline w-full">
+                                <div className="flex items-center gap-4 w-full">
+                                  <DynamicIcon name={item.icon} className="h-10 w-10 text-primary" />
+                                  <span className="font-headline text-2xl text-foreground">{item.title}</span>
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="px-6 pb-6">
                                 <p className="font-body text-lg pl-[56px]">
                                     {item.content}
                                 </p>
