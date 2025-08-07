@@ -7,13 +7,14 @@ import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { GripVertical, Loader2, Plus, Save, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { saveAccordionItemsAction } from './actions';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const SortableItem = ({ item, setItems, isPending }: { item: AccordionItemData, setItems: React.Dispatch<React.SetStateAction<AccordionItemData[]>>, isPending: boolean }) => {
   const {
@@ -41,19 +42,20 @@ const SortableItem = ({ item, setItems, isPending }: { item: AccordionItemData, 
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-        <Card className="mb-4 bg-muted/30">
-             <CardHeader className="flex flex-row items-center justify-between p-3">
-                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2">
-                        <GripVertical className="h-5 w-5 text-muted-foreground" />
-                    </Button>
-                    <span className="font-semibold truncate">{item.title || 'Nuevo Panel'}</span>
-                 </div>
-                 <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isPending}>
-                     <Trash2 className="h-4 w-4" />
-                 </Button>
-            </CardHeader>
-            <CardContent className="p-4 pt-0 grid gap-4">
+      <AccordionItem value={item.id} className="border-b-0 mb-4 bg-muted/30 rounded-lg overflow-hidden">
+          <div className="flex items-center p-2 border-b">
+              <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2">
+                  <GripVertical className="h-5 w-5 text-muted-foreground" />
+              </Button>
+              <AccordionTrigger className="flex-1 p-2 hover:no-underline">
+                  <span className="font-semibold text-left truncate">{item.title || 'Nuevo Panel'}</span>
+              </AccordionTrigger>
+              <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isPending} className="ml-2">
+                  <Trash2 className="h-4 w-4" />
+              </Button>
+          </div>
+          <AccordionContent>
+            <CardContent className="p-4 pt-4 grid gap-4">
                  <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor={`title-${item.id}`}>Título</Label>
@@ -69,7 +71,8 @@ const SortableItem = ({ item, setItems, isPending }: { item: AccordionItemData, 
                     <Textarea id={`content-${item.id}`} value={item.content} onChange={(e) => handleInputChange('content', e.target.value)} rows={3} />
                 </div>
             </CardContent>
-        </Card>
+          </AccordionContent>
+      </AccordionItem>
     </div>
   );
 };
@@ -124,9 +127,11 @@ export function AccordionEditorClient({ initialItems }: { initialItems: Accordio
     <div className="space-y-6">
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={items.map(s => s.id)} strategy={verticalListSortingStrategy}>
+              <Accordion type="multiple" className="w-full space-y-0">
                 {items.map(item => (
                     <SortableItem key={item.id} item={item} setItems={setItems} isPending={isPending} />
                 ))}
+              </Accordion>
             </SortableContext>
         </DndContext>
         
