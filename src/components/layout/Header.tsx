@@ -79,54 +79,66 @@ export function Header() {
                 </Link>
             </div>
             
-            {/* Centered Title - Visible on all screens */}
-            <div className="flex-1 text-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                 <Link href="/">
-                    <span className="font-headline text-lg md:text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
-                 </Link>
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex flex-1 items-center justify-between">
+                {/* Left side nav */}
+                <nav className="flex items-center gap-2 ml-4">
+                    {navItems.map((item) => (
+                    <Button key={item.label} variant="ghost" asChild className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400">
+                        <Link href={item.href} className="font-body text-base font-medium">
+                        {item.label}
+                        </Link>
+                    </Button>
+                    ))}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 font-body text-base font-medium">
+                                Más
+                                <ChevronDown className="relative top-[1px] ml-1 h-4 w-4 transition duration-200 group-data-[state=open]:rotate-180" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-background/80 backdrop-blur-sm border-white/20 text-foreground">
+                            {dropdownNavItems.map((item) => (
+                                <DropdownMenuItem key={item.label} asChild>
+                                    <Link href={item.href} className="flex items-center">
+                                        {item.icon} {item.label}
+                                    </Link>
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </nav>
+
+                {/* Centered Title */}
+                <div className="flex-1 text-center px-4">
+                    <Link href="/">
+                        <span className="font-headline text-lg md:text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
+                    </Link>
+                </div>
+
+                {/* Right side buttons */}
+                <nav className="flex items-center gap-2">
+                    <Button asChild className="bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105">
+                        <Link href="/fiscalizacion">
+                            <ShieldCheck className="mr-2 h-5 w-5" />
+                            <span>Fiscalizá</span>
+                        </Link>
+                    </Button>
+                    <Button asChild className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
+                        <Link href="/afiliacion">
+                            <UserPlus className="mr-2 h-5 w-5" />
+                            <span>Afiliate</span>
+                        </Link>
+                    </Button>
+                </nav>
             </div>
 
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
-            {navItems.map((item) => (
-              <Button key={item.label} variant="ghost" asChild className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400">
-                <Link href={item.href} className="font-body text-base font-medium">
-                  {item.label}
+            {/* Mobile-only Title */}
+            <div className="md:hidden flex-1 text-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <Link href="/">
+                    <span className="font-headline text-lg font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
                 </Link>
-              </Button>
-            ))}
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 font-body text-base font-medium">
-                        Más
-                        <ChevronDown className="relative top-[1px] ml-1 h-4 w-4 transition duration-200 group-data-[state=open]:rotate-180" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="bg-background/80 backdrop-blur-sm border-white/20 text-foreground">
-                    {dropdownNavItems.map((item) => (
-                        <DropdownMenuItem key={item.label} asChild>
-                            <Link href={item.href} className="flex items-center">
-                                {item.icon} {item.label}
-                            </Link>
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
-
-             <Button asChild className="bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105 ml-4">
-               <Link href="/fiscalizacion">
-                  <ShieldCheck className="mr-2 h-5 w-5" />
-                  <span>Fiscalizá</span>
-               </Link>
-            </Button>
-             <Button asChild className="bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105 ml-2">
-               <Link href="/afiliacion">
-                  <UserPlus className="mr-2 h-5 w-5" />
-                  <span>Afiliate</span>
-               </Link>
-            </Button>
-          </nav>
+            </div>
         </div>
       </header>
 
