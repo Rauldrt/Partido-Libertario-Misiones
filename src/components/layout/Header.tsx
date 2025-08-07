@@ -73,13 +73,29 @@ export function Header() {
 
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 flex-1 justify-center">
-            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={64} height={64} />
-            <span className="font-headline text-xl font-semibold">Partido Libertario Misiones</span>
-          </Link>
+            <div className="flex items-center gap-2">
+                <Link href="/" className="flex-shrink-0">
+                    <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={64} height={64} />
+                </Link>
+            </div>
+            
+            {/* Centered Title - Visible on medium screens and up */}
+            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                 <Link href="/">
+                    <span className="font-headline text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
+                 </Link>
+            </div>
+
+            {/* Mobile Title - Only visible on small screens */}
+             <div className="md:hidden flex-1 text-center">
+                 <Link href="/">
+                    <span className="font-headline text-lg font-semibold">PL Misiones</span>
+                 </Link>
+            </div>
+
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2 absolute right-4">
+          <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => (
               <Button key={item.label} variant="ghost" asChild className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400">
                 <Link href={item.href} className="font-body text-base font-medium">
@@ -207,5 +223,3 @@ export function Header() {
     </>
   );
 }
-
-    
