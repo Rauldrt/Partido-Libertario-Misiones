@@ -4,7 +4,7 @@
 import React, { useState, useTransition } from 'react';
 import type { MosaicTileData, MosaicImageData } from '@/lib/homepage-service';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -14,8 +14,12 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { saveMosaicAction } from './actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { ZodIssue } from 'zod';
+import { cn } from '@/lib/utils';
 
-const SortableImageItem = ({ image, tileId, setTiles, isPending }: { image: MosaicImageData, tileId: string, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean }) => {
+type ErrorMap = { [fieldPath: string]: string };
+
+const SortableImageItem = ({ image, tileId, setTiles, isPending, errors }: { image: MosaicImageData, tileId: string, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id });
     const style = { transform: CSS.Transform.toString(transform), transition };
 
@@ -39,6 +43,11 @@ const SortableImageItem = ({ image, tileId, setTiles, isPending }: { image: Mosa
             return tile;
         }));
     };
+    
+    const findError = (field: keyof MosaicImageData) => {
+        const path = `${tileId}.images.${image.id}.${field}`;
+        return errors[path];
+    };
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} className="w-full">
@@ -46,21 +55,32 @@ const SortableImageItem = ({ image, tileId, setTiles, isPending }: { image: Mosa
                 <Button variant="ghost" size="icon" {...listeners} className="cursor-grab absolute top-1 left-1 h-6 w-6"><GripVertical /></Button>
                  <Button variant="destructive" size="icon" onClick={handleImageDelete} disabled={isPending} className="absolute top-1 right-1 h-6 w-6"><Trash2 className="h-4 w-4"/></Button>
                 <div className="grid gap-2 mt-8">
-                     <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
-                    <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} />
-                    <Label htmlFor={`img-caption-${image.id}`}>Leyenda</Label>
-                    <Input id={`img-caption-${image.id}`} value={image.caption} onChange={e => handleImageChange('caption', e.target.value)} />
-                    <Label htmlFor={`img-alt-${image.id}`}>Texto Alt</Label>
-                    <Input id={`img-alt-${image.id}`} value={image.alt} onChange={e => handleImageChange('alt', e.target.value)} />
-                    <Label htmlFor={`img-hint-${image.id}`}>Hint IA</Label>
-                    <Input id={`img-hint-${image.id}`} value={image.hint} onChange={e => handleImageChange('hint', e.target.value)} />
+                     <div className="space-y-1">
+                        <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
+                        <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} className={cn(findError('src') && 'border-destructive')} />
+                        {findError('src') && <p className="text-xs text-destructive">{findError('src')}</p>}
+                    </div>
+                     <div className="space-y-1">
+                        <Label htmlFor={`img-caption-${image.id}`}>Leyenda</Label>
+                        <Input id={`img-caption-${image.id}`} value={image.caption} onChange={e => handleImageChange('caption', e.target.value)} className={cn(findError('caption') && 'border-destructive')} />
+                         {findError('caption') && <p className="text-xs text-destructive">{findError('caption')}</p>}
+                    </div>
+                     <div className="space-y-1">
+                        <Label htmlFor={`img-alt-${image.id}`}>Texto Alt</Label>
+                        <Input id={`img-alt-${image.id}`} value={image.alt} onChange={e => handleImageChange('alt', e.target.value)} className={cn(findError('alt') && 'border-destructive')} />
+                         {findError('alt') && <p className="text-xs text-destructive">{findError('alt')}</p>}
+                    </div>
+                     <div className="space-y-1">
+                        <Label htmlFor={`img-hint-${image.id}`}>Hint IA</Label>
+                        <Input id={`img-hint-${image.id}`} value={image.hint} onChange={e => handleImageChange('hint', e.target.value)} />
+                    </div>
                 </div>
             </Card>
         </div>
     );
 };
 
-const SortableTileItem = ({ tile, setTiles, isPending }: { tile: MosaicTileData, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean }) => {
+const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicTileData, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: tile.id });
   const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
 
@@ -129,7 +149,7 @@ const SortableTileItem = ({ tile, setTiles, isPending }: { tile: MosaicTileData,
                  <DndContext collisionDetection={closestCenter} onDragEnd={handleImageDragEnd}>
                     <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {tile.images.map(image => <SortableImageItem key={image.id} image={image} tileId={tile.id} setTiles={setTiles} isPending={isPending} />)}
+                            {tile.images.map(image => <SortableImageItem key={image.id} image={image} tileId={tile.id} setTiles={setTiles} isPending={isPending} errors={errors} />)}
                         </div>
                     </SortableContext>
                  </DndContext>
@@ -145,6 +165,8 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
   const [tiles, setTiles] = useState<MosaicTileData[]>(initialTiles);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const [errors, setErrors] = useState<ErrorMap>({});
+
 
   const handleTileDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -163,10 +185,33 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
   };
   
   const handleSaveChanges = () => {
+    setErrors({});
     startTransition(async () => {
       const result = await saveMosaicAction(tiles);
-      if (result.success) toast({ title: "¡Éxito!", description: result.message });
-      else toast({ variant: "destructive", title: "Error", description: result.message });
+      if (result.success) {
+        toast({ title: "¡Éxito!", description: result.message });
+      } else {
+        if (result.errors) {
+            const errorMap: ErrorMap = {};
+            result.errors.forEach((issue: ZodIssue) => {
+                // Path will be like [tileIndex, 'images', imageIndex, 'fieldName']
+                // We use tile.id and image.id as keys for reliability
+                const tileIndex = issue.path[0] as number;
+                const imageIndex = issue.path[2] as number;
+                const fieldName = issue.path[3] as string;
+
+                const tileId = tiles[tileIndex]?.id;
+                const imageId = tiles[tileIndex]?.images[imageIndex]?.id;
+                
+                if (tileId && imageId) {
+                    const errorPath = `${tileId}.images.${imageId}.${fieldName}`;
+                    errorMap[errorPath] = issue.message;
+                }
+            });
+            setErrors(errorMap);
+        }
+        toast({ variant: "destructive", title: "Error", description: result.message });
+      }
     });
   };
 
@@ -174,7 +219,7 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     <div className="space-y-6">
       <DndContext collisionDetection={closestCenter} onDragEnd={handleTileDragEnd}>
         <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          {tiles.map(tile => <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} />)}
+          {tiles.map(tile => <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />)}
         </SortableContext>
       </DndContext>
       <div className="flex justify-between items-center">

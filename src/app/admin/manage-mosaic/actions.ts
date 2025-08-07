@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 
 const MosaicImageSchema = z.object({
   id: z.string(),
-  src: z.string().url('La URL de la imagen debe ser válida.'),
+  src: z.string().min(10, 'La URL de la imagen debe ser válida y tener al menos 10 caracteres.').refine(value => value.startsWith('https://') || value.startsWith('/'), { message: 'La URL debe ser segura (https) o una ruta local.'}),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string(),
   caption: z.string().min(1, 'La leyenda es requerida.'),
@@ -28,7 +28,11 @@ export async function saveMosaicAction(data: MosaicTileData[]) {
 
     if (!validation.success) {
         console.error(validation.error.issues);
-        return { success: false, message: 'Datos inválidos. Por favor, revise todos los campos.' };
+        return { 
+            success: false, 
+            message: 'Datos inválidos. Por favor, revise todos los campos.',
+            errors: validation.error.issues,
+        };
     }
 
     try {
