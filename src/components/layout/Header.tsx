@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus, ShieldCheck, Star, ChevronDown } from 'lucide-react';
+import { Menu, Home, Users, Newspaper, MailIcon as Mail, X, Facebook, Twitter, Instagram, Youtube, UserPlus, ShieldCheck, Star, ChevronDown, LayoutDashboard } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +25,7 @@ const dropdownNavItems = [
     { label: 'Quiénes Somos', href: '/about', icon: <Users className="mr-2 h-5 w-5" /> },
     { label: 'Nuestros Referentes', href: '/referentes', icon: <Star className="mr-2 h-5 w-5" /> },
     { label: 'Contacto', href: '/contact', icon: <Mail className="mr-2 h-5 w-5" /> },
+    { label: 'Administrador', href: '/admin', icon: <LayoutDashboard className="mr-2 h-5 w-5" /> },
 ]
 
 const iconMap: { [key: string]: React.ReactNode } = {
