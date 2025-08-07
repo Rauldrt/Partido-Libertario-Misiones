@@ -73,16 +73,21 @@ export function Header() {
 
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-                <Link href="/" className="flex-shrink-0">
+            <div className="flex-shrink-0">
+                <Link href="/" className="flex items-center gap-2">
                     <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={64} height={64} />
                 </Link>
             </div>
             
             {/* Desktop Navigation */}
-            <div className="hidden md:flex flex-1 items-center justify-between">
-                {/* Left side nav */}
-                <nav className="flex items-center gap-2 ml-4">
+            <div className="hidden md:flex flex-1 items-center justify-center">
+                <Link href="/">
+                    <span className="font-headline text-lg md:text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
+                </Link>
+            </div>
+
+            <div className="hidden md:flex flex-shrink-0 items-center justify-end">
+                <nav className="flex items-center gap-2">
                     {navItems.map((item) => (
                     <Button key={item.label} variant="ghost" asChild className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400">
                         <Link href={item.href} className="font-body text-base font-medium">
@@ -107,17 +112,7 @@ export function Header() {
                             ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                </nav>
-
-                {/* Centered Title */}
-                <div className="flex-1 text-center px-4">
-                    <Link href="/">
-                        <span className="font-headline text-lg md:text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
-                    </Link>
-                </div>
-
-                {/* Right side buttons */}
-                <nav className="flex items-center gap-2">
+                    <div className="border-l border-white/20 h-8 mx-2"></div>
                     <Button asChild className="bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105">
                         <Link href="/fiscalizacion">
                             <ShieldCheck className="mr-2 h-5 w-5" />
