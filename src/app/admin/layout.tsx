@@ -180,7 +180,7 @@ function ProtectedAdminLayout({ children }: PropsWithChildren) {
            </SidebarFooter>
         </Sidebar>
         <SidebarInset className="flex-1">
-          <header className="flex h-14 items-center gap-4 border-b bg-card px-6 sticky top-0 z-40">
+          <header className="flex h-14 items-center gap-4 border-b bg-purple-950/80 px-6 sticky top-0 z-40 backdrop-blur-md text-primary-foreground">
              <SidebarTrigger className="md:hidden" />
               <div className="flex-1">
                 <h1 className="text-lg font-semibold">Panel de Administración</h1>
