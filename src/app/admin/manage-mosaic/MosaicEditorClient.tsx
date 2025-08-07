@@ -25,9 +25,9 @@ import {
 import { analyzeImage } from '@/ai/flows/analyze-image-flow';
 
 
-type ErrorMap = { [fieldPath: string]: string };
+type ErrorMap = { [fieldPath: string]: string | undefined };
 
-const SortableImageItem = ({ image, tileId, setTiles, isPending, errors }: { image: MosaicImageData, tileId: string, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
+const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, errors }: { image: MosaicImageData, tileId: string, imageIndex: number, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id });
     const style = { transform: CSS.Transform.toString(transform), transition };
     const [isAnalyzing, startAnalyzing] = useTransition();
@@ -80,8 +80,7 @@ const SortableImageItem = ({ image, tileId, setTiles, isPending, errors }: { ima
     };
 
     const findError = (field: keyof MosaicImageData) => {
-        const path = `${tileId}.images.${image.id}.${field}`;
-        return errors[path];
+        return errors[`${tileId}.images[${imageIndex}].${field}`];
     };
 
     return (
@@ -194,7 +193,7 @@ const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicT
                          <DndContext collisionDetection={closestCenter} onDragEnd={handleImageDragEnd}>
                             <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {tile.images.map(image => <SortableImageItem key={image.id} image={image} tileId={tile.id} setTiles={setTiles} isPending={isPending} errors={errors} />)}
+                                    {tile.images.map((image, index) => <SortableImageItem key={image.id} image={image} tileId={tile.id} imageIndex={index} setTiles={setTiles} isPending={isPending} errors={errors} />)}
                                 </div>
                             </SortableContext>
                          </DndContext>
@@ -245,16 +244,15 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
                 const fieldName = issue.path[3] as string;
 
                 const tileId = tiles[tileIndex]?.id;
-                const imageId = tiles[tileIndex]?.images[imageIndex]?.id;
                 
-                if (tileId && imageId) {
-                    const errorPath = `${tileId}.images.${imageId}.${fieldName}`;
+                if (tileId) {
+                    const errorPath = `${tileId}.images[${imageIndex}].${fieldName}`;
                     errorMap[errorPath] = issue.message;
                 }
             });
             setErrors(errorMap);
         }
-        toast({ variant: "destructive", title: "Error", description: result.message });
+        toast({ variant: "destructive", title: "Error de Validación", description: result.message });
       }
     });
   };
