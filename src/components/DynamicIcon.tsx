@@ -15,9 +15,7 @@ interface DynamicIconProps extends LucideProps {
 export const DynamicIcon = ({ name, className, ...props }: DynamicIconProps) => {
   // Convert icon name to kebab-case to match lucide-react's dynamic import keys.
   // Example: "Users" -> "users", "ShieldCheck" -> "shield-check"
-  const iconKey = name
-    .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-    .toLowerCase();
+  const iconKey = name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
   
   if (!(iconKey in dynamicIconImports)) {
     console.warn(`Icon "${name}" (resolved to "${iconKey}") not found in lucide-react. Falling back to HelpCircle.`);
