@@ -27,7 +27,6 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { deleteNewsItemAction, reorderNewsItemsAction, togglePublishStatusAction, duplicateNewsItemAction } from './actions';
 import { Copy, FilePenLine, GripVertical, Loader2, Trash2 } from 'lucide-react';
-import Image from 'next/image';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -70,7 +69,7 @@ const SortableRow = ({
             <GripVertical className="h-5 w-5 text-muted-foreground" />
         </TableCell>
         <TableCell>
-            <Image src={item.imageUrl} alt={item.title} width={64} height={36} className="rounded-sm object-cover aspect-video" />
+            <img src={item.imageUrl} alt={item.title} width={64} height={36} className="rounded-sm object-cover aspect-video" />
         </TableCell>
         <TableCell className="font-medium">{item.title}</TableCell>
         <TableCell className="hidden md:table-cell capitalize">{item.type}</TableCell>
