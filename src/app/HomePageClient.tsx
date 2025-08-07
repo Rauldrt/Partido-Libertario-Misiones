@@ -124,6 +124,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                                       ctas={[{ 
                                           text: slide.cta.text, 
                                           link: slide.cta.link,
+                                          onClick: () => handleBannerCtaClick(slide.cta.accordionTarget),
                                           'data-accordion-target': slide.cta.accordionTarget, 
                                           className: 'bg-primary text-primary-foreground hover:bg-primary/90',
                                       }]}
@@ -164,8 +165,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
 
         <div className="max-w-5xl mx-auto mb-16 px-4">
              <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[180px] gap-4">
-                {tiles.map((tile, index) => (
-                    <MosaicTile key={index} tile={tile} onImageClick={(images, startIndex) => setLightboxData({ images, startIndex })} />
+                {tiles.map((tile) => (
+                    <MosaicTile key={tile.id} tile={tile} onImageClick={(images, startIndex) => setLightboxData({ images, startIndex })} />
                 ))}
             </div>
         </div>

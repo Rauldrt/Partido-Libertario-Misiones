@@ -9,6 +9,7 @@ interface Cta {
   text: string;
   link: string;
   className?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   [key: string]: any; // Allow other attributes like data-*
 }
 
@@ -57,19 +58,24 @@ export function Banner({
                'md:flex-row md:flex-wrap'
           )}>
           
-          {ctas.map((cta, index) => (
-            <Button 
-              key={index} 
-              asChild 
-              size="lg" 
-              className={cn(
-                "shadow-md transition-transform hover:scale-105 w-full md:w-auto", 
-                cta.className
-              )}
-            >
-              <Link href={cta.link} {...cta}>{cta.text}</Link>
-            </Button>
-          ))}
+          {ctas.map((cta, index) => {
+            // Separate onClick from other props passed to the Link component
+            const { onClick, ...linkProps } = cta;
+            return (
+              <Button 
+                key={index} 
+                asChild 
+                size="lg" 
+                className={cn(
+                  "shadow-md transition-transform hover:scale-105 w-full md:w-auto", 
+                  cta.className
+                )}
+                onClick={onClick} // Pass onClick directly to the Button
+              >
+                <Link href={cta.link} {...linkProps}>{cta.text}</Link>
+              </Button>
+            )
+          })}
 
         </div>
       )}
