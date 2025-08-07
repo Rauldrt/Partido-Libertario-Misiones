@@ -1,3 +1,4 @@
+
 [
   {
     "title": " Nueva edición del streaming libertario de la tierra colorada",
@@ -10,7 +11,6 @@
     "youtubeVideoId": "54WLa9xCsi8",
     "embedCode": "",
     "id": "1752328502815",
-    "linkUrl": "/news/1752328502815",
     "published": true
   },
   {
@@ -24,7 +24,6 @@
     "youtubeVideoId": "54WLa9xCsi8",
     "embedCode": "",
     "id": "1752328115554",
-    "linkUrl": "/news/1752328115554",
     "published": true
   },
   {
@@ -38,7 +37,6 @@
     "youtubeVideoId": "",
     "embedCode": "",
     "id": "1752066530103",
-    "linkUrl": "/news/1752066530103",
     "published": true
   },
   {
@@ -51,7 +49,6 @@
     "type": "news",
     "youtubeVideoId": "",
     "id": "1751976720323",
-    "linkUrl": "/news/1751976720323",
     "published": true
   },
   {
@@ -65,7 +62,6 @@
     "youtubeVideoId": "-nXTHyfwTV8",
     "embedCode": "",
     "id": "1751980430465",
-    "linkUrl": "/news/1751980430465",
     "published": true
   },
   {
@@ -79,7 +75,6 @@
     "youtubeVideoId": "",
     "embedCode": "",
     "id": "1751981155495",
-    "linkUrl": "/news/1751981155495",
     "published": true
   },
   {
@@ -90,7 +85,6 @@
     "content": "Hoy debatimos los temas que otros medios callan. Acompañanos, participá en el chat en vivo y sumate a esta comunidad que defiende la libertad, la propiedad privada y el mercado libre",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "political rally opening",
-    "linkUrl": "/news/1",
     "type": "event",
     "youtubeVideoId": "YXlz1K6o_ps",
     "published": false
@@ -105,7 +99,6 @@
     "type": "news",
     "youtubeVideoId": "",
     "id": "1751839131354",
-    "linkUrl": "/news/1751839131354",
     "published": true
   },
   {
@@ -116,7 +109,6 @@
     "content": "El Partido Libertario de Misiones lanza oficialmente su campaña de voluntariado. Buscamos ciudadanos comprometidos que quieran dedicar parte de su tiempo y talento a difundir las ideas de la libertad y colaborar en diversas actividades del partido. ¡Tu participación es fundamental! Inscribite en nuestra web.",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "volunteers team group",
-    "linkUrl": "/news/7",
     "type": "news",
     "published": true
   },
@@ -128,7 +120,6 @@
     "content": "El equipo económico del Partido Libertario presentó un detallado plan con propuestas concretas para la reactivación económica de Misiones. Entre las medidas se incluyen la reducción de impuestos, la simplificación de trámites para emprendedores y la promoción de la inversión privada. El objetivo es generar un entorno favorable para la creación de empleo y el desarrollo sostenible.",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "economy chart growth",
-    "linkUrl": "/news/2",
     "type": "news",
     "published": false
   },
@@ -140,7 +131,6 @@
     "content": "Se llevará a cabo un debate abierto y participativo sobre el futuro de la educación en Misiones. Se discutirán temas como la libertad de elección de los padres, la implementación de sistemas de vouchers educativos y la mejora de la calidad educativa. Invitamos a docentes, padres, alumnos y a la comunidad en general a sumarse a esta importante conversación.",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "education debate discussion",
-    "linkUrl": "/news/3",
     "type": "event",
     "published": false
   },
@@ -152,7 +142,6 @@
     "content": "El Partido Libertario de Misiones celebra un notable incremento en el número de afiliaciones durante el último mes, superando todas las expectativas. Este crecimiento refleja el creciente interés de los misioneros en las ideas de la libertad y la necesidad de un cambio. Agradecemos a todos los que se suman a este proyecto transformador.",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "people joining community",
-    "linkUrl": "/news/4",
     "type": "news",
     "published": false
   },
@@ -164,7 +153,6 @@
     "content": "Confirmada la visita de destacados referentes del liberalismo a nivel nacional. Ofrecerán una charla exclusiva en Posadas donde analizarán la coyuntura actual y compartirán sus perspectivas sobre el futuro del país y la provincia. Será una oportunidad única para interactuar y debatir con ellos. Pronto más detalles sobre la inscripción. El evento principal será transmitido y estará disponible en nuestro canal de YouTube.",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "conference speaker national",
-    "linkUrl": "/news/5",
     "type": "event",
     "youtubeVideoId": "k1nq1h29X58",
     "published": false
@@ -177,7 +165,6 @@
     "content": "Un equipo de economistas del partido ha elaborado un exhaustivo análisis sobre la situación fiscal de la provincia de Misiones. El informe detalla los principales desafíos y propone una serie de medidas orientadas a la optimización del gasto público, la transparencia fiscal y la búsqueda de un equilibrio presupuestario sostenible a largo plazo.",
     "imageUrl": "https://placehold.co/600x400.png",
     "imageHint": "financial report analysis",
-    "linkUrl": "/news/6",
     "type": "news",
     "published": false
   }

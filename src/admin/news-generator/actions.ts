@@ -58,7 +58,7 @@ export async function saveNewsItemAction(data: Partial<NewsCardData>) {
         }
         try {
             // The service function will handle setting createdAt and default published status
-            await addNewsItem(validation.data);
+            await addNewsItem(validation.data as any);
             revalidatePath('/');
             revalidatePath('/news');
             revalidatePath('/admin/manage-content');

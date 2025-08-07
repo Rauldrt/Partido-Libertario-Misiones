@@ -78,12 +78,9 @@ export default function NewsGeneratorPage() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    // Ensure data being sent is clean, especially for new items
-    const dataToSave: Partial<NewsCardData> = {
-      ...newsData
-    };
-
-    // If we are creating a new item, ensure id is not present
+    
+    // If creating a new item, ensure id is not present
+    const dataToSave: Partial<NewsCardData> = { ...newsData };
     if (!isEditing) {
       delete dataToSave.id;
     }
@@ -150,9 +147,8 @@ export default function NewsGeneratorPage() {
 
   const previewData: NewsCardData = {
     id: newsData.id || 'preview-id',
-    linkUrl: newsData.linkUrl || `news/${newsData.id || 'preview-id'}`,
+    linkUrl: newsData.linkUrl || `/news/${newsData.id || 'preview-id'}`,
     published: newsData.published ?? true,
-    createdAt: newsData.createdAt || new Date().toISOString(),
     title: newsData.title || '',
     date: newsData.date || '',
     summary: newsData.summary || '',
