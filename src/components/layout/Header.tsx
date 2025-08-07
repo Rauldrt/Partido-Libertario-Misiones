@@ -69,7 +69,7 @@ export function Header() {
           priority
         />
         {/* Gradient Overlay Layer (z-10) - Slight Opacity */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-950/80 to-orange-500/70"></div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-950/90 to-indigo-900/70"></div>
 
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
@@ -129,7 +129,7 @@ export function Header() {
             </div>
 
             {/* Mobile-only Title */}
-             <div className="md:hidden flex-1 text-center">
+             <div className="md:hidden flex-1 text-center flex justify-center items-center">
                 <Link href="/">
                     <span className="font-headline text-lg font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
                 </Link>
