@@ -3,8 +3,8 @@
 
 import React, { useState, useTransition } from 'react';
 import type { MosaicTileData, MosaicImageData } from '@/lib/homepage-service';
-import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DndContext, closestCenter, type DragEndEvent, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -28,7 +28,7 @@ import { analyzeImage } from '@/ai/flows/analyze-image-flow';
 type ErrorMap = { [fieldPath: string]: string | undefined };
 
 const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, errors }: { image: MosaicImageData, tileId: string, imageIndex: number, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id, data: { tileId } });
     const style = { transform: CSS.Transform.toString(transform), transition };
     const [isAnalyzing, startAnalyzing] = useTransition();
     const { toast } = useToast();
@@ -134,22 +134,6 @@ const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicT
     setTiles(prev => prev.map(t => t.id === tile.id ? { ...t, images: [...t.images, newImage] } : t));
   };
   
-  const handleImageDragEnd = (event: DragEndEvent) => {
-     const { active, over } = event;
-     if(over && active.id !== over.id) {
-         setTiles((prevTiles) => prevTiles.map(t => {
-             if (t.id === tile.id) {
-                const oldIndex = t.images.findIndex(img => img.id === active.id);
-                const newIndex = t.images.findIndex(img => img.id === over.id);
-                if (oldIndex !== -1 && newIndex !== -1) {
-                    return {...t, images: arrayMove(t.images, oldIndex, newIndex) };
-                }
-             }
-             return t;
-         }));
-     }
-  }
-
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
         <AccordionItem value={tile.id} className="border-b-0 mb-4 bg-muted/30 rounded-lg overflow-hidden">
@@ -190,13 +174,11 @@ const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicT
                     </div>
                     <div>
                          <Label className="text-lg font-medium mb-2 block">Imágenes del Mosaico</Label>
-                         <DndContext collisionDetection={closestCenter} onDragEnd={handleImageDragEnd}>
-                            <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {tile.images.map((image, index) => <SortableImageItem key={image.id} image={image} tileId={tile.id} imageIndex={index} setTiles={setTiles} isPending={isPending} errors={errors} />)}
-                                </div>
-                            </SortableContext>
-                         </DndContext>
+                         <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {tile.images.map((image, index) => <SortableImageItem key={image.id} image={image} tileId={tile.id} imageIndex={index} setTiles={setTiles} isPending={isPending} errors={errors} />)}
+                            </div>
+                        </SortableContext>
                         <Button onClick={handleAddImage} className="mt-4"><Plus className="mr-2 h-4 w-4" />Añadir Imagen</Button>
                     </div>
                 </div>
@@ -213,13 +195,42 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
   const [errors, setErrors] = useState<ErrorMap>({});
 
 
-  const handleTileDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-        setTiles(items => arrayMove(items, items.findIndex(i => i.id === active.id), items.findIndex(i => i.id === over.id)));
+        // Dragging a tile
+        if (tiles.find(t => t.id === active.id)) {
+            setTiles(items => arrayMove(items, items.findIndex(i => i.id === active.id), items.findIndex(i => i.id === over.id)));
+        }
+        // Dragging an image
+        else {
+             setTiles((currentTiles) => {
+                const activeTileId = active.data.current?.tileId;
+                const overTileId = over.data.current?.tileId;
+                const activeImageId = active.id;
+                const overImageId = over.id;
+
+                if (!activeTileId || !overTileId) return currentTiles;
+                
+                // Dropping over a different image in the same tile
+                if (activeTileId === overTileId) {
+                    return currentTiles.map(tile => {
+                        if (tile.id === activeTileId) {
+                            const oldIndex = tile.images.findIndex(img => img.id === activeImageId);
+                            const newIndex = tile.images.findIndex(img => img.id === overImageId);
+                            return { ...tile, images: arrayMove(tile.images, oldIndex, newIndex) };
+                        }
+                        return tile;
+                    });
+                }
+                
+                // This logic could be expanded to move images between tiles
+                return currentTiles;
+            });
+        }
     }
   };
-
+  
   const handleAddNewTile = () => {
     const newTile: MosaicTileData = {
         id: `new-tile-${Date.now()}`,
@@ -259,7 +270,7 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
 
   return (
     <div className="space-y-6">
-       <DndContext collisionDetection={closestCenter} onDragEnd={handleTileDragEnd}>
+       <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
           <Accordion type="multiple" className="w-full space-y-0">
             {tiles.map(tile => (
