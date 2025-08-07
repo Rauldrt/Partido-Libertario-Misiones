@@ -59,14 +59,14 @@ const newsGeneratorPrompt = ai.definePrompt({
 El contenido puede ser un artículo completo, una publicación de redes sociales, la descripción de un video, la TRANSCRIPCIÓN DE UN VIDEO, o una imagen. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
 
 {{#if imageUrl}}
-Tarea Principal: Describe la siguiente imagen y, basándote en ella, genera un título, un resumen y palabras clave.
+Tarea Principal: Si el siguiente contenido de texto está vacío, tu tarea principal es describir la imagen. Si hay texto, úsalo como contexto principal y la imagen como secundaria. Basándote en la información disponible, genera un título, un resumen y palabras clave.
 Imagen a analizar: {{media url=imageUrl}}
 {{else}}
 Si el contenido parece provenir de una red social (ej. Twitter, Facebook, Instagram), enfócate en el texto principal de la publicación e ignora el texto de la interfaz de usuario como "Me gusta", "Compartir", comentarios, marcas de tiempo, etc.
+{{/if}}
 
 Contenido de texto a analizar:
 {{{articleContent}}}
-{{/if}}
 
 - Genera un título llamativo en español basado en el contenido.
 - Escribe un resumen conciso en español que capture la esencia del contenido.
@@ -272,3 +272,5 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     return { ...output, imageUrl, youtubeVideoId, embedCode };
   }
 );
+
+    
