@@ -79,17 +79,10 @@ export function Header() {
                 </Link>
             </div>
             
-            {/* Centered Title - Visible on medium screens and up */}
-            <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            {/* Centered Title - Visible on all screens */}
+            <div className="flex-1 text-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                  <Link href="/">
-                    <span className="font-headline text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
-                 </Link>
-            </div>
-
-            {/* Mobile Title - Only visible on small screens */}
-             <div className="md:hidden flex-1 text-center">
-                 <Link href="/">
-                    <span className="font-headline text-lg font-semibold">PL Misiones</span>
+                    <span className="font-headline text-lg md:text-xl font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
                  </Link>
             </div>
 
