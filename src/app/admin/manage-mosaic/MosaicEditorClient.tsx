@@ -7,8 +7,8 @@ import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { GripVertical, Loader2, Plus, Save, Trash2 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { GripVertical, Loader2, Plus, Save, Trash2, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +16,13 @@ import { saveMosaicAction } from './actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ZodIssue } from 'zod';
 import { cn } from '@/lib/utils';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 
 type ErrorMap = { [fieldPath: string]: string };
 
@@ -113,50 +120,56 @@ const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicT
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      <Card className="mb-4 bg-muted/30">
-        <CardHeader className="flex flex-row items-center justify-between p-3">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2"><GripVertical /></Button>
-            <span className="font-semibold">Mosaico (Layout: {tile.layout})</span>
-          </div>
-          <Button variant="destructive" size="icon" onClick={handleTileDelete} disabled={isPending}><Trash2 className="h-4 w-4" /></Button>
-        </CardHeader>
-        <CardContent className="p-4 pt-0 grid gap-4">
-            <div className="grid md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                    <Label>Layout (CSS Grid)</Label>
-                    <Input value={tile.layout} onChange={e => handleTileChange('layout', e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                    <Label>Duración (ms)</Label>
-                    <Input type="number" value={tile.duration} onChange={e => handleTileChange('duration', parseInt(e.target.value) || 0)} />
-                </div>
-                 <div className="space-y-2">
-                    <Label>Animación</Label>
-                     <Select onValueChange={value => handleTileChange('animation', value)} defaultValue={tile.animation}>
-                         <SelectTrigger><SelectValue /></SelectTrigger>
-                         <SelectContent>
-                             <SelectItem value="animate-fade-in-up">Fade In Up</SelectItem>
-                             <SelectItem value="animate-zoom-in-gentle">Zoom In</SelectItem>
-                             <SelectItem value="animate-crossfade-in">Crossfade</SelectItem>
-                             <SelectItem value="animate-ken-burns-in">Ken Burns</SelectItem>
-                         </SelectContent>
-                     </Select>
-                </div>
+        <AccordionItem value={tile.id} className="border-b-0 mb-4 bg-muted/30 rounded-lg overflow-hidden">
+            <div className="flex items-center p-2 border-b">
+                 <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2">
+                    <GripVertical className="h-5 w-5 text-muted-foreground" />
+                </Button>
+                <AccordionTrigger className="flex-1 p-2 hover:no-underline">
+                    <span className="font-semibold text-left">Mosaico (Layout: {tile.layout})</span>
+                </AccordionTrigger>
+                <Button variant="destructive" size="icon" onClick={handleTileDelete} disabled={isPending} className="ml-2">
+                    <Trash2 className="h-4 w-4" />
+                </Button>
             </div>
-            <div>
-                 <Label className="text-lg font-medium mb-2 block">Imágenes del Mosaico</Label>
-                 <DndContext collisionDetection={closestCenter} onDragEnd={handleImageDragEnd}>
-                    <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {tile.images.map(image => <SortableImageItem key={image.id} image={image} tileId={tile.id} setTiles={setTiles} isPending={isPending} errors={errors} />)}
+            <AccordionContent>
+                <div className="p-4 pt-4 grid gap-4">
+                    <div className="grid md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                            <Label>Layout (CSS Grid)</Label>
+                            <Input value={tile.layout} onChange={e => handleTileChange('layout', e.target.value)} />
                         </div>
-                    </SortableContext>
-                 </DndContext>
-                <Button onClick={handleAddImage} className="mt-4"><Plus className="mr-2 h-4 w-4" />Añadir Imagen</Button>
-            </div>
-        </CardContent>
-      </Card>
+                        <div className="space-y-2">
+                            <Label>Duración (ms)</Label>
+                            <Input type="number" value={tile.duration} onChange={e => handleTileChange('duration', parseInt(e.target.value) || 0)} />
+                        </div>
+                         <div className="space-y-2">
+                            <Label>Animación</Label>
+                             <Select onValueChange={value => handleTileChange('animation', value)} defaultValue={tile.animation}>
+                                 <SelectTrigger><SelectValue /></SelectTrigger>
+                                 <SelectContent>
+                                     <SelectItem value="animate-fade-in-up">Fade In Up</SelectItem>
+                                     <SelectItem value="animate-zoom-in-gentle">Zoom In</SelectItem>
+                                     <SelectItem value="animate-crossfade-in">Crossfade</SelectItem>
+                                     <SelectItem value="animate-ken-burns-in">Ken Burns</SelectItem>
+                                 </SelectContent>
+                             </Select>
+                        </div>
+                    </div>
+                    <div>
+                         <Label className="text-lg font-medium mb-2 block">Imágenes del Mosaico</Label>
+                         <DndContext collisionDetection={closestCenter} onDragEnd={handleImageDragEnd}>
+                            <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {tile.images.map(image => <SortableImageItem key={image.id} image={image} tileId={tile.id} setTiles={setTiles} isPending={isPending} errors={errors} />)}
+                                </div>
+                            </SortableContext>
+                         </DndContext>
+                        <Button onClick={handleAddImage} className="mt-4"><Plus className="mr-2 h-4 w-4" />Añadir Imagen</Button>
+                    </div>
+                </div>
+            </AccordionContent>
+        </AccordionItem>
     </div>
   );
 };
@@ -194,8 +207,6 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
         if (result.errors) {
             const errorMap: ErrorMap = {};
             result.errors.forEach((issue: ZodIssue) => {
-                // Path will be like [tileIndex, 'images', imageIndex, 'fieldName']
-                // We use tile.id and image.id as keys for reliability
                 const tileIndex = issue.path[0] as number;
                 const imageIndex = issue.path[2] as number;
                 const fieldName = issue.path[3] as string;
@@ -217,9 +228,13 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
 
   return (
     <div className="space-y-6">
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleTileDragEnd}>
+       <DndContext collisionDetection={closestCenter} onDragEnd={handleTileDragEnd}>
         <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
-          {tiles.map(tile => <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />)}
+          <Accordion type="multiple" className="w-full space-y-0">
+            {tiles.map(tile => (
+              <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />
+            ))}
+          </Accordion>
         </SortableContext>
       </DndContext>
       <div className="flex justify-between items-center">
@@ -232,3 +247,5 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     </div>
   );
 }
+
+    
