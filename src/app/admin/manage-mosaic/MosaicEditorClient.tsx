@@ -8,7 +8,7 @@ import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } 
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { GripVertical, Loader2, Plus, Save, Trash2, ChevronDown } from 'lucide-react';
+import { GripVertical, Loader2, Plus, Save, Trash2, ChevronDown, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +22,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { analyzeImage } from '@/ai/flows/analyze-image-flow';
 
 
 type ErrorMap = { [fieldPath: string]: string };
@@ -29,6 +30,8 @@ type ErrorMap = { [fieldPath: string]: string };
 const SortableImageItem = ({ image, tileId, setTiles, isPending, errors }: { image: MosaicImageData, tileId: string, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id });
     const style = { transform: CSS.Transform.toString(transform), transition };
+    const [isAnalyzing, startAnalyzing] = useTransition();
+    const { toast } = useToast();
 
     const handleImageChange = (field: keyof MosaicImageData, value: string) => {
         setTiles(prev => prev.map(tile => {
@@ -51,6 +54,31 @@ const SortableImageItem = ({ image, tileId, setTiles, isPending, errors }: { ima
         }));
     };
     
+    const handleAnalyzeImage = () => {
+        if (!image.src) {
+            toast({ variant: 'destructive', title: 'URL Requerida', description: 'Por favor, ingrese una URL de imagen para analizar.' });
+            return;
+        }
+
+        startAnalyzing(async () => {
+            try {
+                const result = await analyzeImage({ imageUrl: image.src });
+                setTiles(prev => prev.map(tile => {
+                    if (tile.id === tileId) {
+                        return {
+                            ...tile,
+                            images: tile.images.map(img => img.id === image.id ? { ...img, caption: result.caption, alt: result.altText } : img)
+                        };
+                    }
+                    return tile;
+                }));
+                toast({ title: '¡Análisis Completo!', description: 'La IA ha rellenado la leyenda y el texto alternativo.' });
+            } catch (error) {
+                toast({ variant: 'destructive', title: 'Error de Análisis', description: (error as Error).message });
+            }
+        });
+    };
+
     const findError = (field: keyof MosaicImageData) => {
         const path = `${tileId}.images.${image.id}.${field}`;
         return errors[path];
@@ -64,7 +92,12 @@ const SortableImageItem = ({ image, tileId, setTiles, isPending, errors }: { ima
                 <div className="grid gap-2 mt-8">
                      <div className="space-y-1">
                         <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
-                        <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} className={cn(findError('src') && 'border-destructive')} />
+                        <div className="flex items-center gap-2">
+                            <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} className={cn(findError('src') && 'border-destructive')} />
+                            <Button size="icon" variant="outline" onClick={handleAnalyzeImage} disabled={isAnalyzing || isPending} title="Analizar imagen con IA para rellenar campos">
+                                {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                            </Button>
+                        </div>
                         {findError('src') && <p className="text-xs text-destructive">{findError('src')}</p>}
                     </div>
                      <div className="space-y-1">
@@ -247,5 +280,3 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     </div>
   );
 }
-
-    
