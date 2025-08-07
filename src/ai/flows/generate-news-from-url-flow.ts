@@ -52,22 +52,27 @@ export async function generateNewsFromUrl(
 // Genkit Prompt
 const newsGeneratorPrompt = ai.definePrompt({
   name: 'newsGeneratorPrompt',
-  input: { schema: z.object({ articleContent: z.string() }) },
+  input: { schema: z.object({ articleContent: z.string(), imageUrl: z.string().optional() }) },
   output: { schema: GenerateNewsOutputSchema.omit({ imageUrl: true, youtubeVideoId: true, embedCode: true }) }, // The LLM doesn't generate these
   prompt: `Eres un experto editor de noticias para un sitio web político. Tu tarea es analizar el contenido proporcionado y generar un resumen de noticias en ESPAÑOL.
 
-El contenido puede ser un artículo completo, una publicación de redes sociales, la descripción de un video o la TRANSCRIPCIÓN DE UN VIDEO. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
+El contenido puede ser un artículo completo, una publicación de redes sociales, la descripción de un video, la TRANSCRIPCIÓN DE UN VIDEO, o una imagen. Tu respuesta DEBE ser siempre en español, sin importar el idioma del contenido original.
 
+{{#if imageUrl}}
+Tarea Principal: Describe la siguiente imagen y, basándote en ella, genera un título, un resumen y palabras clave.
+Imagen a analizar: {{media url=imageUrl}}
+{{else}}
 Si el contenido parece provenir de una red social (ej. Twitter, Facebook, Instagram), enfócate en el texto principal de la publicación e ignora el texto de la interfaz de usuario como "Me gusta", "Compartir", comentarios, marcas de tiempo, etc.
 
-- Genera un título llamativo en español basado en el contenido principal.
+Contenido de texto a analizar:
+{{{articleContent}}}
+{{/if}}
+
+- Genera un título llamativo en español basado en el contenido.
 - Escribe un resumen conciso en español que capture la esencia del contenido.
 - Proporciona una o dos palabras clave en español para una imagen de archivo que represente el tema.
 
 Genera una respuesta en el formato JSON requerido.
-
-Contenido a analizar:
-{{{articleContent}}}
 `,
 });
 
@@ -120,11 +125,19 @@ async function scrapeUrlForContent(url: string): Promise<{ articleContent: strin
             'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
         },
     });
     if (!response.ok) {
         throw new Error(`Error al buscar la URL: ${response.statusText}`);
     }
+
+    // Check if the URL points directly to an image
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.startsWith('image/')) {
+        return { articleContent: '', imageUrl: url };
+    }
+
     const html = await response.text();
     const dom = new JSDOM(html, { url });
     const doc = dom.window.document;
@@ -240,13 +253,16 @@ const generateNewsFromUrlFlow = ai.defineFlow(
     }
 
 
-    if (!articleContent.trim()) {
+    if (!articleContent.trim() && !imageUrl) {
       throw new Error(
-        'No se pudo extraer contenido significativo de la URL. El sitio puede estar protegido, depender de JavaScript, o el video puede no tener transcripción ni descripción.'
+        'No se pudo extraer contenido significativo de la URL. El sitio puede estar protegido, o el video puede no tener transcripción.'
       );
     }
     
-    const { output } = await newsGeneratorPrompt({ articleContent: articleContent.substring(0, 15000) }); 
+    const { output } = await newsGeneratorPrompt({ 
+        articleContent: articleContent.substring(0, 15000),
+        imageUrl: imageUrl,
+    }); 
 
     if (!output) {
       throw new Error('The AI failed to generate a response.');
