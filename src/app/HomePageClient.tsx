@@ -44,28 +44,35 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 
   return (
     <div
-      key={currentImage.src} // Key helps React re-render, triggering the animation
+      key={tile.id} 
       className={cn(
         'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer',
-        tile.layout,
-        tile.animation
+        tile.layout
       )}
       onClick={() => onImageClick(tile.images, currentIndex)}
     >
-      <Image
-        src={currentImage.src}
-        alt={currentImage.alt}
-        layout="fill"
-        objectFit="cover"
-        data-ai-hint={currentImage.hint}
-        className="transition-transform duration-500 ease-in-out group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-      <div className="absolute bottom-0 left-0 p-4">
-        <p className="font-body text-lg font-semibold text-white" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
-          {currentImage.caption}
-        </p>
-      </div>
+      <div 
+        key={currentImage.src}
+        className={cn(
+            'absolute inset-0 transition-opacity duration-1000',
+            tile.animation
+        )}
+       >
+        <Image
+          src={currentImage.src}
+          alt={currentImage.alt}
+          layout="fill"
+          objectFit="cover"
+          data-ai-hint={currentImage.hint}
+          className="transition-transform duration-500 ease-in-out group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-4">
+          <p className="font-body text-lg font-semibold text-white" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+            {currentImage.caption}
+          </p>
+        </div>
+       </div>
     </div>
   );
 };
@@ -182,14 +189,14 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                 {accordionItems.map(item => (
                     <AccordionItem key={item.id} value={item.value} className="border-b-0">
                         <Card className="shadow-lg w-full">
-                            <AccordionTrigger className="p-6 hover:no-underline">
-                                <div className="flex items-center gap-4 w-full">
-                                    <DynamicIcon name={item.icon} className="h-10 w-10 text-primary" />
+                             <div className="flex items-center gap-4 w-full p-6">
+                                <DynamicIcon name={item.icon} className="h-10 w-10 text-primary" />
+                                <AccordionTrigger className="p-0 hover:no-underline flex-1">
                                     <span className="font-headline text-2xl text-foreground">{item.title}</span>
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="px-6 pb-6">
-                                <p className="font-body text-lg">
+                                </AccordionTrigger>
+                            </div>
+                            <AccordionContent className="px-6 pb-6 -mt-4">
+                                <p className="font-body text-lg pl-[56px]">
                                     {item.content}
                                 </p>
                             </AccordionContent>
