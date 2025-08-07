@@ -1,6 +1,5 @@
 
 import { getNewsItems, getNewsItemById } from '@/lib/news-service';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/button';
@@ -71,13 +70,12 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
             <>
               {article.imageUrl && !article.youtubeVideoId && (
                 <div className="relative w-full h-56 sm:h-72 md:h-96 mb-8 rounded-md overflow-hidden shadow-md">
-                  <Image
+                  <img
                     src={article.imageUrl}
                     alt={article.title}
-                    layout="fill"
-                    objectFit="cover"
+                    className="absolute h-full w-full object-cover"
                     data-ai-hint={article.imageHint}
-                    priority
+                    loading="eager"
                   />
                 </div>
               )}

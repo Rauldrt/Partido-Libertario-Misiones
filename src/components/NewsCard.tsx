@@ -1,4 +1,4 @@
-import Image from 'next/image';
+
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,11 +32,10 @@ export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, t
           </div>
         ) : (
           <div className="relative aspect-video overflow-hidden rounded-t-lg"> {/* Ensure consistent aspect ratio */}
-            <Image 
+            <img 
               src={imageUrl} 
               alt={title} 
-              layout="fill" 
-              objectFit="cover" 
+              className="absolute h-full w-full object-cover" 
               data-ai-hint={imageHint} 
             />
           </div>
