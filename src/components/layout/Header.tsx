@@ -129,7 +129,7 @@ export function Header() {
             </div>
 
             {/* Mobile-only Title */}
-            <div className="md:hidden flex-1 text-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+             <div className="md:hidden flex-1 text-center">
                 <Link href="/">
                     <span className="font-headline text-lg font-semibold whitespace-nowrap">Partido Libertario Misiones</span>
                 </Link>
