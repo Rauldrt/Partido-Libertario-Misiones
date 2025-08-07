@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -74,7 +73,7 @@ export function Header() {
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={52} height={52} />
+            <Image src="/logo.png" alt="Partido Libertario Misiones Logo" width={64} height={64} />
             <span className="font-headline text-xl font-semibold">Partido Libertario Misiones</span>
           </Link>
 
