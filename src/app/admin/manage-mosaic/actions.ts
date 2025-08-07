@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 
 const MosaicImageSchema = z.object({
   id: z.string(),
-  src: z.string().min(10, 'La URL de la imagen debe ser válida y tener al menos 10 caracteres.').refine(value => value.startsWith('https://') || value.startsWith('/'), { message: 'La URL debe ser segura (https) o una ruta local.'}),
+  src: z.string().url('La URL de la imagen debe ser un enlace válido.').or(z.string().startsWith('/', { message: 'La ruta local debe comenzar con /' })),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string(),
   caption: z.string().min(1, 'La leyenda es requerida.'),
