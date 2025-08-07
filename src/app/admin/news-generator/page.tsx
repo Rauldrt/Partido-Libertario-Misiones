@@ -30,6 +30,7 @@ const getEmptyNewsItem = (): Partial<NewsCardData> => ({
   youtubeVideoId: '',
   embedCode: '',
   published: true, // Default to true for new items
+  // id should be undefined for new items
 });
 
 export default function NewsGeneratorPage() {
@@ -77,7 +78,17 @@ export default function NewsGeneratorPage() {
 
   const handleSave = async () => {
     setIsSaving(true);
-    const result = await saveNewsItemAction(newsData);
+    // Ensure data being sent is clean, especially for new items
+    const dataToSave: Partial<NewsCardData> = {
+      ...newsData
+    };
+
+    // If we are creating a new item, ensure id is not present
+    if (!isEditing) {
+      delete dataToSave.id;
+    }
+
+    const result = await saveNewsItemAction(dataToSave);
     if (result.success) {
       toast({
         title: '¡Éxito!',
@@ -111,7 +122,7 @@ export default function NewsGeneratorPage() {
     try {
       const result = await generateNewsFromUrl({ url: aiUrl });
       setNewsData(prev => ({
-        ...prev, // Keep ID if editing
+        ...prev, // Keep ID and other fields if editing
         title: result.title,
         summary: result.summary,
         content: result.summary,
