@@ -82,6 +82,19 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget, infoSectionData, notificationData }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode, infoSectionData: InfoSectionData, notificationData: NotificationData }>) {
   const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
+  const [notificationClicked, setNotificationClicked] = useState(false);
+
+  useEffect(() => {
+    // Check session storage to see if the notification has already been clicked
+    if (sessionStorage.getItem('notificationClicked') === 'true') {
+      setNotificationClicked(true);
+    }
+  }, []);
+
+  const handleNotificationClick = () => {
+    setNotificationClicked(true);
+    sessionStorage.setItem('notificationClicked', 'true');
+  };
 
   const handleBannerCtaClick = (accordionTarget?: string) => {
     if (accordionTarget) {
@@ -103,10 +116,13 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
         className="relative h-[calc(100vh-5rem)] min-h-[600px] flex items-start md:items-center justify-center p-0 pt-16 md:pt-0"
       >
         {notificationData.enabled && notificationData.text && (
-          <Link href={notificationData.link || '#'} className="absolute top-4 right-4 z-40">
-              <div className="relative inline-flex items-center rounded-lg bg-background/90 p-2 pr-3 shadow-lg border border-accent/50 animate-pulse-bubble cursor-pointer">
+          <Link href={notificationData.link || '#'} className="absolute top-4 right-4 z-40" onClick={handleNotificationClick}>
+              <div className={cn(
+                  "relative inline-flex items-center rounded-lg bg-background/90 p-2 pr-3 shadow-lg border border-accent/50 cursor-pointer",
+                  !notificationClicked && "animate-pulse-bubble"
+              )}>
                   <span className="relative flex h-3 w-3 mr-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                      <span className={cn("absolute inline-flex h-full w-full rounded-full bg-primary opacity-75", !notificationClicked && "animate-ping")}></span>
                       <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
                   </span>
                   <span className="text-sm font-medium text-foreground">{notificationData.text}</span>
