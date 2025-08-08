@@ -12,7 +12,7 @@ const MosaicImageSchema = z.object({
   id: z.string(),
   src: z.string().min(1, 'La URL de la imagen es requerida.'),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
-  hint: z.string(),
+  hint: z.string().optional(), // Make hint optional
   caption: z.string().min(1, 'La leyenda es requerida.'),
 });
 
