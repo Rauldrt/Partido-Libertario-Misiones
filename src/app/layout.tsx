@@ -1,7 +1,6 @@
 
 "use client";
 
-import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -12,14 +11,6 @@ import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
-
-// Metadata can still be defined in a client component, but it's often better at the page level.
-// For a global layout, this is acceptable.
-export const metadata: Metadata = {
-  title: 'Partido Libertario Misiones',
-  description: 'Página oficial del Partido Libertario de Misiones.',
-};
-
 
 function ProtectedAppLayout({
   children,
@@ -77,6 +68,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        <title>Partido Libertario Misiones</title>
+        <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
