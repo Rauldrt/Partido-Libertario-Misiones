@@ -7,7 +7,7 @@ import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { GripVertical, Loader2, Plus, Save, Trash2, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -96,7 +96,9 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
     }
     
     const findError = (field: keyof MosaicImageData) => {
-        return errors[`${tileId}.images[${imageIndex}].${field}`];
+        // Construct the expected error path: `tile_id.images[index].field`
+        const errorKey = `${tileId}.images[${imageIndex}].${field}`;
+        return errors[errorKey];
     };
 
     return (
@@ -294,13 +296,14 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
             const errorMap: ErrorMap = {};
             result.errors.forEach((issue: ZodIssue) => {
                 // Example path: ["0", "images", "0", "caption"]
-                // We want to map this to: "tileId.images[0].caption"
                 const tileIndex = parseInt(issue.path[0] as string, 10);
+                const imageIndex = parseInt(issue.path[2] as string, 10);
+                const fieldName = issue.path[3] as string;
+                
                 const tileId = tiles[tileIndex]?.id;
 
                 if (tileId) {
-                    const fieldPath = issue.path.slice(1).join('.').replace(/\.(\d+)\./, '[S1].').replace('S1', issue.path[2] as string);
-                    const finalPath = `${tileId}.${fieldPath}`;
+                    const finalPath = `${tileId}.images[${imageIndex}].${fieldName}`;
                     errorMap[finalPath] = issue.message;
                 }
             });
@@ -311,21 +314,10 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     });
   };
 
-  const allItemIds = React.useMemo(() => {
-    const ids: (string | number)[] = [];
-    tiles.forEach(tile => {
-      ids.push(tile.id);
-      tile.images.forEach(image => {
-        ids.push(image.id);
-      });
-    });
-    return ids;
-  }, [tiles]);
-
   return (
     <div className="space-y-6">
        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={allItemIds} strategy={verticalListSortingStrategy}>
+        <SortableContext items={tiles.flatMap(t => [t.id, ...t.images.map(i => i.id)])} strategy={verticalListSortingStrategy}>
           <Accordion type="multiple" className="w-full space-y-0">
             {tiles.map((tile) => (
               <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />
@@ -343,3 +335,5 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     </div>
   );
 }
+
+    

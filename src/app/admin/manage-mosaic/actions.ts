@@ -7,6 +7,8 @@ import { revalidatePath } from 'next/cache';
 
 const MosaicImageSchema = z.object({
   id: z.string(),
+  // Allow any non-empty string, as it can be a local path or a full URL.
+  // The client-side logic should ensure it's a valid path.
   src: z.string().min(1, 'La URL de la imagen es requerida.'),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string(),
@@ -43,3 +45,5 @@ export async function saveMosaicAction(data: MosaicTileData[]) {
         return { success: false, message: (error as Error).message };
     }
 }
+
+    
