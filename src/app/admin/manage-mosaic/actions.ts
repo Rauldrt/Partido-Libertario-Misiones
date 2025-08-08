@@ -16,7 +16,7 @@ const MosaicImageSchema = z.object({
 const MosaicTileSchema = z.object({
   id: z.string(),
   layout: z.string().min(1, 'El layout es requerido.'),
-  duration: z.number().int().positive('La duración debe ser un número positivo.'),
+  duration: z.coerce.number().int().positive('La duración debe ser un número positivo.'),
   animation: z.string().min(1, 'La animación es requerida.'),
   images: z.array(MosaicImageSchema).min(1, 'Debe haber al menos una imagen por mosaico.'),
 });
