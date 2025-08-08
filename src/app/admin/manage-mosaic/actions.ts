@@ -4,10 +4,11 @@
 import { z } from 'zod';
 import { saveMosaicTiles, type MosaicTileData } from '@/lib/homepage-service';
 import { revalidatePath } from 'next/cache';
+import fs from 'fs/promises';
+import path from 'path';
+import mime from 'mime-types';
 
 const MosaicImageSchema = z.object({
-  // The client uses the 'id' for dnd-kit, so we need to expect it here.
-  // It will be stripped by the writeData function before saving to JSON.
   id: z.string(),
   src: z.string().min(1, 'La URL de la imagen es requerida.'),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
@@ -46,4 +47,19 @@ export async function saveMosaicAction(data: MosaicTileData[]) {
     }
 }
 
+export async function getImageAsDataUriAction(imagePath: string): Promise<{ success: boolean; dataUri?: string; message?: string; }> {
+    if (!imagePath.startsWith('/')) {
+        return { success: false, message: 'La ruta debe ser local (empezar con /).' };
+    }
     
+    try {
+        const filePath = path.join(process.cwd(), 'public', imagePath);
+        const fileBuffer = await fs.readFile(filePath);
+        const mimeType = mime.lookup(filePath) || 'application/octet-stream';
+        const dataUri = `data:${mimeType};base64,${fileBuffer.toString('base64')}`;
+        return { success: true, dataUri };
+    } catch (error) {
+        console.error("Error reading file for data URI:", error);
+        return { success: false, message: 'No se pudo leer el archivo de imagen. Asegúrese de que la ruta sea correcta.' };
+    }
+}

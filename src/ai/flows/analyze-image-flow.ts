@@ -11,12 +11,11 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-// Input Schema
+// Input Schema - Now accepts a URL or a Base64 data URI
 const AnalyzeImageInputSchema = z.object({
   imageUrl: z
     .string()
-    .url()
-    .describe('The URL of the image to analyze.'),
+    .describe('The URL or Base64 data URI of the image to analyze.'),
 });
 export type AnalyzeImageInput = z.infer<typeof AnalyzeImageInputSchema>;
 

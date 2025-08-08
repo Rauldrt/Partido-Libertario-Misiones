@@ -12,7 +12,7 @@ import { GripVertical, Loader2, Plus, Save, Trash2, Sparkles, Image as ImageIcon
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { saveMosaicAction } from './actions';
+import { saveMosaicAction, getImageAsDataUriAction } from './actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { ZodIssue } from 'zod';
 import { cn } from '@/lib/utils';
@@ -65,15 +65,20 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
 
         startAnalyzing(async () => {
             try {
-                // Use a fully-qualified URL if it's a local path
-                const rawUrl = image.src.startsWith('/') 
-                    ? `${window.location.origin}${image.src}` 
-                    : image.src;
-                
-                // Encode the URL to handle spaces and other special characters
-                const imageUrl = encodeURI(rawUrl);
+                let imageUrlForApi: string;
+                // If it's a local path, get the base64 data URI
+                if (image.src.startsWith('/')) {
+                    const result = await getImageAsDataUriAction(image.src);
+                    if (!result.success) {
+                        throw new Error(result.message);
+                    }
+                    imageUrlForApi = result.dataUri!;
+                } else {
+                    // It's a remote URL, encode it
+                    imageUrlForApi = encodeURI(image.src);
+                }
 
-                const result = await analyzeImage({ imageUrl });
+                const result = await analyzeImage({ imageUrl: imageUrlForApi });
                 setTiles(prev => prev.map(tile => {
                     if (tile.id === tileId) {
                         return {
@@ -85,6 +90,7 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
                 }));
                 toast({ title: '¡Análisis Completo!', description: 'La IA ha rellenado la leyenda y el texto alternativo.' });
             } catch (error) {
+                console.error("Image analysis error:", error);
                 toast({ variant: 'destructive', title: 'Error de Análisis', description: (error as Error).message });
             }
         });
@@ -96,8 +102,7 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
     }
     
     const findError = (field: keyof MosaicImageData) => {
-        // Construct the expected error path: `tile_id.images[index].field`
-        const errorKey = `${tileId}.images[${imageIndex}].${field}`;
+        const errorKey = `tiles.${tileId}.images.${imageIndex}.${field}`;
         return errors[errorKey];
     };
 
@@ -206,14 +211,14 @@ const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicT
                          <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {tile.images.map((image, index) => (
-                                    <SortableImageItem 
-                                        key={image.id} 
-                                        image={image} 
-                                        tileId={tile.id} 
-                                        imageIndex={index} 
-                                        setTiles={setTiles} 
-                                        isPending={isPending} 
-                                        errors={errors} 
+                                    <SortableImageItem
+                                        key={image.id}
+                                        image={image}
+                                        tileId={tile.id}
+                                        imageIndex={index}
+                                        setTiles={setTiles}
+                                        isPending={isPending}
+                                        errors={errors}
                                     />
                                 ))}
                             </div>
@@ -241,8 +246,9 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     }
     
     const activeType = active.data.current?.type;
+    const overType = over.data.current?.type;
 
-    if (activeType === 'tile') {
+    if (activeType === 'tile' && overType === 'tile') {
         setTiles(items => {
             const oldIndex = items.findIndex(t => t.id === active.id);
             const newIndex = items.findIndex(t => t.id === over.id);
@@ -253,24 +259,19 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
         setTiles(currentTiles => {
             const activeTileId = active.data.current?.tileId;
             const overTileId = over.data.current?.tileId;
-            const activeImageId = active.id;
-            const overImageId = over.id;
 
-            if (!activeTileId || !overTileId) return currentTiles;
-
-            // Reordering within the same tile
             if (activeTileId === overTileId) {
-                return currentTiles.map(tile => {
+                // Reorder within the same tile
+                 return currentTiles.map(tile => {
                     if (tile.id === activeTileId) {
-                        const oldIndex = tile.images.findIndex(img => img.id === activeImageId);
-                        const newIndex = tile.images.findIndex(img => img.id === overImageId);
+                        const oldIndex = tile.images.findIndex(img => img.id === active.id);
+                        const newIndex = tile.images.findIndex(img => img.id === over.id);
                         if (oldIndex === -1 || newIndex === -1) return tile;
                         return { ...tile, images: arrayMove(tile.images, oldIndex, newIndex) };
                     }
                     return tile;
                 });
             }
-            
             return currentTiles;
         });
     }
@@ -295,15 +296,13 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
         if (result.errors) {
             const errorMap: ErrorMap = {};
             result.errors.forEach((issue: ZodIssue) => {
-                // Example path: ["0", "images", "0", "caption"]
-                const tileIndex = parseInt(issue.path[0] as string, 10);
-                const imageIndex = parseInt(issue.path[2] as string, 10);
-                const fieldName = issue.path[3] as string;
-                
-                const tileId = tiles[tileIndex]?.id;
+                const tileIndex = issue.path[0];
+                const imageIndex = issue.path[2];
+                const fieldName = issue.path[3];
 
-                if (tileId) {
-                    const finalPath = `${tileId}.images[${imageIndex}].${fieldName}`;
+                const tile = tiles[tileIndex as number];
+                if (tile) {
+                    const finalPath = `tiles.${tile.id}.images.${imageIndex}.${fieldName}`;
                     errorMap[finalPath] = issue.message;
                 }
             });
@@ -317,7 +316,7 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
   return (
     <div className="space-y-6">
        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={tiles.flatMap(t => [t.id, ...t.images.map(i => i.id)])} strategy={verticalListSortingStrategy}>
+        <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
           <Accordion type="multiple" className="w-full space-y-0">
             {tiles.map((tile) => (
               <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />
@@ -335,5 +334,3 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     </div>
   );
 }
-
-    
