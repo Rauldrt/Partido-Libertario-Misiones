@@ -94,11 +94,9 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
         handleImageChange('src', src);
         setGalleryOpen(false);
     }
-
+    
     const findError = (field: keyof MosaicImageData) => {
-        const tileIndex = (window as any).__tiles_debug?.findIndex((t: MosaicTileData) => t.id === tileId) ?? -1;
-        if(tileIndex === -1) return undefined;
-        return errors[`tiles[${tileIndex}].images[${imageIndex}].${field}`];
+        return errors[`${tileId}.images[${imageIndex}].${field}`];
     };
 
     return (
@@ -207,7 +205,17 @@ const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicT
                          <Label className="text-lg font-medium mb-2 block">Imágenes del Mosaico</Label>
                          <SortableContext items={tile.images.map(img => img.id)} strategy={verticalListSortingStrategy}>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {tile.images.map((image, index) => <SortableImageItem key={image.id} image={image} tileId={tile.id} imageIndex={index} setTiles={setTiles} isPending={isPending} errors={errors} />)}
+                                {tile.images.map((image, index) => (
+                                    <SortableImageItem 
+                                        key={image.id} 
+                                        image={image} 
+                                        tileId={tile.id} 
+                                        imageIndex={index} 
+                                        setTiles={setTiles} 
+                                        isPending={isPending} 
+                                        errors={errors} 
+                                    />
+                                ))}
                             </div>
                         </SortableContext>
                         <Button onClick={handleAddImage} className="mt-4"><Plus className="mr-2 h-4 w-4" />Añadir Imagen</Button>
@@ -225,11 +233,6 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
   const { toast } = useToast();
   const [errors, setErrors] = useState<ErrorMap>({});
   
-  // A hacky way to make tile data available for error mapping
-  if (typeof window !== 'undefined') {
-    (window as any).__tiles_debug = tiles;
-  }
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -292,8 +295,16 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
         if (result.errors) {
             const errorMap: ErrorMap = {};
             result.errors.forEach((issue: ZodIssue) => {
-                const path = issue.path.join('.');
-                errorMap[path] = issue.message;
+                // Example path: ["0", "images", "0", "caption"]
+                // We want to map this to: "tileId.images[0].caption"
+                const tileIndex = parseInt(issue.path[0] as string, 10);
+                const tileId = tiles[tileIndex]?.id;
+
+                if (tileId) {
+                    const fieldPath = issue.path.slice(1).join('.').replace(/\.(\d+)\./, '[S1].').replace('S1', issue.path[2] as string);
+                    const finalPath = `${tileId}.${fieldPath}`;
+                    errorMap[finalPath] = issue.message;
+                }
             });
             setErrors(errorMap);
         }
@@ -318,7 +329,7 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={allItemIds} strategy={verticalListSortingStrategy}>
           <Accordion type="multiple" className="w-full space-y-0">
-            {tiles.map((tile, index) => (
+            {tiles.map((tile) => (
               <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />
             ))}
           </Accordion>
