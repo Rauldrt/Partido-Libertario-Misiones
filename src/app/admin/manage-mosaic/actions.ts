@@ -12,7 +12,7 @@ const MosaicImageSchema = z.object({
   id: z.string(),
   src: z.string().min(1, 'La URL de la imagen es requerida.'),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
-  hint: z.string().optional(), // Make hint optional
+  hint: z.string().optional().default(''), // Make hint optional and provide a default
   caption: z.string().min(1, 'La leyenda es requerida.'),
 });
 
@@ -27,7 +27,16 @@ const MosaicTileSchema = z.object({
 const MosaicTilesSchema = z.array(MosaicTileSchema);
 
 export async function saveMosaicAction(data: MosaicTileData[]) {
-    const validationResult = MosaicTilesSchema.safeParse(data);
+    // Before validation, ensure every image has an 'id' field, as the client relies on it.
+    const dataWithIds = data.map(tile => ({
+        ...tile,
+        images: tile.images.map(image => ({
+            ...image,
+            id: image.id || `new-img-${Date.now()}`
+        }))
+    }));
+
+    const validationResult = MosaicTilesSchema.safeParse(dataWithIds);
 
     if (!validationResult.success) {
         console.error("Zod Validation Errors:", validationResult.error.issues);

@@ -65,9 +65,19 @@ const infoSectionFilePath = path.join(process.cwd(), 'data', 'info-section.json'
 async function readData<T>(filePath: string): Promise<T[]> {
   try {
     const data = await fs.readFile(filePath, 'utf-8');
-    const items: T[] = JSON.parse(data);
+    const items: any[] = JSON.parse(data);
     // Add unique IDs if they don't exist, for dnd-kit compatibility
-    return items.map((item, index) => ({ id: (item as any).id || `${filePath}-${index}-${Date.now()}`, ...item }));
+    return items.map((item, index) => {
+        const baseItem = { id: item.id || `${path.basename(filePath, '.json')}-${index}-${Date.now()}`, ...item };
+        // Special handling for mosaic tiles to ensure images also have IDs
+        if (filePath.includes('mosaic.json') && item.images) {
+            baseItem.images = item.images.map((img: any, imgIndex: number) => ({
+                id: img.id || `img-${baseItem.id}-${imgIndex}-${Date.now()}`,
+                ...img
+            }));
+        }
+        return baseItem;
+    });
   } catch (error: any) {
     if (error.code === 'ENOENT') {
       await fs.writeFile(filePath, JSON.stringify([], null, 2), 'utf-8');
@@ -78,10 +88,20 @@ async function readData<T>(filePath: string): Promise<T[]> {
   }
 }
 
-async function writeData<T>(filePath: string, data: T[]): Promise<void> {
+async function writeData<T extends { id?: any }>(filePath: string, data: T[]): Promise<void> {
     try {
-        // Strip the temporary 'id' field before writing back to the file
-        const dataToSave = data.map(({ id, ...rest }: any) => rest);
+        // Strip the top-level 'id' field before writing back to the file
+        const dataToSave = data.map(({ id, ...rest }) => {
+            // Special handling for mosaic tiles: keep the image IDs but remove the tile ID.
+            if ('images' in rest && Array.isArray(rest.images)) {
+                (rest as any).images = (rest.images as any[]).map(img => {
+                    // This is where we ensure image IDs are preserved.
+                    return img;
+                });
+            }
+            return rest;
+        });
+
         await fs.writeFile(filePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
     } catch (error) {
         console.error(`Failed to write data to ${filePath}:`, error);
