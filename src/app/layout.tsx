@@ -5,14 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeManager } from '@/components/layout/ThemeManager';
 import { SocialModalProvider } from '@/context/SocialModalContext';
 import { AuthProvider } from '@/context/AuthContext';
-import type { Metadata } from 'next';
-
-// Metadata can still be defined in a client component, but it's often better at the page level.
-// For a global layout, this is acceptable.
-export const metadata: Metadata = {
-  title: 'Partido Libertario Misiones',
-  description: 'Página oficial del Partido Libertario de Misiones.',
-};
 
 export default function RootLayout({
   children,
@@ -20,8 +12,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   
-  const isProtected = process.env.NEXT_PUBLIC_PROTECTED_SITE === 'true';
-
   return (
     <html lang="es">
       <head>
