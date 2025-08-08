@@ -37,7 +37,7 @@
         "src": "/fotos/20231016_185842.jpg",
         "alt": "Imagen de un acto de campaña de Javier Milei con voluntarios en un espacio público. Se ven carteles de propaganda, una mesa con el logo de campaña y una furgoneta blanca al fondo.",
         "hint": "young people group",
-        "caption": "¡La Libertad Avanza en cada rincón del país!"
+        "caption": "¡La Libertad  en cada rincón del país!"
       },
       {
         "id": "img-mosaic-1-1754618339045-1-1754618339045",
@@ -48,10 +48,10 @@
       },
       {
         "id": "img-mosaic-1-1754618339045-2-1754618339045",
-        "src": "/fotos/20231016_185842.jpg",
+        "src": "/afiliando.webp",
         "alt": "Dos hombres con remeras de Javier Milei atienden un puesto de campaña en un parque. Se ve un cartel electoral de Milei-Villarruel, una mesa con un mantel con el logo de campaña, y una furgoneta blanca al fondo.",
         "hint": "Argentina flag",
-        "caption": "¡La Libertad Avanza en cada rincón!"
+        "caption": "¡La Libertad  en cada rincón!"
       }
     ]
   },
@@ -62,10 +62,10 @@
     "images": [
       {
         "id": "img-mosaic-2-1754618339045-0-1754618339045",
-        "src": "/banner1.jpg",
-        "alt": "Ciudadanos debatiendo",
+        "src": "/fotos/20231022_123119_HDR.jpg",
+        "alt": "Imagen de un centro de votación con varias personas sentadas en mesas atendiendo a votantes. Se ven formularios y papeletas electorales sobre las mesas.",
         "hint": "community discussion",
-        "caption": "Debate ciudadano."
+        "caption": "¡Tu voto hace la diferencia! #EleccionesArgentina"
       },
       {
         "id": "img-mosaic-2-1754618339045-1-1754618339045",
@@ -91,23 +91,23 @@
       {
         "id": "img-mosaic-3-1754618339045-0-1754618339045",
         "src": "/fotos/20231022_102234.jpg",
-        "alt": "Varias personas, posiblemente fiscales de mesa, sentadas en mesas revisando documentos durante una jornada electoral. Un hombre con una camiseta azul hace el signo de 'shaka' con su mano.",
+        "alt": "Voluntarios trabajando como fiscales de mesa en una elección. Se los ve sentados en mesas escolares revisando documentación. Uno de ellos mira a la cámara y hace un gesto de aprobación con ambas manos.",
         "hint": "Misiones landscape",
-        "caption": "¡Fiscales comprometidos con la transparencia electoral!"
+        "caption": "Comprometidos con la transparencia electoral. ¡Gracias a nuestros fiscales de mesa!"
       },
       {
         "id": "img-mosaic-3-1754618339045-1-1754618339045",
-        "src": "https://placehold.co/600x600.png",
-        "alt": "Cataratas del Iguazú",
+        "src": "/fotos/20231016_185830.jpg",
+        "alt": "Imagen de propaganda política con carteles de Javier Milei y Victoria Villarruel en un espacio público al aire libre. Se observa una bandera que dice 'Milei 2023' y 'Wanda está con Milei'.",
         "hint": "Iguazu falls",
-        "caption": "Belleza natural."
+        "caption": "¡Sumate!"
       },
       {
         "id": "img-mosaic-3-1754618339045-2-1754618339045",
-        "src": "https://placehold.co/600x600.png",
-        "alt": "Cultivo de yerba mate",
+        "src": "/fotos/20231022_135310.jpg",
+        "alt": "Cuatro personas sonrientes sentadas detrás de una mesa en un centro de votación durante una elección. Se ve una urna con el número 2580.",
         "hint": "yerba mate",
-        "caption": "Apoyo al productor."
+        "caption": "¡Comprometidos con la democracia y la transparencia en cada mesa!"
       }
     ]
   }
