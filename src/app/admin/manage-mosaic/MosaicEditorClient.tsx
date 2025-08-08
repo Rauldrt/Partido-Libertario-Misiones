@@ -298,10 +298,21 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
     });
   };
 
+  const allItemIds = React.useMemo(() => {
+    const ids: (string | number)[] = [];
+    tiles.forEach(tile => {
+      ids.push(tile.id);
+      tile.images.forEach(image => {
+        ids.push(image.id);
+      });
+    });
+    return ids;
+  }, [tiles]);
+
   return (
     <div className="space-y-6">
        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={allItemIds} strategy={verticalListSortingStrategy}>
           <Accordion type="multiple" className="w-full space-y-0">
             {tiles.map((tile, index) => (
               <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />
