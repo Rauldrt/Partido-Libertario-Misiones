@@ -100,51 +100,49 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} className="w-full">
-            <Card className="p-3 bg-background relative">
-                <Button variant="ghost" size="icon" {...listeners} className="cursor-grab absolute top-1 left-1 h-6 w-6"><GripVertical /></Button>
-                 <Button variant="destructive" size="icon" onClick={handleImageDelete} disabled={isPending} className="absolute top-1 right-1 h-6 w-6"><Trash2 className="h-4 w-4"/></Button>
-                <div className="grid gap-2 mt-8">
-                     <div className="space-y-1">
-                        <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
-                        <div className="flex items-center gap-2">
-                            <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} className={cn(findError('src') && 'border-destructive')} />
-                             <Dialog open={isGalleryOpen} onOpenChange={setGalleryOpen}>
-                                <DialogTrigger asChild>
-                                    <Button size="icon" variant="outline" title="Seleccionar desde la galería">
-                                        <ImageIcon className="h-4 w-4" />
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-4xl w-full h-[90vh]">
-                                    <DialogHeader>
-                                        <DialogTitle>Galería de Imágenes</DialogTitle>
-                                    </DialogHeader>
-                                    <ImageGallery onImageSelect={onImageSelect} />
-                                </DialogContent>
-                             </Dialog>
-                             <Button size="icon" variant="outline" onClick={handleAnalyzeImage} disabled={isAnalyzing || isPending} title="Analizar imagen con IA para rellenar campos">
-                                {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                            </Button>
-                        </div>
-                        {findError('src') && <p className="text-xs text-destructive">{findError('src')}</p>}
+        <Card ref={setNodeRef} style={style} {...attributes} className="p-3 bg-background relative w-full">
+            <Button variant="ghost" size="icon" {...listeners} className="cursor-grab absolute top-1 left-1 h-6 w-6"><GripVertical /></Button>
+             <Button variant="destructive" size="icon" onClick={handleImageDelete} disabled={isPending} className="absolute top-1 right-1 h-6 w-6"><Trash2 className="h-4 w-4"/></Button>
+            <div className="grid gap-2 mt-8">
+                 <div className="space-y-1">
+                    <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
+                    <div className="flex items-center gap-2">
+                        <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} className={cn(findError('src') && 'border-destructive')} />
+                         <Dialog open={isGalleryOpen} onOpenChange={setGalleryOpen}>
+                            <DialogTrigger asChild>
+                                <Button size="icon" variant="outline" title="Seleccionar desde la galería">
+                                    <ImageIcon className="h-4 w-4" />
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl w-full h-[90vh]">
+                                <DialogHeader>
+                                    <DialogTitle>Galería de Imágenes</DialogTitle>
+                                </DialogHeader>
+                                <ImageGallery onImageSelect={onImageSelect} />
+                            </DialogContent>
+                         </Dialog>
+                         <Button size="icon" variant="outline" onClick={handleAnalyzeImage} disabled={isAnalyzing || isPending} title="Analizar imagen con IA para rellenar campos">
+                            {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                        </Button>
                     </div>
-                     <div className="space-y-1">
-                        <Label htmlFor={`img-caption-${image.id}`}>Leyenda</Label>
-                        <Input id={`img-caption-${image.id}`} value={image.caption} onChange={e => handleImageChange('caption', e.target.value)} className={cn(findError('caption') && 'border-destructive')} />
-                         {findError('caption') && <p className="text-xs text-destructive">{findError('caption')}</p>}
-                    </div>
-                     <div className="space-y-1">
-                        <Label htmlFor={`img-alt-${image.id}`}>Texto Alt</Label>
-                        <Input id={`img-alt-${image.id}`} value={image.alt} onChange={e => handleImageChange('alt', e.target.value)} className={cn(findError('alt') && 'border-destructive')} />
-                         {findError('alt') && <p className="text-xs text-destructive">{findError('alt')}</p>}
-                    </div>
-                     <div className="space-y-1">
-                        <Label htmlFor={`img-hint-${image.id}`}>Hint IA (2 palabras max)</Label>
-                        <Input id={`img-hint-${image.id}`} value={image.hint} onChange={e => handleImageChange('hint', e.target.value)} />
-                    </div>
+                    {findError('src') && <p className="text-xs text-destructive">{findError('src')}</p>}
                 </div>
-            </Card>
-        </div>
+                 <div className="space-y-1">
+                    <Label htmlFor={`img-caption-${image.id}`}>Leyenda</Label>
+                    <Input id={`img-caption-${image.id}`} value={image.caption} onChange={e => handleImageChange('caption', e.target.value)} className={cn(findError('caption') && 'border-destructive')} />
+                     {findError('caption') && <p className="text-xs text-destructive">{findError('caption')}</p>}
+                </div>
+                 <div className="space-y-1">
+                    <Label htmlFor={`img-alt-${image.id}`}>Texto Alt</Label>
+                    <Input id={`img-alt-${image.id}`} value={image.alt} onChange={e => handleImageChange('alt', e.target.value)} className={cn(findError('alt') && 'border-destructive')} />
+                     {findError('alt') && <p className="text-xs text-destructive">{findError('alt')}</p>}
+                </div>
+                 <div className="space-y-1">
+                    <Label htmlFor={`img-hint-${image.id}`}>Hint IA (2 palabras max)</Label>
+                    <Input id={`img-hint-${image.id}`} value={image.hint} onChange={e => handleImageChange('hint', e.target.value)} />
+                </div>
+            </div>
+        </Card>
     );
 };
 
