@@ -92,10 +92,10 @@ async function writeData<T extends { id?: any }>(filePath: string, data: T[]): P
     try {
         // Strip the top-level 'id' field before writing back to the file
         const dataToSave = data.map(({ id, ...rest }) => {
-            // Special handling for mosaic tiles: keep the image IDs but remove the tile ID.
+            // Special handling for mosaic tiles: keep the image IDs.
             if ('images' in rest && Array.isArray(rest.images)) {
                 (rest as any).images = (rest.images as any[]).map(img => {
-                    // This is where we ensure image IDs are preserved.
+                    // Keep the image ID
                     return img;
                 });
             }
