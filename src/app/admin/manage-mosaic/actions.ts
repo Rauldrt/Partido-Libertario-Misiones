@@ -6,9 +6,9 @@ import { saveMosaicTiles, type MosaicTileData } from '@/lib/homepage-service';
 import { revalidatePath } from 'next/cache';
 
 const MosaicImageSchema = z.object({
+  // The client uses the 'id' for dnd-kit, so we need to expect it here.
+  // It will be stripped by the writeData function before saving to JSON.
   id: z.string(),
-  // Allow any non-empty string, as it can be a local path or a full URL.
-  // The client-side logic should ensure it's a valid path.
   src: z.string().min(1, 'La URL de la imagen es requerida.'),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string(),
