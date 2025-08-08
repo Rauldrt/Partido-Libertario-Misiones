@@ -5,6 +5,7 @@ import { getBannerSlides, getMosaicTiles, getAccordionItems, getInfoSectionData 
 import { EventsCarousel } from '@/components/EventsCarousel';
 import { getNewsItems } from '@/lib/news-service';
 import { SocialWidget } from '@/components/SocialWidget';
+import { getNotificationData } from '@/lib/notification-service';
 
 export const revalidate = 60; // Revalidate data every 60 seconds
 
@@ -14,6 +15,7 @@ export default async function HomePage() {
   const tiles = await getMosaicTiles();
   const accordionItems = await getAccordionItems();
   const infoSectionData = await getInfoSectionData();
+  const notificationData = await getNotificationData();
   const allItems = await getNewsItems();
   const events = allItems.filter(item => item.type === 'event' && item.published);
 
@@ -35,6 +37,7 @@ export default async function HomePage() {
         tiles={tiles}
         accordionItems={accordionItems}
         infoSectionData={infoSectionData}
+        notificationData={notificationData}
         events={<EventsCarousel events={events} />}
         socialWidget={<SocialWidget />}
     >

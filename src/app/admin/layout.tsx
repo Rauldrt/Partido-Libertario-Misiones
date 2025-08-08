@@ -15,7 +15,7 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell } from 'lucide-react';
 import Image from 'next/image';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
@@ -95,6 +95,14 @@ function ProtectedAdminLayout({ children }: PropsWithChildren) {
                   <Link href="/admin/manage-content">
                     <ListChecks />
                     Gestionar Contenido
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/manage-notification">
+                    <Bell />
+                    Gestionar Notificación
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

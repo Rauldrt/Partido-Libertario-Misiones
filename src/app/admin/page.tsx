@@ -1,9 +1,8 @@
-
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, Rss, Server, Sparkles, Star, PanelsTopLeft, Type } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell } from 'lucide-react';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -68,6 +67,23 @@ export default function AdminDashboardPage() {
                 <Link href="/admin/manage-content">
                   <ListChecks className="mr-2 h-4 w-4" />
                   Ir al Gestor
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestionar Notificación</CardTitle>
+              <CardDescription>Controla la burbuja de notificación en el banner principal.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Activa y configura una notificación destacada en la página de inicio.
+              </p>
+              <Button asChild>
+                <Link href="/admin/manage-notification">
+                  <Bell className="mr-2 h-4 w-4" />
+                  Editar Notificación
                 </Link>
               </Button>
             </CardContent>
