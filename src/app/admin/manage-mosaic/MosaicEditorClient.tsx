@@ -66,9 +66,13 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
         startAnalyzing(async () => {
             try {
                 // Use a fully-qualified URL if it's a local path
-                const imageUrl = image.src.startsWith('/') 
+                const rawUrl = image.src.startsWith('/') 
                     ? `${window.location.origin}${image.src}` 
                     : image.src;
+                
+                // Encode the URL to handle spaces and other special characters
+                const imageUrl = encodeURI(rawUrl);
+
                 const result = await analyzeImage({ imageUrl });
                 setTiles(prev => prev.map(tile => {
                     if (tile.id === tileId) {
