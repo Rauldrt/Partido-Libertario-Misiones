@@ -3,12 +3,12 @@
 
 import React, { useState, useTransition } from 'react';
 import type { MosaicTileData, MosaicImageData } from '@/lib/homepage-service';
-import { DndContext, closestCenter, type DragEndEvent, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { GripVertical, Loader2, Plus, Save, Trash2, ChevronDown, Sparkles } from 'lucide-react';
+import { GripVertical, Loader2, Plus, Save, Trash2, Sparkles, Image as ImageIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -23,14 +23,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { analyzeImage } from '@/ai/flows/analyze-image-flow';
+import { ImageGallery } from '@/components/ImageGallery';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 
 type ErrorMap = { [fieldPath: string]: string | undefined };
 
 const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, errors }: { image: MosaicImageData, tileId: string, imageIndex: number, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id, data: { tileId } });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: image.id, data: { tileId, type: 'image' } });
     const style = { transform: CSS.Transform.toString(transform), transition };
     const [isAnalyzing, startAnalyzing] = useTransition();
+    const [isGalleryOpen, setGalleryOpen] = useState(false);
     const { toast } = useToast();
 
     const handleImageChange = (field: keyof MosaicImageData, value: string) => {
@@ -56,13 +59,17 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
     
     const handleAnalyzeImage = () => {
         if (!image.src) {
-            toast({ variant: 'destructive', title: 'URL Requerida', description: 'Por favor, ingrese una URL de imagen para analizar.' });
+            toast({ variant: 'destructive', title: 'URL Requerida', description: 'Por favor, ingrese o seleccione una URL de imagen para analizar.' });
             return;
         }
 
         startAnalyzing(async () => {
             try {
-                const result = await analyzeImage({ imageUrl: image.src });
+                // Use a fully-qualified URL if it's a local path
+                const imageUrl = image.src.startsWith('/') 
+                    ? `${window.location.origin}${image.src}` 
+                    : image.src;
+                const result = await analyzeImage({ imageUrl });
                 setTiles(prev => prev.map(tile => {
                     if (tile.id === tileId) {
                         return {
@@ -78,9 +85,16 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
             }
         });
     };
+    
+    const onImageSelect = (src: string) => {
+        handleImageChange('src', src);
+        setGalleryOpen(false);
+    }
 
     const findError = (field: keyof MosaicImageData) => {
-        return errors[`${tileId}.images[${imageIndex}].${field}`];
+        const tileIndex = (window as any).__tiles_debug?.findIndex((t: MosaicTileData) => t.id === tileId) ?? -1;
+        if(tileIndex === -1) return undefined;
+        return errors[`tiles[${tileIndex}].images[${imageIndex}].${field}`];
     };
 
     return (
@@ -93,7 +107,20 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
                         <Label htmlFor={`img-src-${image.id}`}>URL Imagen</Label>
                         <div className="flex items-center gap-2">
                             <Input id={`img-src-${image.id}`} value={image.src} onChange={e => handleImageChange('src', e.target.value)} className={cn(findError('src') && 'border-destructive')} />
-                            <Button size="icon" variant="outline" onClick={handleAnalyzeImage} disabled={isAnalyzing || isPending} title="Analizar imagen con IA para rellenar campos">
+                             <Dialog open={isGalleryOpen} onOpenChange={setGalleryOpen}>
+                                <DialogTrigger asChild>
+                                    <Button size="icon" variant="outline" title="Seleccionar desde la galería">
+                                        <ImageIcon className="h-4 w-4" />
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl w-full h-[90vh]">
+                                    <DialogHeader>
+                                        <DialogTitle>Galería de Imágenes</DialogTitle>
+                                    </DialogHeader>
+                                    <ImageGallery onImageSelect={onImageSelect} />
+                                </DialogContent>
+                             </Dialog>
+                             <Button size="icon" variant="outline" onClick={handleAnalyzeImage} disabled={isAnalyzing || isPending} title="Analizar imagen con IA para rellenar campos">
                                 {isAnalyzing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                             </Button>
                         </div>
@@ -110,7 +137,7 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
                          {findError('alt') && <p className="text-xs text-destructive">{findError('alt')}</p>}
                     </div>
                      <div className="space-y-1">
-                        <Label htmlFor={`img-hint-${image.id}`}>Hint IA</Label>
+                        <Label htmlFor={`img-hint-${image.id}`}>Hint IA (2 palabras max)</Label>
                         <Input id={`img-hint-${image.id}`} value={image.hint} onChange={e => handleImageChange('hint', e.target.value)} />
                     </div>
                 </div>
@@ -120,7 +147,7 @@ const SortableImageItem = ({ image, tileId, imageIndex, setTiles, isPending, err
 };
 
 const SortableTileItem = ({ tile, setTiles, isPending, errors }: { tile: MosaicTileData, setTiles: React.Dispatch<React.SetStateAction<MosaicTileData[]>>, isPending: boolean, errors: ErrorMap }) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: tile.id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: tile.id, data: { type: 'tile' } });
   const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.5 : 1 };
 
   const handleTileChange = (field: keyof MosaicTileData, value: string | number) => {
@@ -193,41 +220,52 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const [errors, setErrors] = useState<ErrorMap>({});
-
+  
+  // A hacky way to make tile data available for error mapping
+  if (typeof window !== 'undefined') {
+    (window as any).__tiles_debug = tiles;
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
-        // Dragging a tile
-        if (tiles.find(t => t.id === active.id)) {
-            setTiles(items => arrayMove(items, items.findIndex(i => i.id === active.id), items.findIndex(i => i.id === over.id)));
-        }
-        // Dragging an image
-        else {
-             setTiles((currentTiles) => {
-                const activeTileId = active.data.current?.tileId;
-                const overTileId = over.data.current?.tileId;
-                const activeImageId = active.id;
-                const overImageId = over.id;
 
-                if (!activeTileId || !overTileId) return currentTiles;
-                
-                // Dropping over a different image in the same tile
-                if (activeTileId === overTileId) {
-                    return currentTiles.map(tile => {
-                        if (tile.id === activeTileId) {
-                            const oldIndex = tile.images.findIndex(img => img.id === activeImageId);
-                            const newIndex = tile.images.findIndex(img => img.id === overImageId);
-                            return { ...tile, images: arrayMove(tile.images, oldIndex, newIndex) };
-                        }
-                        return tile;
-                    });
-                }
-                
-                // This logic could be expanded to move images between tiles
-                return currentTiles;
-            });
-        }
+    if (!over || active.id === over.id) {
+        return;
+    }
+    
+    const activeType = active.data.current?.type;
+
+    if (activeType === 'tile') {
+        setTiles(items => {
+            const oldIndex = items.findIndex(t => t.id === active.id);
+            const newIndex = items.findIndex(t => t.id === over.id);
+            if (oldIndex === -1 || newIndex === -1) return items;
+            return arrayMove(items, oldIndex, newIndex);
+        });
+    } else if (activeType === 'image') {
+        setTiles(currentTiles => {
+            const activeTileId = active.data.current?.tileId;
+            const overTileId = over.data.current?.tileId;
+            const activeImageId = active.id;
+            const overImageId = over.id;
+
+            if (!activeTileId || !overTileId) return currentTiles;
+
+            // Reordering within the same tile
+            if (activeTileId === overTileId) {
+                return currentTiles.map(tile => {
+                    if (tile.id === activeTileId) {
+                        const oldIndex = tile.images.findIndex(img => img.id === activeImageId);
+                        const newIndex = tile.images.findIndex(img => img.id === overImageId);
+                        if (oldIndex === -1 || newIndex === -1) return tile;
+                        return { ...tile, images: arrayMove(tile.images, oldIndex, newIndex) };
+                    }
+                    return tile;
+                });
+            }
+            
+            return currentTiles;
+        });
     }
   };
   
@@ -250,16 +288,8 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
         if (result.errors) {
             const errorMap: ErrorMap = {};
             result.errors.forEach((issue: ZodIssue) => {
-                const tileIndex = issue.path[0] as number;
-                const imageIndex = issue.path[2] as number;
-                const fieldName = issue.path[3] as string;
-
-                const tileId = tiles[tileIndex]?.id;
-                
-                if (tileId) {
-                    const errorPath = `${tileId}.images[${imageIndex}].${fieldName}`;
-                    errorMap[errorPath] = issue.message;
-                }
+                const path = issue.path.join('.');
+                errorMap[path] = issue.message;
             });
             setErrors(errorMap);
         }
@@ -273,7 +303,7 @@ export function MosaicEditorClient({ initialTiles }: { initialTiles: MosaicTileD
        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={tiles.map(t => t.id)} strategy={verticalListSortingStrategy}>
           <Accordion type="multiple" className="w-full space-y-0">
-            {tiles.map(tile => (
+            {tiles.map((tile, index) => (
               <SortableTileItem key={tile.id} tile={tile} setTiles={setTiles} isPending={isPending} errors={errors} />
             ))}
           </Accordion>

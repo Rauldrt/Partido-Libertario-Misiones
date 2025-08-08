@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 
 const MosaicImageSchema = z.object({
   id: z.string(),
-  src: z.string().url('La URL de la imagen debe ser un enlace válido.').or(z.string().startsWith('/', { message: 'La ruta local debe comenzar con /' })),
+  src: z.string().min(1, 'La URL de la imagen es requerida.'),
   alt: z.string().min(1, 'El texto alternativo es requerido.'),
   hint: z.string(),
   caption: z.string().min(1, 'La leyenda es requerida.'),
@@ -24,19 +24,19 @@ const MosaicTileSchema = z.object({
 const MosaicTilesSchema = z.array(MosaicTileSchema);
 
 export async function saveMosaicAction(data: MosaicTileData[]) {
-    const validation = MosaicTilesSchema.safeParse(data);
+    const validationResult = MosaicTilesSchema.safeParse(data);
 
-    if (!validation.success) {
-        console.error(validation.error.issues);
+    if (!validationResult.success) {
+        console.error("Zod Validation Errors:", validationResult.error.issues);
         return { 
             success: false, 
-            message: 'Datos inválidos. Por favor, revise todos los campos.',
-            errors: validation.error.issues,
+            message: 'Datos inválidos. Por favor, revise los campos marcados.',
+            errors: validationResult.error.issues,
         };
     }
 
     try {
-        await saveMosaicTiles(validation.data);
+        await saveMosaicTiles(validationResult.data);
         revalidatePath('/');
         return { success: true, message: '¡Mosaico guardado con éxito!' };
     } catch (error) {
