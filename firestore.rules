@@ -2,18 +2,30 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Regla para la configuración del sitio (banner, mosaico, etc.)
-    match /site-config/{docId} {
-      allow read: if true;
-      // Permite la escritura si el usuario está autenticado O si el documento aún no existe (para la siembra inicial)
-      allow write: if request.auth != null || !exists(/databases/$(database)/documents/site-config/$(docId));
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    // Regla para las noticias y eventos
-    match /news/{newsId} {
+    // Allow public read for all collections, as the site is public.
+    match /news/{document=**} {
       allow read: if true;
-      // Permite la escritura si el usuario está autenticado O si el documento es nuevo (para la siembra inicial)
-      allow write: if request.auth != null || !exists(/databases/$(database)/documents/news/$(newsId));
+    }
+     match /site-config/{document=**} {
+      allow read: if true;
+    }
+
+    // Allow write only for authenticated users (admins)
+    // This rule allows creating the document if it doesn't exist (for seeding)
+    // but requires authentication for any subsequent updates or deletes.
+    match /news/{newsId} {
+      allow create: if true; // Allow initial creation for seeding
+      allow update, delete: if request.auth != null;
+    }
+    
+    match /site-config/{configId} {
+        allow create: if true; // Allow initial creation for seeding
+        allow update, delete: if request.auth != null;
     }
   }
 }
