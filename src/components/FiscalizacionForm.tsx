@@ -22,10 +22,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
-import { getFiscalizacionValidationSchema } from "@/lib/fiscalizacion-service";
 import { Skeleton } from './ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { getFormDefinition, FormField as FormFieldType } from '@/lib/afiliacion-service';
+import { getFormDefinition, type FormDefinition, type FormField as FormFieldType } from '@/lib/afiliacion-service';
 
 
 // Helper to build a Zod schema from a form definition
@@ -157,7 +156,7 @@ const renderField = (fieldInfo: FormFieldType, control: any) => {
 
 export function FiscalizacionForm() {
   const { toast } = useToast();
-  const [formDefinition, setFormDefinition] = React.useState<FormFieldType[] | null>(null);
+  const [formDefinition, setFormDefinition] = React.useState<FormDefinition | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const form = useForm({
@@ -169,12 +168,11 @@ export function FiscalizacionForm() {
         setIsLoading(true);
         try {
             const definition = await getFormDefinition('fiscalizacion');
-            const fields = definition.fields;
-            setFormDefinition(fields);
+            setFormDefinition(definition);
             
-            const schema = buildZodSchema(fields);
+            const schema = buildZodSchema(definition.fields);
             const defaultValues = Object.fromEntries(
-                fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
+                definition.fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
             );
             
             form.reset(defaultValues);
@@ -241,7 +239,7 @@ export function FiscalizacionForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {formDefinition.map(field => renderField(field, form.control))}
+        {formDefinition.fields.map(field => renderField(field, form.control))}
         
         <Button type="submit" className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105" disabled={isSubmitting}>
           {isSubmitting ? (
