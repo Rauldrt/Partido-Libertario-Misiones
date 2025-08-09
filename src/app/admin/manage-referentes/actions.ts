@@ -2,7 +2,7 @@
 'use server';
 
 import { z } from 'zod';
-import { saveReferentes, type ReferenteData } from '@/lib/referentes-service';
+import { saveReferentes } from '@/lib/referentes-service';
 import { revalidatePath } from 'next/cache';
 
 const ReferenteSchema = z.object({
@@ -11,6 +11,9 @@ const ReferenteSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido.'),
   phone: z.string().regex(/^[0-9]+$/, 'El teléfono solo debe contener números.').min(10, 'El teléfono debe tener al menos 10 dígitos.'),
 });
+
+// Exporting the type from here is allowed as this is not a 'use client' file.
+export type ReferenteData = z.infer<typeof ReferenteSchema>;
 
 const ReferentesListSchema = z.array(ReferenteSchema);
 
@@ -23,7 +26,9 @@ export async function saveReferentesAction(data: ReferenteData[]) {
     }
 
     try {
-        await saveReferentes(validation.data);
+        // Strip the temporary 'id' field before writing back to the database
+        const dataToSave = validation.data.map(({ id, ...rest }) => rest);
+        await saveReferentes(dataToSave);
         revalidatePath('/referentes');
         
         return { success: true, message: '¡Referentes guardados con éxito!' };

@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useTransition } from 'react';
-import type { ReferenteData } from '@/lib/referentes-service';
+import type { ReferenteData } from './actions'; // Updated import path
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -30,7 +30,7 @@ const SortableReferenteItem = ({ referente, setReferentes, isPending }: { refere
     opacity: isDragging ? 0.5 : 1,
   };
 
-  const handleInputChange = (field: keyof ReferenteData, value: string) => {
+  const handleInputChange = (field: keyof Omit<ReferenteData, 'id'>, value: string) => {
     setReferentes(prev => prev.map(r => (r.id === referente.id ? { ...r, [field]: value } : r)));
   };
   

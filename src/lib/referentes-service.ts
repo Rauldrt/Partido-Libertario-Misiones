@@ -5,16 +5,14 @@ import { getDb } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
-import { z } from 'zod';
 
-export const ReferenteSchema = z.object({
-  id: z.string(),
-  locality: z.string(),
-  name: z.string(),
-  phone: z.string(),
-});
-
-export type ReferenteData = z.infer<typeof ReferenteSchema>;
+// This type is now defined in the actions file to avoid exporting from a 'use server' file.
+export interface ReferenteData {
+  id: string;
+  locality: string;
+  name: string;
+  phone: string;
+}
 
 const getReferentesDocRef = () => {
     const db = getDb();
@@ -45,8 +43,6 @@ export async function getReferentes(): Promise<ReferenteData[]> {
     return seededData.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
 }
 
-export async function saveReferentes(referentes: ReferenteData[]): Promise<void> {
-    // Strip the temporary 'id' field before writing back to the database
-    const dataToSave = referentes.map(({ id, ...rest }) => rest);
-    await setDoc(getReferentesDocRef(), { list: dataToSave });
+export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
+    await setDoc(getReferentesDocRef(), { list: referentes });
 }
