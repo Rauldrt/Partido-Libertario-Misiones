@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, CalendarDays, Youtube } from 'lucide-react';
+import { ArrowRight, CalendarDays, Youtube, Link as LinkIcon } from 'lucide-react';
 import type { NewsCardData } from '@/lib/news-service';
 import { EmbedDisplay } from './EmbedDisplay';
 
@@ -10,11 +10,13 @@ import { EmbedDisplay } from './EmbedDisplay';
 // to be shared between the component and the data service.
 export type { NewsCardData };
 
-export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, type, youtubeVideoId, embedCode }: NewsCardData) {
+export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, type, youtubeVideoId, embedCode, links }: NewsCardData) {
   
+  const hasLinks = links && links.length > 0;
+
   return (
     <Card className="flex flex-col h-full overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg">
-      <CardHeader className="p-0">
+      <CardHeader className="p-0 relative">
         {embedCode ? (
           <div className="bg-card max-h-[400px] overflow-y-auto">
             <EmbedDisplay embedCode={embedCode} />
@@ -31,13 +33,32 @@ export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, t
             ></iframe>
           </div>
         ) : (
-          <div className="relative aspect-video overflow-hidden rounded-t-lg"> {/* Ensure consistent aspect ratio */}
+          <div className="relative aspect-video overflow-hidden rounded-t-lg">
             <img 
               src={imageUrl} 
               alt={title} 
               className="absolute h-full w-full object-cover" 
               data-ai-hint={imageHint} 
             />
+            {hasLinks && (
+              <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/60 backdrop-blur-sm">
+                <ul className="space-y-1">
+                  {links.map((link, index) => (
+                    <li key={index}>
+                      <a 
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-white text-xs hover:text-primary transition-colors rounded-md p-1.5 hover:bg-white/10"
+                      >
+                        <LinkIcon className="h-3 w-3 flex-shrink-0" />
+                        <span className="truncate">{link.title}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </CardHeader>
