@@ -41,22 +41,19 @@ export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, t
               data-ai-hint={imageHint} 
             />
             {hasLinks && (
-              <div className="absolute bottom-0 left-0 right-0 p-2 bg-black/60 backdrop-blur-sm">
-                <ul className="space-y-1">
+              <div className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-2">
                   {links.map((link, index) => (
-                    <li key={index}>
                       <a 
+                        key={index}
                         href={link.url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-white text-xs hover:text-primary transition-colors rounded-md p-1.5 hover:bg-white/10"
+                        className="flex items-center gap-1.5 text-foreground text-xs font-semibold bg-white/70 backdrop-blur-sm px-2 py-1 rounded-md shadow-md hover:bg-white/90 hover:scale-105 transition-all duration-200"
                       >
-                        <LinkIcon className="h-3 w-3 flex-shrink-0" />
+                        <LinkIcon className="h-3 w-3 flex-shrink-0 text-primary" />
                         <span className="truncate">{link.title}</span>
                       </a>
-                    </li>
                   ))}
-                </ul>
               </div>
             )}
           </div>
