@@ -58,18 +58,8 @@ export function Header() {
   return (
     <>
       <header className="relative text-primary-foreground shadow-md sticky top-0 z-50">
-        {/* Background Image Layer (z-0) - Full Opacity */}
-        <Image 
-          src="/banner3.jpg"
-          alt="Navbar background pattern" 
-          layout="fill" 
-          objectFit="cover" 
-          className="absolute inset-0 z-0"
-          data-ai-hint="abstract pattern"
-          priority
-        />
-        {/* Gradient Overlay Layer (z-10) - Slight Opacity */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#002F6C]/90 to-[#93328E]/90"></div>
+        {/* Background Layer (z-10) */}
+        <div className="absolute inset-0 z-10 bg-[#572364]"></div>
 
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
