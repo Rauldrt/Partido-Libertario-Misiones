@@ -9,7 +9,7 @@ export default async function ManageAfiliacionesPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gestionar Afiliaciones</CardTitle>
+        <CardTitle>Ver Afiliaciones</CardTitle>
         <CardDescription>
           Aquí puedes ver todas las solicitudes de afiliación enviadas desde el formulario del sitio web.
         </CardDescription>

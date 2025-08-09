@@ -15,7 +15,7 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Edit } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -74,11 +74,19 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                        <Link href="/admin/manage-forms">
+                            <Edit />
+                            Gestionar Formularios
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
                         <Link href="/admin/manage-afiliaciones">
                             <UserCheck />
-                            Gestionar Afiliaciones
+                            Ver Afiliaciones
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -86,7 +94,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                         <SidebarMenuButton asChild>
                         <Link href="/admin/manage-fiscales">
                             <ShieldCheckIcon />
-                            Gestionar Fiscales
+                            Ver Fiscales
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -94,7 +102,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                         <SidebarMenuButton asChild>
                         <Link href="/admin/manage-contact">
                             <MessageSquare />
-                            Gestionar Contactos
+                            Ver Contactos
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
