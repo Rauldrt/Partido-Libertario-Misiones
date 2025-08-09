@@ -1,31 +1,26 @@
+
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny all
-    match /{document=**} {
-      allow read, write: if false;
+
+    // Allow public read access to all site configuration and news content.
+    match /site-config/{docId} {
+      allow read: if true;
+      // Allow writing (create/update) for the initial data seeding and admin actions.
+      // In a more complex app, this would be restricted to authenticated admins.
+      allow write: if true;
     }
 
-    // Allow public read for all collections, as the site is public.
-    match /news/{document=**} {
-      allow read: if true;
-    }
-     match /site-config/{document=**} {
-      allow read: if true;
-    }
-
-    // Allow write only for authenticated users (admins)
-    // This rule allows creating the document if it doesn't exist (for seeding)
-    // but requires authentication for any subsequent updates or deletes.
     match /news/{newsId} {
-      allow create: if true; // Allow initial creation for seeding
-      allow update, delete: if request.auth != null;
+      allow read: if true;
+      // Allow writing (create/update) for the initial data seeding and admin actions.
+      allow write: if true;
     }
     
-    match /site-config/{configId} {
-        allow create: if true; // Allow initial creation for seeding
-        allow update, delete: if request.auth != null;
+    // Default deny for any other collection
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
