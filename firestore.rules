@@ -1,0 +1,22 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Función auxiliar para verificar si el usuario es un administrador autenticado
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // Colección 'news': contiene artículos de noticias y eventos
+    // Colección 'site-config': contiene toda la configuración de la página (banner, mosaico, etc.)
+    match /{collection}/{document=**} {
+      // PERMITIR LECTURA a cualquier persona (pública)
+      allow read: if true;
+
+      // PERMITIR ESCRITURA (crear, actualizar, eliminar) solo si el usuario es un administrador
+      allow write: if isAdmin();
+    }
+  }
+}
