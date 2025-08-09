@@ -69,7 +69,7 @@ export function Header() {
           priority
         />
         {/* Gradient Overlay Layer (z-10) - Slight Opacity */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-purple-950/90 to-orange-600/70"></div>
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#002F6C]/90 to-[#93328E]/90"></div>
 
         {/* Content Layer (z-20) */}
         <div className="relative z-20 container mx-auto px-4 md:px-6 h-20 flex items-center justify-between">
@@ -89,7 +89,7 @@ export function Header() {
             <div className="hidden md:flex flex-shrink-0 items-center justify-end">
                 <nav className="flex items-center gap-2">
                     {navItems.map((item) => (
-                    <Button key={item.label} variant="ghost" asChild className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400">
+                    <Button key={item.label} variant="ghost" asChild className="hover:bg-black/20">
                         <Link href={item.href} className="font-body text-base font-medium">
                         {item.label}
                         </Link>
@@ -97,7 +97,7 @@ export function Header() {
                     ))}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 font-body text-base font-medium">
+                            <Button variant="ghost" className="hover:bg-black/20 font-body text-base font-medium">
                                 Más
                                 <ChevronDown className="relative top-[1px] ml-1 h-4 w-4 transition duration-200 group-data-[state=open]:rotate-180" />
                             </Button>
