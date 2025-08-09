@@ -86,6 +86,10 @@ const config = {
         "zoom-in-gentle": { from: { opacity: '0', transform: 'scale(0.9)' }, to: { opacity: '1', transform: 'scale(1)' } },
         "crossfade-in": { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
         "ken-burns-in": { from: { transform: 'scale(1.1) rotate(1deg)' }, to: { transform: 'scale(1) rotate(0deg)' } },
+        "pulse-subtle": {
+            '0%, 100%': { transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(255, 255, 255, 0.4)' },
+            '70%': { transform: 'scale(1)', boxShadow: '0 0 0 10px rgba(255, 255, 255, 0)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -94,6 +98,7 @@ const config = {
         "zoom-in-gentle": "zoom-in-gentle 0.5s ease-out forwards",
         "crossfade-in": "crossfade-in 1.2s ease-in-out forwards",
         "ken-burns-in": "ken-burns-in 8s ease-out forwards",
+        "pulse-subtle": "pulse-subtle 2s infinite",
       },
     },
   },

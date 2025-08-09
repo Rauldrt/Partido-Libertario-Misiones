@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, CalendarDays, Youtube, Link as LinkIcon } from 'lucide-react';
 import type { NewsCardData } from '@/lib/news-service';
 import { EmbedDisplay } from './EmbedDisplay';
+import { cn } from '@/lib/utils';
 
 // The NewsCardData interface has been moved to src/lib/news-service.ts
 // to be shared between the component and the data service.
@@ -48,7 +49,11 @@ export function NewsCard({ title, date, summary, imageUrl, imageHint, linkUrl, t
                         href={link.url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-foreground text-xs font-semibold bg-white/70 backdrop-blur-sm px-2 py-1 rounded-md shadow-md hover:bg-white/90 hover:scale-105 transition-all duration-200"
+                        style={{ animationDelay: `${index * 150}ms` }}
+                        className={cn(
+                            "flex items-center gap-1.5 text-foreground text-xs font-semibold bg-white/70 backdrop-blur-sm px-2 py-1 rounded-md shadow-md hover:bg-white/90 transition-all duration-200",
+                            "animate-pulse-subtle"
+                        )}
                       >
                         <LinkIcon className="h-3 w-3 flex-shrink-0 text-primary" />
                         <span className="truncate">{link.title}</span>
