@@ -3,37 +3,51 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // Reglas para colecciones gestionadas por el admin panel
-    match /site-config/{docId} {
+
+    // Helper functions
+    function isUserAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Rules for news collection
+    match /news/{newsId} {
+      // Anyone can read news articles
       allow read: if true;
-      allow write: if request.auth != null;
+      // Allow anyone to write (create, update, delete).
+      // The admin panel is protected by its own auth, so server-side actions
+      // from Vercel (which are not authenticated) will be allowed.
+      allow write: if true;
+    }
+
+    // Rules for site-config documents
+    match /site-config/{configId} {
+      // Anyone can read config documents
+      allow read: if true;
+      // Only authenticated users can write to config.
+      // This is correct as config is only managed from the admin panel UI.
+      allow write: if isUserAuthenticated();
     }
     
-    match /news/{docId} {
+    // Rules for form submissions, which can be created by anyone.
+    match /afiliaciones/{afiliacionId} {
+        allow create: if true;
+        allow read, update, delete: if isUserAuthenticated();
+    }
+    
+    match /fiscalizaciones/{fiscalizacionId} {
+        allow create: if true;
+        allow read, update, delete: if isUserAuthenticated();
+    }
+
+    match /contactSubmissions/{contactId} {
+        allow create: if true;
+        allow read, update, delete: if isUserAuthenticated();
+    }
+    
+    // Rules for form definitions, managed from admin panel
+    match /form-definitions/{formId} {
       allow read: if true;
-      allow write: if true; // Permite escrituras desde el servidor (no autenticado)
-    }
-
-    // Reglas para colecciones de formularios públicos
-    match /afiliaciones/{docId} {
-      allow read: if request.auth != null; // Solo admins pueden leer
-      allow create: if true; // Cualquiera puede enviar el formulario
-    }
-
-    match /fiscalizaciones/{docId} {
-      allow read: if request.auth != null; // Solo admins pueden leer
-      allow create: if true; // Cualquiera puede enviar el formulario
-    }
-
-    match /contactSubmissions/{docId} {
-      allow read: if request.auth != null; // Solo admins pueden leer
-      allow create: if true; // Cualquiera puede enviar el formulario
-    }
-
-    // Regla por defecto: denegar todo lo demás
-    match /{document=**} {
-      allow read, write: if false;
+      allow write: if isUserAuthenticated();
     }
   }
 }
