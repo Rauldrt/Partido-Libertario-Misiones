@@ -1,22 +1,19 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Función auxiliar para verificar si el usuario es un administrador autenticado
-    function isAdmin() {
-      return request.auth != null;
+    // Regla para la configuración del sitio (banner, mosaico, etc.)
+    match /site-config/{docId} {
+      allow read: if true;
+      // Permite la escritura si el usuario está autenticado O si el documento aún no existe (para la siembra inicial)
+      allow write: if request.auth != null || !exists(/databases/$(database)/documents/site-config/$(docId));
     }
 
-    // Colección 'news': contiene artículos de noticias y eventos
-    // Colección 'site-config': contiene toda la configuración de la página (banner, mosaico, etc.)
-    match /{collection}/{document=**} {
-      // PERMITIR LECTURA a cualquier persona (pública)
+    // Regla para las noticias y eventos
+    match /news/{newsId} {
       allow read: if true;
-
-      // PERMITIR ESCRITURA (crear, actualizar, eliminar) solo si el usuario es un administrador
-      allow write: if isAdmin();
+      // Permite la escritura si el usuario está autenticado O si el documento es nuevo (para la siembra inicial)
+      allow write: if request.auth != null || !exists(/databases/$(database)/documents/news/$(newsId));
     }
   }
 }
