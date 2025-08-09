@@ -36,13 +36,11 @@ const buildZodSchema = (fields: FormFieldType[]) => {
         case 'email':
             fieldSchema = z.string().email({ message: "Correo electrónico inválido." });
             break;
-        case 'tel':
-        case 'number':
-            fieldSchema = z.string();
-            break;
         case 'checkbox':
             fieldSchema = z.boolean().default(false);
             break;
+        case 'number':
+        case 'tel':
         default:
             fieldSchema = z.string();
     }
@@ -70,44 +68,52 @@ const buildZodSchema = (fields: FormFieldType[]) => {
         fieldSchema = fieldSchema.optional();
     }
     
+    // For radio groups, ensure the value is one of the options
+    if (field.type === 'radio' && field.options) {
+        fieldSchema = z.enum(field.options as [string, ...string[]], {
+            required_error: `${field.label} es requerido.`
+        })
+    }
+
     schemaShape[field.name] = fieldSchema;
   });
   return z.object(schemaShape);
 };
 
 
-const renderField = (field: FormFieldType, control: any) => {
+const renderField = (fieldInfo: FormFieldType, control: any) => {
     return (
         <FormField
-            key={field.id}
+            key={fieldInfo.id}
             control={control}
-            name={field.name}
-            render={({ field: formField }) => (
+            name={fieldInfo.name}
+            render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{field.label}</FormLabel>
+                    <FormLabel>{fieldInfo.label}</FormLabel>
                     <FormControl>
-                        {field.type === 'textarea' ? (
-                            <Textarea placeholder={field.placeholder} {...formField} />
-                        ) : field.type === 'checkbox' ? (
-                            <div className="flex items-center space-x-2">
+                        {fieldInfo.type === 'textarea' ? (
+                            <Textarea placeholder={fieldInfo.placeholder} {...field} />
+                        ) : fieldInfo.type === 'checkbox' ? (
+                            <div className="flex items-center space-x-2 pt-2">
                                 <Checkbox
-                                    checked={formField.value}
-                                    onCheckedChange={formField.onChange}
+                                    id={fieldInfo.id}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
                                 />
                                 <label
-                                    htmlFor={field.name}
-                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor={fieldInfo.id}
+                                    className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                 >
-                                    {field.placeholder}
+                                    {fieldInfo.placeholder}
                                 </label>
                             </div>
-                        ) : field.type === 'radio' && field.options ? (
+                        ) : fieldInfo.type === 'radio' && fieldInfo.options ? (
                              <RadioGroup
-                                onValueChange={formField.onChange}
-                                defaultValue={formField.value}
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
                                 className="flex flex-col space-y-1"
                             >
-                                {field.options.map(option => (
+                                {fieldInfo.options.map(option => (
                                     <FormItem key={option} className="flex items-center space-x-3 space-y-0">
                                         <FormControl>
                                             <RadioGroupItem value={option} />
@@ -116,21 +122,21 @@ const renderField = (field: FormFieldType, control: any) => {
                                     </FormItem>
                                 ))}
                             </RadioGroup>
-                        ) : field.type === 'select' && field.options ? (
-                             <Select onValueChange={formField.onChange} defaultValue={formField.value}>
+                        ) : fieldInfo.type === 'select' && fieldInfo.options ? (
+                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                 <SelectTrigger>
-                                    <SelectValue placeholder={field.placeholder} />
+                                    <SelectValue placeholder={fieldInfo.placeholder} />
                                 </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    {field.options.map(option => (
+                                    {fieldInfo.options.map(option => (
                                         <SelectItem key={option} value={option}>{option}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
                         ) : (
-                            <Input type={field.type} placeholder={field.placeholder} {...formField} />
+                            <Input type={fieldInfo.type} placeholder={fieldInfo.placeholder} {...field} />
                         )}
                     </FormControl>
                     <FormMessage />
@@ -153,7 +159,7 @@ export function AfiliacionForm() {
     const fetchFormDef = async () => {
       try {
         setIsLoading(true);
-        const definition = await getFormDefinition();
+        const definition = await getFormDefinition('afiliacion');
         setFormDefinition(definition);
         
         // Dynamically create default values and resolver

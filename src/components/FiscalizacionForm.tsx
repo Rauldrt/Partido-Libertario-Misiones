@@ -1,6 +1,7 @@
 
 "use client";
 
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -9,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,26 +22,177 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
-import { fiscalizacionFormSchema, type FiscalizacionFormValues } from "@/lib/fiscalizacion-service";
+import { getFiscalizacionValidationSchema } from "@/lib/fiscalizacion-service";
+import { Skeleton } from './ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { getFormDefinition, FormField as FormFieldType } from '@/lib/afiliacion-service';
+
+
+// Helper to build a Zod schema from a form definition
+const buildZodSchema = (fields: FormFieldType[]) => {
+  const schemaShape: Record<string, z.ZodTypeAny> = {};
+  fields.forEach(field => {
+    let fieldSchema: z.ZodTypeAny;
+
+    switch (field.type) {
+        case 'email':
+            fieldSchema = z.string().email({ message: "Correo electrónico inválido." });
+            break;
+        case 'checkbox':
+            fieldSchema = z.boolean().default(false);
+            break;
+        case 'number':
+        case 'tel':
+        default:
+            fieldSchema = z.string();
+    }
+    
+    if (field.required && field.type !== 'checkbox') {
+        fieldSchema = fieldSchema.min(1, { message: `${field.label} es requerido.` });
+    }
+
+    if (field.required && field.type === 'checkbox') {
+        fieldSchema = fieldSchema.refine(val => val === true, {
+            message: `${field.label} es requerido.`
+        });
+    }
+
+    if(field.validationRegex) {
+        try {
+            const regex = new RegExp(field.validationRegex);
+            fieldSchema = (fieldSchema as z.ZodString).regex(regex, { message: field.validationMessage || "Formato inválido."});
+        } catch (e) {
+            console.error("Invalid regex in form definition:", field.validationRegex)
+        }
+    }
+    
+    if (!field.required) {
+        fieldSchema = fieldSchema.optional();
+    }
+
+    // For radio groups, ensure the value is one of the options
+    if (field.type === 'radio' && field.options) {
+        fieldSchema = z.enum(field.options as [string, ...string[]], {
+            required_error: `${field.label} es requerido.`
+        })
+    }
+    
+    schemaShape[field.name] = fieldSchema;
+  });
+  return z.object(schemaShape);
+};
+
+
+const renderField = (fieldInfo: FormFieldType, control: any) => {
+    return (
+        <FormField
+            key={fieldInfo.id}
+            control={control}
+            name={fieldInfo.name}
+            render={({ field }) => (
+                <FormItem>
+                    <FormLabel>{fieldInfo.label}</FormLabel>
+                    <FormControl>
+                        {fieldInfo.type === 'textarea' ? (
+                            <Textarea placeholder={fieldInfo.placeholder} {...field} />
+                        ) : fieldInfo.type === 'checkbox' ? (
+                            <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
+                               <Checkbox
+                                    id={fieldInfo.id}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                                <div className="space-y-1 leading-none">
+                                    <label
+                                        htmlFor={fieldInfo.id}
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        {fieldInfo.label}
+                                    </label>
+                                    {fieldInfo.placeholder && (
+                                        <p className="text-sm text-muted-foreground">
+                                           {fieldInfo.placeholder}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        ) : fieldInfo.type === 'radio' && fieldInfo.options ? (
+                             <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="flex flex-col space-y-1"
+                            >
+                                {fieldInfo.options.map(option => (
+                                    <FormItem key={option} className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value={option} />
+                                        </FormControl>
+                                        <FormLabel className="font-normal capitalize">{option.replace('_', ' ')}</FormLabel>
+                                    </FormItem>
+                                ))}
+                            </RadioGroup>
+                        ) : fieldInfo.type === 'select' && fieldInfo.options ? (
+                             <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder={fieldInfo.placeholder} />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {fieldInfo.options.map(option => (
+                                        <SelectItem key={option} value={option}>{option}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        ) : (
+                            <Input type={fieldInfo.type} placeholder={fieldInfo.placeholder} {...field} />
+                        )}
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+    )
+}
 
 export function FiscalizacionForm() {
   const { toast } = useToast();
-  const form = useForm<FiscalizacionFormValues>({
-    resolver: zodResolver(fiscalizacionFormSchema),
-    defaultValues: {
-      fullName: "",
-      dni: "",
-      email: "",
-      phone: "",
-      city: "",
-      previousExperience: false,
-      notes: "",
-    },
+  const [formDefinition, setFormDefinition] = React.useState<FormFieldType[] | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const form = useForm({
+    // resolver will be updated dynamically
   });
+
+  React.useEffect(() => {
+    const fetchAndSetForm = async () => {
+        setIsLoading(true);
+        try {
+            const definition = await getFormDefinition('fiscalizacion');
+            const fields = definition.fields;
+            setFormDefinition(fields);
+            
+            const schema = buildZodSchema(fields);
+            const defaultValues = Object.fromEntries(
+                fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
+            );
+            
+            form.reset(defaultValues);
+            (form as any)._options.resolver = zodResolver(schema);
+
+        } catch (error) {
+            toast({ variant: 'destructive', title: 'Error', description: 'No se pudo cargar la definición del formulario.' });
+        } finally {
+            setIsLoading(false);
+        }
+    }
+    fetchAndSetForm();
+  }, [form, toast]);
+
 
   const { formState: { isSubmitting } } = form;
 
-  async function onSubmit(values: FiscalizacionFormValues) {
+  async function onSubmit(values: Record<string, any>) {
     try {
       const result = await submitFiscalizacionForm(values);
 
@@ -54,7 +205,7 @@ export function FiscalizacionForm() {
       } else {
         form.clearErrors();
         result.errors?.forEach((error) => {
-          form.setError(error.path[0] as keyof FiscalizacionFormValues, {
+          form.setError(error.path[0] as any, {
             type: "manual",
             message: error.message,
           });
@@ -75,158 +226,22 @@ export function FiscalizacionForm() {
     }
   }
 
+  if (isLoading || !formDefinition) {
+    return (
+        <div className="space-y-6">
+            <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
+            <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
+            <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-24 w-full" /></div>
+            <Skeleton className="h-12 w-full" />
+        </div>
+    )
+  }
+
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
-            <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Nombre y Apellido</FormLabel>
-                <FormControl>
-                    <Input placeholder="Victoria Villarruel" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-            <FormField
-            control={form.control}
-            name="dni"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>DNI (sin puntos)</FormLabel>
-                <FormControl>
-                    <Input type="number" placeholder="22333444" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Correo Electrónico</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="vpv@gmail.com" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Teléfono</FormLabel>
-                <FormControl>
-                  <Input placeholder="011 4XXX XXXX" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="city"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Localidad donde fiscalizarías</FormLabel>
-              <FormControl>
-                <Input placeholder="Posadas" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-            control={form.control}
-            name="availability"
-            render={({ field }) => (
-                <FormItem className="space-y-3">
-                <FormLabel>¿Qué disponibilidad tenés para el día de la elección?</FormLabel>
-                <FormControl>
-                    <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-col space-y-1"
-                    >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                        <RadioGroupItem value="completa" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Jornada Completa</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                        <RadioGroupItem value="parcial" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Medio día (mañana o tarde)</FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                        <RadioGroupItem value="indistinta" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Indistinta / A coordinar</FormLabel>
-                    </FormItem>
-                    </RadioGroup>
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-        />
-
-        <FormField
-          control={form.control}
-          name="previousExperience"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Ya tengo experiencia fiscalizando
-                </FormLabel>
-                <FormDescription>
-                    Marcá esta casilla si ya participaste como fiscal en elecciones anteriores.
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Aclaraciones (Opcional)</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Dejanos cualquier otra información que consideres relevante."
-                  className="resize-y"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {formDefinition.map(field => renderField(field, form.control))}
         
         <Button type="submit" className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105" disabled={isSubmitting}>
           {isSubmitting ? (

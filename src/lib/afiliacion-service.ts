@@ -1,3 +1,6 @@
+
+'use server';
+
 import { getDb } from './firebase';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import { z } from 'zod';
@@ -5,8 +8,8 @@ import { z } from 'zod';
 // Defines a single field in a form
 export const FormFieldSchema = z.object({
   id: z.string(),
-  name: z.string().min(1),
-  label: z.string().min(1),
+  name: z.string().min(1, 'El nombre del campo es requerido.'),
+  label: z.string().min(1, 'La etiqueta es requerida.'),
   type: z.enum(['text', 'email', 'tel', 'number', 'textarea', 'checkbox', 'radio', 'select']),
   placeholder: z.string().optional(),
   required: z.boolean().default(false),
@@ -57,32 +60,46 @@ const fromFirestore = (doc: any): AfiliacionSubmission => {
 };
 
 const defaultAfiliacionFields: FormField[] = [
-    { id: '1', name: 'fullName', label: 'Nombre y Apellido', type: 'text', placeholder: 'Javier G. Milei', required: true, order: 1 },
+    { id: '1', name: 'fullName', label: 'Nombre y Apellido', type: 'text', placeholder: 'Javier G. Milei', required: true, order: 1, validationRegex: '', validationMessage: '' },
     { id: '2', name: 'dni', label: 'DNI (sin puntos)', type: 'number', placeholder: '22333444', required: true, order: 2, validationRegex: '^\\d{7,8}$', validationMessage: "El DNI debe tener 7 u 8 dígitos." },
-    { id: '3', name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'presidente@argentina.gob', required: true, order: 3 },
-    { id: '4', name: 'phone', label: 'Teléfono', type: 'tel', placeholder: '011 4XXX XXXX', required: true, order: 4 },
-    { id: '5', name: 'city', label: 'Localidad', type: 'text', placeholder: 'Posadas', required: true, order: 5 },
-    { id: '6', name: 'address', label: 'Dirección', type: 'text', placeholder: 'Av. Corrientes 123', required: true, order: 6 },
+    { id: '3', name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'presidente@argentina.gob', required: true, order: 3, validationRegex: '', validationMessage: '' },
+    { id: '4', name: 'phone', label: 'Teléfono', type: 'tel', placeholder: '011 4XXX XXXX', required: true, order: 4, validationRegex: '', validationMessage: '' },
+    { id: '5', name: 'city', label: 'Localidad', type: 'text', placeholder: 'Posadas', required: true, order: 5, validationRegex: '', validationMessage: '' },
+    { id: '6', name: 'address', label: 'Dirección', type: 'text', placeholder: 'Av. Corrientes 123', required: true, order: 6, validationRegex: '', validationMessage: '' },
 ];
 
 // --- Public Service Functions ---
 
-export async function getFormDefinition(): Promise<FormDefinition> {
-    const docRef = doc(getFormDefCollection(), 'afiliacion');
+export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
+    const docRef = doc(getFormDefCollection(), formId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        // Sort fields by order
         const data = docSnap.data() as FormDefinition;
         data.fields.sort((a, b) => a.order - b.order);
         return data;
     } else {
         // Seed with default data if it doesn't exist
-        console.log("Seeding default form definition for 'afiliacion'.");
-        const defaultFormDef: FormDefinition = { id: 'afiliacion', fields: defaultAfiliacionFields };
+        console.log(`Seeding default form definition for '${formId}'.`);
+        
+        let defaultFields: FormField[] = [];
+        if (formId === 'afiliacion') {
+            defaultFields = defaultAfiliacionFields;
+        } // Add else if for other forms if they have different defaults
+        
+        const defaultFormDef: FormDefinition = { id: formId, fields: defaultFields };
         await setDoc(docRef, defaultFormDef);
         return defaultFormDef;
     }
+}
+
+export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
+    const docRef = doc(getFormDefCollection(), formId);
+    const dataToSave: FormDefinition = {
+        id: formId,
+        fields: fields.map((field, index) => ({...field, order: index})) // Re-assign order based on array index
+    }
+    await setDoc(docRef, dataToSave);
 }
 
 export async function addAfiliacionSubmission(submission: Record<string, any>): Promise<void> {

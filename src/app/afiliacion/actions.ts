@@ -2,7 +2,7 @@
 'use server';
 
 import * as z from "zod";
-import { addAfiliacionSubmission, getFormDefinition, FormDefinition } from "@/lib/afiliacion-service";
+import { addAfiliacionSubmission, getFormDefinition, FormField } from "@/lib/afiliacion-service";
 import { revalidatePath } from "next/cache";
 
 export type AfiliacionFormState = {
@@ -11,29 +11,37 @@ export type AfiliacionFormState = {
   errors?: z.ZodIssue[];
 };
 
-
 // This function now dynamically builds a Zod schema from the form definition
 async function getValidationSchema(): Promise<z.ZodObject<any, any, any>> {
-  const formDefinition = await getFormDefinition();
-  const schema = z.object(
-    Object.fromEntries(
+  const formDefinition = await getFormDefinition('afiliacion');
+  
+  const schemaShape = Object.fromEntries(
       formDefinition.fields.map(field => {
-        let fieldSchema: z.ZodTypeAny = z.string(); // Default to string
+        let fieldSchema: z.ZodTypeAny;
 
-        if (field.type === 'email') {
-          fieldSchema = z.string().email({ message: "Correo electrónico inválido." });
+        switch (field.type) {
+            case 'email':
+                fieldSchema = z.string().email({ message: "Correo electrónico inválido." });
+                break;
+            case 'checkbox':
+                fieldSchema = z.boolean().default(false);
+                break;
+            case 'number':
+            case 'tel':
+            default:
+                fieldSchema = z.string();
         }
         
-        if (field.type === 'number') {
-           fieldSchema = z.string().regex(/^\d+$/, { message: "Debe ser un número." });
+        if (field.required && field.type !== 'checkbox') {
+            fieldSchema = fieldSchema.min(1, { message: `${field.label} es requerido.` });
         }
-
-        if (field.required) {
-          fieldSchema = fieldSchema.min(1, { message: `${field.label} es requerido.` });
-        } else {
-          fieldSchema = fieldSchema.optional();
+    
+        if (field.required && field.type === 'checkbox') {
+            fieldSchema = fieldSchema.refine(val => val === true, {
+                message: `${field.label} es requerido.`
+            });
         }
-
+    
         if(field.validationRegex) {
             try {
                 const regex = new RegExp(field.validationRegex);
@@ -43,11 +51,21 @@ async function getValidationSchema(): Promise<z.ZodObject<any, any, any>> {
             }
         }
         
+        if (!field.required) {
+            fieldSchema = fieldSchema.optional();
+        }
+        
+        if (field.type === 'radio' && field.options) {
+             fieldSchema = z.enum(field.options as [string, ...string[]], {
+                required_error: `${field.label} es requerido.`
+            })
+        }
+
         return [field.name, fieldSchema];
       })
-    )
-  );
-  return schema;
+    );
+
+  return z.object(schemaShape);
 }
 
 export async function submitAfiliacionForm(

@@ -1,8 +1,8 @@
 
-"use server";
+'use server';
 
 import * as z from "zod";
-import { addFiscalizacionSubmission, fiscalizacionFormSchema, type FiscalizacionFormValues } from "@/lib/fiscalizacion-service";
+import { addFiscalizacionSubmission, getFiscalizacionValidationSchema } from "@/lib/fiscalizacion-service";
 import { revalidatePath } from "next/cache";
 
 export type FiscalizacionFormState = {
@@ -12,9 +12,10 @@ export type FiscalizacionFormState = {
 };
 
 export async function submitFiscalizacionForm(
-  values: FiscalizacionFormValues
+  values: z.infer<z.ZodObject<any>>
 ): Promise<FiscalizacionFormState> {
-  const validatedFields = fiscalizacionFormSchema.safeParse(values);
+  const validationSchema = await getFiscalizacionValidationSchema();
+  const validatedFields = validationSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return {
