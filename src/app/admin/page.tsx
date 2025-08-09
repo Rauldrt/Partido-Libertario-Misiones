@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Edit } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -21,23 +21,6 @@ export default function AdminDashboardPage() {
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Gestionar Formularios</CardTitle>
-              <CardDescription>Añadí, editá y reordená los campos de tus formularios.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Control total sobre los campos de los formularios de afiliación, fiscales y contacto.
-              </p>
-              <Button asChild>
-                <Link href="/admin/manage-forms">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Ir al Gestor de Forms
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
           <Card>
             <CardHeader>
               <CardTitle>Ver Afiliaciones</CardTitle>

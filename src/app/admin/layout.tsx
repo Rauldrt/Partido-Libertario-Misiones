@@ -15,7 +15,7 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Edit } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -71,14 +71,6 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                         <Link href="/admin">
                             <LayoutDashboard />
                             Dashboard
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-forms">
-                            <Edit />
-                            Gestionar Formularios
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
