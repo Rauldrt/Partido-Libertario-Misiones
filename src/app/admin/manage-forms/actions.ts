@@ -29,7 +29,7 @@ export async function saveFormDefinitionAction(data: FormDefinition) {
   }
 }
 
-export async function getFormDefinitionAction(formId: 'afiliacion' | 'fiscalizacion') {
+export async function getFormDefinitionAction(formId: 'afiliacion' | 'fiscalizacion' | 'contacto') {
     try {
         const definition = await getFormDefinition(formId);
         return { success: true, definition };
