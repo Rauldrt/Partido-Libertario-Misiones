@@ -1,10 +1,28 @@
 
-import { getAfiliacionSubmissions } from '@/lib/afiliacion-service';
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { getAfiliacionSubmissions, type AfiliacionSubmission } from '@/lib/afiliacion-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AfiliacionesTable } from './AfiliacionesTable';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Loader2 } from 'lucide-react';
 
-export default async function ManageAfiliacionesPage() {
-  const submissions = await getAfiliacionSubmissions();
+export default function ManageAfiliacionesPage() {
+  const [submissions, setSubmissions] = useState<AfiliacionSubmission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    getAfiliacionSubmissions()
+      .then(data => {
+        setSubmissions(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error("Failed to load affiliations:", error);
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <Card>
@@ -15,7 +33,14 @@ export default async function ManageAfiliacionesPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <AfiliacionesTable initialData={submissions} />
+        {isLoading ? (
+          <div className="flex items-center justify-center p-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="ml-4 text-lg">Cargando datos...</p>
+          </div>
+        ) : (
+          <AfiliacionesTable initialData={submissions} />
+        )}
       </CardContent>
     </Card>
   );
