@@ -70,7 +70,18 @@ const defaultContactoFields: FormField[] = [
     { id: 'c1', name: 'fullName', label: 'Nombre y Apellido', type: 'text', placeholder: 'John Doe', required: true, order: 1, validationRegex: '', validationMessage: '' },
     { id: 'c2', name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'john.doe@example.com', required: true, order: 2, validationRegex: '', validationMessage: '' },
     { id: 'c3', name: 'message', label: 'Tu Mensaje', type: 'textarea', placeholder: 'Escribí acá tu consulta o propuesta...', required: true, order: 3, validationRegex: '', validationMessage: '' },
-]
+];
+
+const defaultFiscalizacionFields: FormField[] = [
+    { id: 'f1', name: 'fullName', label: 'Nombre y Apellido', type: 'text', placeholder: 'Victoria Villarruel', required: true, order: 1, validationRegex: '', validationMessage: '' },
+    { id: 'f2', name: 'dni', label: 'DNI (sin puntos)', type: 'number', placeholder: '22333444', required: true, order: 2, validationRegex: '^\\d{7,8}$', validationMessage: "El DNI debe tener 7 u 8 dígitos." },
+    { id: 'f3', name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'vpv@gmail.com', required: true, order: 3, validationRegex: '', validationMessage: '' },
+    { id: 'f4', name: 'phone', label: 'Teléfono', type: 'tel', placeholder: '011 4XXX XXXX', required: true, order: 4, validationRegex: '', validationMessage: '' },
+    { id: 'f5', name: 'city', label: 'Localidad donde fiscalizarías', type: 'text', placeholder: 'Posadas', required: true, order: 5, validationRegex: '', validationMessage: '' },
+    { id: 'f6', name: 'availability', label: '¿Qué disponibilidad tenés para el día de la elección?', type: 'radio', required: true, order: 6, options: ['completa', 'parcial', 'indistinta'], validationRegex: '', validationMessage: '' },
+    { id: 'f7', name: 'previousExperience', label: 'Ya tengo experiencia fiscalizando', type: 'checkbox', required: false, order: 7, placeholder: 'Marcá esta casilla si ya participaste como fiscal en elecciones anteriores.', validationRegex: '', validationMessage: '' },
+    { id: 'f8', name: 'notes', label: 'Aclaraciones (Opcional)', type: 'textarea', required: false, order: 8, placeholder: 'Dejanos cualquier otra información que consideres relevante.', validationRegex: '', validationMessage: '' },
+];
 
 
 // --- Public Service Functions ---
@@ -90,6 +101,8 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
         let defaultFields: FormField[] = [];
         if (formId === 'afiliacion') {
             defaultFields = defaultAfiliacionFields;
+        } else if (formId === 'fiscalizacion') {
+            defaultFields = defaultFiscalizacionFields;
         } else if (formId === 'contacto') {
             defaultFields = defaultContactoFields;
         }
