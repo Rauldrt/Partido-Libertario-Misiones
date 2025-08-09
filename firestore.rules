@@ -4,23 +4,31 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Allow public read access to all site configuration and news content.
-    match /site-config/{docId} {
+    // Allow public read on all collections for site visitors
+    match /{document=**} {
       allow read: if true;
-      // Allow writing (create/update) for the initial data seeding and admin actions.
-      // In a more complex app, this would be restricted to authenticated admins.
-      allow write: if true;
-    }
-
-    match /news/{newsId} {
-      allow read: if true;
-      // Allow writing (create/update) for the initial data seeding and admin actions.
-      allow write: if true;
     }
     
-    // Default deny for any other collection
-    match /{document=**} {
-      allow read, write: if false;
+    // --- Form Submissions ---
+    // Allow anyone to submit (create) data for these forms.
+    // Restrict updates and deletes to authenticated users.
+    match /afiliaciones/{docId} {
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+    
+    match /fiscalizaciones/{docId} {
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+
+    // --- Admin-managed content ---
+    // Allow authenticated users (admins) to write to these collections.
+    match /site-config/{docId} {
+       allow write: if request.auth != null;
+    }
+    match /news/{docId} {
+       allow write: if request.auth != null;
     }
   }
 }
