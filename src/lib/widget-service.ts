@@ -1,43 +1,34 @@
 
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
+import { getDb } from './firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
 
 export interface SocialWidgetData {
     embedCode: string;
 }
 
-const widgetFilePath = path.join(process.cwd(), 'data', 'social-widget.json');
-
 const SocialWidgetSchema = z.object({
     embedCode: z.string().trim(),
 });
 
-export async function getSocialWidgetData(): Promise<SocialWidgetData> {
-  try {
-    const data = await fs.readFile(widgetFilePath, 'utf-8');
-    const widgetData = JSON.parse(data);
-    // Validate the data just in case
-    const parsed = SocialWidgetSchema.safeParse(widgetData);
-    if(parsed.success) {
-        return parsed.data;
-    }
-    // If invalid or empty, return default
-    return { embedCode: '' };
+const getWidgetDocRef = () => {
+    const db = getDb();
+    if (!db) throw new Error("Firestore is not initialized.");
+    return doc(db, 'site-config', 'socialWidget');
+};
 
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      // If the file doesn't exist, create it with an empty object
-      const defaultData = { embedCode: '' };
-      await fs.writeFile(widgetFilePath, JSON.stringify(defaultData, null, 2), 'utf-8');
-      return defaultData;
+
+export async function getSocialWidgetData(): Promise<SocialWidgetData> {
+    const docSnap = await getDoc(getWidgetDocRef());
+    if (docSnap.exists()) {
+        const parsed = SocialWidgetSchema.safeParse(docSnap.data());
+        if(parsed.success) {
+            return parsed.data;
+        }
     }
-    console.error(`Failed to read data from ${widgetFilePath}:`, error);
-    // On other errors, return default data to prevent crashes
     return { embedCode: '' };
-  }
 }
 
 
@@ -48,10 +39,5 @@ export async function saveSocialWidgetData(data: SocialWidgetData): Promise<void
         throw new Error('Invalid widget data provided.');
     }
 
-    try {
-        await fs.writeFile(widgetFilePath, JSON.stringify(validation.data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error(`Failed to write data to ${widgetFilePath}:`, error);
-        throw new Error(`Could not save widget data to ${widgetFilePath}.`);
-    }
+    await setDoc(getWidgetDocRef(), validation.data);
 }

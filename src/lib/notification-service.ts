@@ -1,6 +1,6 @@
 
-import fs from 'fs/promises';
-import path from 'path';
+import { getDb } from './firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
 
 export const NotificationSchema = z.object({
@@ -11,7 +11,11 @@ export const NotificationSchema = z.object({
 
 export type NotificationData = z.infer<typeof NotificationSchema>;
 
-const filePath = path.join(process.cwd(), 'data', 'notification.json');
+const getNotificationDocRef = () => {
+    const db = getDb();
+    if (!db) throw new Error("Firestore is not initialized.");
+    return doc(db, 'site-config', 'notification');
+};
 
 const defaultData: NotificationData = {
   enabled: false,
@@ -20,26 +24,14 @@ const defaultData: NotificationData = {
 };
 
 export async function getNotificationData(): Promise<NotificationData> {
-  try {
-    const data = await fs.readFile(filePath, 'utf-8');
-    const jsonData = JSON.parse(data);
-    const parsed = NotificationSchema.safeParse(jsonData);
-
+  const docSnap = await getDoc(getNotificationDocRef());
+  if (docSnap.exists()) {
+    const parsed = NotificationSchema.safeParse(docSnap.data());
     if (parsed.success) {
       return parsed.data;
     }
-    
-    console.warn("Notification data is invalid, returning default data.", parsed.error.issues);
-    return defaultData;
-
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      await fs.writeFile(filePath, JSON.stringify(defaultData, null, 2), 'utf-8');
-      return defaultData;
-    }
-    console.error(`Failed to read data from ${filePath}:`, error);
-    return defaultData; // Return default on other errors to prevent crashes
   }
+  return defaultData;
 }
 
 export async function saveNotificationData(data: NotificationData): Promise<void> {
@@ -50,10 +42,5 @@ export async function saveNotificationData(data: NotificationData): Promise<void
         throw new Error('Datos de notificación inválidos.');
     }
 
-    try {
-        await fs.writeFile(filePath, JSON.stringify(validation.data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error(`Failed to write data to ${filePath}:`, error);
-        throw new Error(`Could not save notification data to ${filePath}.`);
-    }
+    await setDoc(getNotificationDocRef(), validation.data);
 }

@@ -1,8 +1,9 @@
 
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
+import { getDb } from './firebase';
+import { collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, writeBatch, query, orderBy } from 'firebase/firestore';
+import type { Firestore } from 'firebase/firestore';
 
 export interface NewsCardData {
   id: string;
@@ -17,107 +18,118 @@ export interface NewsCardData {
   youtubeVideoId?: string;
   published: boolean;
   embedCode?: string;
+  order: number; // For ordering
 }
 
-const newsFilePath = path.join(process.cwd(), 'data', 'news.json');
-
-async function readNewsData(): Promise<NewsCardData[]> {
-  try {
-    const data = await fs.readFile(newsFilePath, 'utf-8');
-    // Ensure that linkUrl is correctly formed for each item
-    const items: NewsCardData[] = JSON.parse(data);
-    return items.map(item => ({ ...item, linkUrl: `/news/${item.id}` }));
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      await fs.writeFile(newsFilePath, JSON.stringify([], null, 2), 'utf-8');
-      return [];
-    }
-    console.error('Failed to read news data:', error);
-    throw new Error('Could not retrieve news items.');
+// Firestore collection reference
+const getNewsCollection = () => {
+  const db = getDb();
+  if (!db) {
+    throw new Error("Firestore is not initialized. Check your Firebase configuration.");
   }
-}
+  return collection(db, 'news');
+};
 
-async function writeNewsData(data: NewsCardData[]): Promise<void> {
-    try {
-        // Before writing, remove the temporary linkUrl property as it's generated dynamically
-        const dataToSave = data.map(({ linkUrl, ...rest }) => rest);
-        await fs.writeFile(newsFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
-    } catch (error) {
-        console.error('Failed to write news data:', error);
-        throw new Error('Could not save news items.');
-    }
-}
+// Helper to convert Firestore doc to NewsCardData
+const fromFirestore = (doc: any): NewsCardData => {
+    const data = doc.data();
+    const id = doc.id;
+    return {
+        id,
+        linkUrl: `/news/${id}`,
+        ...data,
+    };
+};
 
+// Helper to convert NewsCardData to Firestore doc data
+const toFirestore = (item: Partial<NewsCardData>): any => {
+    const { id, linkUrl, ...data } = item;
+    return data;
+};
 
 export async function getNewsItems(): Promise<NewsCardData[]> {
-  return await readNewsData();
+  const newsCollection = getNewsCollection();
+  const q = query(newsCollection, orderBy("order", "asc"));
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) {
+    console.log("No news items found in Firestore. You may need to add some initial data.");
+    return [];
+  }
+  return snapshot.docs.map(fromFirestore);
 }
 
 export async function getNewsItemById(id: string): Promise<NewsCardData | undefined> {
-  const items = await readNewsData();
-  return items.find((item) => item.id === id);
+  const db = getDb();
+  if (!db) throw new Error("Firestore not initialized.");
+  const docRef = doc(db, 'news', id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return fromFirestore(docSnap);
+  } else {
+    return undefined;
+  }
 }
 
 export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): Promise<NewsCardData> {
-  const items = await readNewsData();
-  const newItem: NewsCardData = {
+  const newsCollection = getNewsCollection();
+  const allItems = await getNewsItems();
+  const newOrder = allItems.length > 0 ? Math.min(...allItems.map(i => i.order)) - 1 : 0;
+  
+  const docRef = await addDoc(newsCollection, toFirestore({ ...item, order: newOrder }));
+  return {
     ...item,
-    id: `${Date.now()}`,
-    linkUrl: `/news/${Date.now()}`
+    id: docRef.id,
+    linkUrl: `/news/${docRef.id}`,
+    order: newOrder
   };
-  const updatedItems = [newItem, ...items];
-  await writeNewsData(updatedItems);
-  return newItem;
 }
 
-export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id'>>): Promise<NewsCardData> {
-  const items = await readNewsData();
-  const itemIndex = items.findIndex((item) => item.id === id);
-  if (itemIndex === -1) {
-    throw new Error('Item not found');
-  }
-  items[itemIndex] = { ...items[itemIndex], ...updates };
-  await writeNewsData(items);
-  return items[itemIndex];
+export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
+  const db = getDb();
+  if (!db) throw new Error("Firestore not initialized.");
+  const docRef = doc(db, 'news', id);
+  await setDoc(docRef, toFirestore(updates), { merge: true });
+  
+  const updatedDoc = await getDoc(docRef);
+  return fromFirestore(updatedDoc);
 }
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
-    const items = await readNewsData();
-    const updatedItems = items.filter(item => item.id !== id);
-    if (items.length === updatedItems.length) {
-        return { success: false }; // Item not found
-    }
-    await writeNewsData(updatedItems);
-    return { success: true };
+  const db = getDb();
+  if (!db) throw new Error("Firestore not initialized.");
+  const docRef = doc(db, 'news', id);
+  await deleteDoc(docRef);
+  return { success: true };
 }
 
 export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
-    const items = await readNewsData();
-    const orderedItems = orderedIds.map(id => items.find(item => item.id === id)).filter(Boolean) as NewsCardData[];
-    // Append any items that were not in the orderedIds list (e.g., new items)
-    const remainingItems = items.filter(item => !orderedIds.includes(item.id));
-    await writeNewsData([...orderedItems, ...remainingItems]);
+    const db = getDb();
+    if (!db) throw new Error("Firestore not initialized.");
+    const batch = writeBatch(db);
+    
+    orderedIds.forEach((id, index) => {
+        const docRef = doc(db, 'news', id);
+        batch.update(docRef, { order: index });
+    });
+
+    await batch.commit();
 }
 
 export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
-  const items = await readNewsData();
-  const originalItem = items.find(item => item.id === id);
+  const originalItem = await getNewsItemById(id);
 
   if (!originalItem) {
     throw new Error(`Item with id ${id} not found.`);
   }
+  
+  const { id: originalId, linkUrl, order, ...dataToCopy } = originalItem;
 
-  const { id: originalId, linkUrl, ...dataToCopy } = originalItem;
-
-  const newItem: NewsCardData = {
+  const newItemData = {
     ...dataToCopy,
-    id: `${Date.now()}`,
     title: `(Copia) ${originalItem.title}`,
     published: false, // Duplicates are not published by default
-    linkUrl: `/news/${Date.now()}` // This will be updated on read
   };
   
-  const updatedItems = [newItem, ...items];
-  await writeNewsData(updatedItems);
-  return newItem;
+  return addNewsItem(newItemData);
 }

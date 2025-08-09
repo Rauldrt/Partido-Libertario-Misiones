@@ -1,9 +1,8 @@
 
 'use server';
 
-import fs from 'fs/promises';
-import path from 'path';
-import type { LucideIcon } from 'lucide-react';
+import { getDb } from './firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 // Types for Banner Slides
 export interface BannerCtaData {
@@ -17,10 +16,10 @@ export interface BannerSlideData {
     title: string;
     description: string;
     cta: BannerCtaData;
-    expiresAt?: string; // Optional expiration date string (e.g., "YYYY-MM-DD")
+    expiresAt?: string;
     imageUrl?: string;
     videoUrl?: string;
-    embedCode?: string; // Optional embed code for YouTube, social media, etc.
+    embedCode?: string;
 }
 
 // Types for Mosaic Tiles
@@ -45,7 +44,7 @@ export interface AccordionItemData {
     id: string;
     value: string;
     title: string;
-    icon: string; // Icon name from lucide-react
+    icon: string;
     content: string;
 }
 
@@ -55,120 +54,81 @@ export interface InfoSectionData {
     description: string;
 }
 
+// Firestore document reference for homepage data
+const getHomepageDocRef = () => {
+    const db = getDb();
+    if (!db) throw new Error("Firestore is not initialized.");
+    // Store all homepage-related data in a single document for simplicity
+    return doc(db, 'site-config', 'homepage');
+};
 
-const bannerFilePath = path.join(process.cwd(), 'data', 'banner.json');
-const mosaicFilePath = path.join(process.cwd(), 'data', 'mosaic.json');
-const accordionFilePath = path.join(process.cwd(), 'data', 'accordion.json');
-const infoSectionFilePath = path.join(process.cwd(), 'data', 'info-section.json');
-
-
-async function readData<T>(filePath: string): Promise<T[]> {
-  try {
-    const data = await fs.readFile(filePath, 'utf-8');
-    const items: any[] = JSON.parse(data);
-    // Add unique IDs if they don't exist, for dnd-kit compatibility
-    return items.map((item, index) => {
-        const baseItem = { id: item.id || `${path.basename(filePath, '.json')}-${index}-${Date.now()}`, ...item };
-        // Special handling for mosaic tiles to ensure images also have IDs
-        if (filePath.includes('mosaic.json') && item.images) {
-            baseItem.images = item.images.map((img: any, imgIndex: number) => ({
-                id: img.id || `img-${baseItem.id}-${imgIndex}-${Date.now()}`,
-                ...img
-            }));
-        }
-        return baseItem;
-    });
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      await fs.writeFile(filePath, JSON.stringify([], null, 2), 'utf-8');
-      return [];
+async function getHomepageData(): Promise<any> {
+    const docRef = getHomepageDocRef();
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        return docSnap.data();
     }
-    console.error(`Failed to read data from ${filePath}:`, error);
-    throw new Error(`Could not retrieve items from ${filePath}.`);
-  }
+    // If the document doesn't exist, we can return a default structure.
+    // In a real app, you might want to initialize this from the old JSON files once.
+    console.log("Homepage config document not found in Firestore. Returning default empty structure.");
+    return {
+        banner: [],
+        mosaic: [],
+        accordion: [],
+        infoSection: { title: 'El Camino de la Libertad', description: 'Nuestros principios y cómo podés participar.' }
+    };
 }
 
-async function writeData<T extends { id?: any }>(filePath: string, data: T[]): Promise<void> {
-    try {
-        // Strip the top-level 'id' field before writing back to the file
-        const dataToSave = data.map(({ id, ...rest }) => {
-            // Special handling for mosaic tiles: keep the image IDs.
-            if ('images' in rest && Array.isArray(rest.images)) {
-                (rest as any).images = (rest.images as any[]).map(img => {
-                    // Keep the image ID
-                    return img;
-                });
-            }
-            return rest;
-        });
-
-        await fs.writeFile(filePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
-    } catch (error) {
-        console.error(`Failed to write data to ${filePath}:`, error);
-        throw new Error(`Could not save items to ${filePath}.`);
-    }
+async function saveHomepageData(data: any): Promise<void> {
+    const docRef = getHomepageDocRef();
+    await setDoc(docRef, data, { merge: true });
 }
 
 
 // Banner Functions
 export async function getBannerSlides(): Promise<BannerSlideData[]> {
-  return readData<BannerSlideData>(bannerFilePath);
+    const data = await getHomepageData();
+    return data.banner || [];
 }
 
 export async function saveBannerSlides(slides: BannerSlideData[]): Promise<void> {
-  await writeData(bannerFilePath, slides);
+    await saveHomepageData({ banner: slides });
 }
 
 
 // Mosaic Functions
 export async function getMosaicTiles(): Promise<MosaicTileData[]> {
-  return readData<MosaicTileData>(mosaicFilePath);
+    const data = await getHomepageData();
+    return data.mosaic || [];
 }
 
 export async function saveMosaicTiles(tiles: MosaicTileData[]): Promise<void> {
-  await writeData(mosaicFilePath, tiles);
+    await saveHomepageData({ mosaic: tiles });
 }
 
 // Accordion Functions
 export async function getAccordionItems(): Promise<AccordionItemData[]> {
-  const items = await readData<Omit<AccordionItemData, 'value'>>(accordionFilePath);
-  // Dynamically generate `value` from title for accordion functionality
-  return items.map(item => ({
-    ...item,
-    value: item.title.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-  }));
+    const data = await getHomepageData();
+    const items = data.accordion || [];
+    // Dynamically generate `value` from title for accordion functionality
+    return items.map((item: any) => ({
+      ...item,
+      value: item.title.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    }));
 }
 
 export async function saveAccordionItems(items: AccordionItemData[]): Promise<void> {
-    // Strip id and value before saving
-    const dataToSave = items.map(({ id, value, ...rest }) => rest);
-    await fs.writeFile(accordionFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
+    // Strip value before saving as it's generated dynamically
+    const dataToSave = items.map(({ value, ...rest }) => rest);
+    await saveHomepageData({ accordion: dataToSave });
 }
 
 // Info Section Functions
 export async function getInfoSectionData(): Promise<InfoSectionData> {
-    try {
-        const data = await fs.readFile(infoSectionFilePath, 'utf-8');
-        return JSON.parse(data);
-    } catch (error: any) {
-        if (error.code === 'ENOENT') {
-            const defaultData: InfoSectionData = {
-                title: 'El Camino de la Libertad',
-                description: 'Nuestros principios y cómo podés participar.'
-            };
-            await fs.writeFile(infoSectionFilePath, JSON.stringify(defaultData, null, 2), 'utf-8');
-            return defaultData;
-        }
-        console.error(`Failed to read data from ${infoSectionFilePath}:`, error);
-        throw new Error(`Could not retrieve data from ${infoSectionFilePath}.`);
-    }
+    const data = await getHomepageData();
+    return data.infoSection || { title: '', description: '' };
 }
 
 export async function saveInfoSectionData(data: InfoSectionData): Promise<void> {
-    try {
-        await fs.writeFile(infoSectionFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error(`Failed to write data to ${infoSectionFilePath}:`, error);
-        throw new Error(`Could not save data to ${infoSectionFilePath}.`);
-    }
+    await saveHomepageData({ infoSection: data });
 }
