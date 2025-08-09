@@ -195,8 +195,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
       
       <Section id="info" className="py-16 md:py-24">
         <div className="text-center mb-12">
-            <h2 className="font-headline text-4xl font-bold text-white">{infoSectionData.title}</h2>
-            <p className="font-body text-lg text-white/90 mt-2">{infoSectionData.description}</p>
+            <h2 className="font-headline text-4xl font-bold text-foreground">{infoSectionData.title}</h2>
+            <p className="font-body text-lg text-muted-foreground mt-2">{infoSectionData.description}</p>
         </div>
 
         <div className="max-w-5xl mx-auto mb-16 px-4">
@@ -247,8 +247,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
       
       <Section id="latest-news" className="py-16 md:py-24">
         <div className="text-center mb-12">
-          <h2 className="font-headline text-4xl font-bold text-white">Actividad Reciente</h2>
-          <p className="font-body text-lg text-white/90 mt-2">
+          <h2 className="font-headline text-4xl font-bold text-foreground">Actividad Reciente</h2>
+          <p className="font-body text-lg text-muted-foreground mt-2">
             Enterate de las últimas noticias, eventos y conectate con nosotros en redes sociales.
           </p>
         </div>

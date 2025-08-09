@@ -15,7 +15,7 @@ export async function LatestNews() {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h3 className="font-headline text-3xl font-bold text-white text-center mb-8">
+      <h3 className="font-headline text-3xl font-bold text-foreground text-center mb-8">
         Últimas Noticias
       </h3>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
