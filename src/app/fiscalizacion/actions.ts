@@ -2,8 +2,10 @@
 "use server";
 
 import * as z from "zod";
+import { addFiscalizacionSubmission } from "@/lib/fiscalizacion-service";
+import { revalidatePath } from "next/cache";
 
-const fiscalizacionFormSchema = z.object({
+export const fiscalizacionFormSchema = z.object({
   fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
   dni: z.string().regex(/^\d{7,8}$/, { message: "El DNI debe tener 7 u 8 dígitos." }),
   email: z.string().email({ message: "Correo electrónico inválido." }),
@@ -37,14 +39,18 @@ export async function submitFiscalizacionForm(
     };
   }
 
-  // Simulate form submission to a database or external service
-  console.log("Nueva solicitud de fiscalización recibida:", validatedFields.data);
-  
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
-
-  return {
-    success: true,
-    message: "¡Inscripción para fiscalizar enviada con éxito! Gracias por tu compromiso.",
-  };
+  try {
+    await addFiscalizacionSubmission(validatedFields.data);
+    revalidatePath('/admin/manage-fiscales');
+    return {
+      success: true,
+      message: "¡Inscripción para fiscalizar enviada con éxito! Gracias por tu compromiso.",
+    };
+  } catch (error) {
+     console.error("Error al guardar la inscripción:", error);
+     return {
+        success: false,
+        message: "Ocurrió un error en el servidor. Por favor, intenta de nuevo más tarde.",
+     };
+  }
 }

@@ -5,11 +5,12 @@ import Image from 'next/image';
 import { getPageHeaderData } from '@/lib/page-headers-service';
 import type { PageHeaderData } from '@/lib/page-headers-service';
 import { DynamicIcon } from '@/components/DynamicIcon';
+import { FiscalizacionForm } from '@/components/FiscalizacionForm';
+
 
 export default async function FiscalizacionPage() {
   const headerData = await getPageHeaderData('fiscalizacion');
 
-  // Use default data if none is found to prevent crashing
   const pageData: PageHeaderData = headerData || {
     title: "Defendé el Voto",
     description: "La defensa de la libertad también se juega en las urnas. Tu rol como fiscal es crucial para garantizar la transparencia y el respeto a la voluntad popular. ¡Sumate al equipo de fiscales!",
@@ -18,9 +19,6 @@ export default async function FiscalizacionPage() {
     featuredImage: "https://elbibliote.com/resources/Temas/html/imageneshtml/1468/1468a.jpg",
     featuredImageTitle: "Somos Libertarios"
   };
-
-  // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
-  const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Fiscales+2025&view=fiscales+2025";
 
   return (
     <>
@@ -49,28 +47,12 @@ export default async function FiscalizacionPage() {
                 Completá tus datos para ser parte del equipo de fiscales del Partido Libertario.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow flex flex-col">
-              <div className="relative w-full flex-grow h-[700px] rounded-md overflow-hidden border">
-                 <iframe 
-                  src={googleFormUrl}
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight={0} 
-                  marginWidth={0}
-                  className="absolute top-0 left-0"
-                  title="Formulario de Inscripción para Fiscales"
-                >
-                  Cargando formulario...
-                </iframe>
-              </div>
-               <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-bold">Nota:</span> Usamos un formulario para gestionar los contactos.
-              </p>
+            <CardContent>
+              <FiscalizacionForm />
             </CardContent>
           </Card>
           
-          <div className="space-y-8">
+          <div className="space-y-8 sticky top-24">
             <Card className="shadow-lg">
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl">El Rol del Fiscal</CardTitle>

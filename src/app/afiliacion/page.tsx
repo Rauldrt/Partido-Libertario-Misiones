@@ -5,11 +5,12 @@ import { getPageHeaderData } from '@/lib/page-headers-service';
 import Image from 'next/image';
 import type { PageHeaderData } from '@/lib/page-headers-service';
 import { DynamicIcon } from '@/components/DynamicIcon';
+import { AfiliacionForm } from './AfiliacionForm';
+
 
 export default async function AfiliacionPage() {
   const headerData = await getPageHeaderData('afiliacion');
   
-  // Use default data if none is found to prevent crashing
   const pageData: PageHeaderData = headerData || {
     title: "Sumate Libertario",
     description: "Tu participación es el motor del cambio. Al afiliarte, no solo apoyás las ideas de la libertad, sino que te convertís en un protagonista activo en la construcción de una Misiones más próspera y libre.",
@@ -17,9 +18,6 @@ export default async function AfiliacionPage() {
     backgroundImage: "/afilia1.webp"
   };
   
-  // PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
-  const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=afilicion+res&view=afiliate";
-
   return (
     <>
       <Section 
@@ -44,31 +42,15 @@ export default async function AfiliacionPage() {
             <CardHeader>
               <CardTitle className="font-headline text-2xl md:text-3xl">Formulario de Afiliación</CardTitle>
               <CardDescription className="font-body text-md">
-                Por favor, completá el siguiente formulario para unirte oficialmente al Partido Libertario de Misiones.
+                Completá tus datos para unirte oficialmente al Partido Libertario de Misiones.
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-grow flex flex-col">
-              <div className="relative w-full flex-grow h-[700px] rounded-md overflow-hidden border">
-                 <iframe 
-                  src={googleFormUrl}
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  marginHeight={0} 
-                  marginWidth={0}
-                  className="absolute top-0 left-0"
-                  title="Formulario de Afiliación de Google"
-                >
-                  Cargando formulario...
-                </iframe>
-              </div>
-               <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-bold">Nota:</span> Usamos un formulario para gestionar los contactos.
-              </p>
+            <CardContent>
+              <AfiliacionForm />
             </CardContent>
           </Card>
           
-          <div className="space-y-8">
+          <div className="space-y-8 sticky top-24">
             <Card className="shadow-lg">
                 <CardHeader>
                   <CardTitle className="font-headline text-2xl">¿Por qué Afiliarse?</CardTitle>
