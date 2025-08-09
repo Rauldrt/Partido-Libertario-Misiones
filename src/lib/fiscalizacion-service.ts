@@ -1,5 +1,4 @@
 
-'use server';
 import { getDb } from './firebase';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import * as z from "zod";
