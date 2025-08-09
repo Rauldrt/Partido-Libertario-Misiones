@@ -6,15 +6,13 @@ import { getPageHeaderData } from '@/lib/page-headers-service';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { DynamicIcon } from '@/components/DynamicIcon';
+import { ContactForm } from '@/components/ContactForm';
 
 export default async function ContactPage() {
   const headerData = await getPageHeaderData('contact');
   if (!headerData) {
     notFound();
   }
-
-  // POR FAVOR, REEMPLAZA ESTA URL CON LA URL "INSERTAR" (EMBED) DE TU FORMULARIO DE GOOGLE
-  const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2"; // URL de ejemplo
 
   return (
     <>
@@ -44,23 +42,7 @@ export default async function ContactPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow flex flex-col">
-              <div className="relative w-full flex-grow h-[600px] rounded-md overflow-hidden border">
-                <iframe
-                  src={googleFormUrl}
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  marginHeight={0}
-                  marginWidth={0}
-                  className="absolute top-0 left-0"
-                  title="Formulario de Contacto de Google"
-                >
-                  Cargando formulario...
-                </iframe>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">
-                <span className="font-bold">Nota:</span> Para obtener el enlace, andá a tu Google Form, hacé clic en "Enviar", seleccioná la pestaña "&lt; &gt;" y copiá la URL del atributo <code className="bg-muted px-1 rounded-sm">src</code>.
-              </p>
+              <ContactForm />
             </CardContent>
           </Card>
 

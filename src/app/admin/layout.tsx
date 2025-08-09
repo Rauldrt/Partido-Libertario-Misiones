@@ -15,12 +15,14 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { usePathname, useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+
 
 export default function AdminLayout({ children }: PropsWithChildren) {
     const { user, loading, logout } = useAuth();
@@ -85,6 +87,14 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                         <Link href="/admin/manage-fiscales">
                             <ShieldCheckIcon />
                             Gestionar Fiscales
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                        <Link href="/admin/manage-contact">
+                            <MessageSquare />
+                            Gestionar Contactos
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

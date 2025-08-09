@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -51,6 +51,23 @@ export default function AdminDashboardPage() {
                 <Link href="/admin/manage-fiscales">
                   <ShieldCheckIcon className="mr-2 h-4 w-4" />
                   Ver Fiscales
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestionar Contactos</CardTitle>
+              <CardDescription>Revisá los mensajes enviados desde la página de contacto.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Accedé a la lista de mensajes para darles seguimiento.
+              </p>
+              <Button asChild>
+                <Link href="/admin/manage-contact">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Ver Mensajes
                 </Link>
               </Button>
             </CardContent>
