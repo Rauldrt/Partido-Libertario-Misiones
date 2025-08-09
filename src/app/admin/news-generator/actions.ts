@@ -6,6 +6,11 @@ import { addNewsItem, updateNewsItem, getNewsItemById } from '@/lib/news-service
 import type { NewsCardData } from '@/lib/news-service';
 import { revalidatePath } from 'next/cache';
 
+const NewsLinkSchema = z.object({
+    title: z.string().min(1, 'El título del enlace es requerido.'),
+    url: z.string().url('Debe ser una URL válida.'),
+});
+
 // Base schema for the core fields that are always expected from the form.
 const BaseNewsSchema = z.object({
     title: z.string().min(1, 'El título es requerido.'),
@@ -18,6 +23,7 @@ const BaseNewsSchema = z.object({
     youtubeVideoId: z.string().optional(),
     embedCode: z.string().optional(),
     published: z.boolean().optional(),
+    links: z.array(NewsLinkSchema).optional(),
 });
 
 // Schema for creating a new item. `id` should not be present.

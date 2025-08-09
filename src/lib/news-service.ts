@@ -7,6 +7,11 @@ import type { Firestore } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
+export interface NewsLink {
+  title: string;
+  url: string;
+}
+
 export interface NewsCardData {
   id: string;
   title: string;
@@ -21,6 +26,7 @@ export interface NewsCardData {
   published: boolean;
   embedCode?: string;
   order: number; // For ordering
+  links?: NewsLink[];
 }
 
 // Firestore collection reference

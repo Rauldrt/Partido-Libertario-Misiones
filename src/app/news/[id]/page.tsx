@@ -3,9 +3,9 @@ import { getNewsItems, getNewsItemById } from '@/lib/news-service';
 import Link from 'next/link';
 import { Section } from '@/components/ui/Section';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CalendarDays, YoutubeIcon } from 'lucide-react';
+import { ArrowLeft, CalendarDays, YoutubeIcon, Link as LinkIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { EmbedDisplay } from '@/components/EmbedDisplay';
 
 interface NewsArticlePageProps {
@@ -111,6 +111,26 @@ export default async function NewsArticlePage({ params }: NewsArticlePageProps) 
                 </div>
               )}
             </>
+          )}
+
+          {article.links && article.links.length > 0 && (
+             <div className="mt-10 pt-6 border-t">
+                 <h3 className="font-headline text-xl font-semibold mb-4 flex items-center">
+                    <LinkIcon className="mr-2 h-5 w-5 text-primary" />
+                    Enlaces de Interés
+                 </h3>
+                 <ul className="space-y-2">
+                    {article.links.map((link, index) => (
+                        <li key={index}>
+                            <Button variant="link" asChild className="p-0 h-auto font-body text-base">
+                                <a href={link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center">
+                                    <span className="mr-2">›</span>{link.title}
+                                </a>
+                            </Button>
+                        </li>
+                    ))}
+                 </ul>
+             </div>
           )}
         </article>
 

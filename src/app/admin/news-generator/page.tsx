@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { NewsCard } from '@/components/NewsCard';
-import type { NewsCardData } from '@/lib/news-service';
+import type { NewsCardData, NewsLink } from '@/lib/news-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -11,13 +11,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dna, FilePlus, Loader2, Save } from 'lucide-react';
+import { Dna, FilePlus, Loader2, Save, Trash2, Plus, Link as LinkIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { generateNewsFromUrl } from '@/ai/flows/generate-news-from-url-flow';
 import { format } from 'date-fns';
 import { getNewsItemForEditAction, saveNewsItemAction } from './actions';
 import { useSearchParams } from 'next/navigation';
 import { EmbedDisplay } from '@/components/EmbedDisplay';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const getEmptyNewsItem = (): Partial<NewsCardData> => ({
   title: 'Título del Contenido',
@@ -30,6 +31,7 @@ const getEmptyNewsItem = (): Partial<NewsCardData> => ({
   youtubeVideoId: '',
   embedCode: '',
   published: true, // Default to true for new items
+  links: [],
   // id should be undefined for new items
 });
 
@@ -51,7 +53,10 @@ export default function NewsGeneratorPage() {
       getNewsItemForEditAction(editId)
         .then(result => {
           if (result.success && result.data) {
-            setNewsData(result.data);
+            setNewsData({
+                ...result.data,
+                links: result.data.links || [], // Ensure links is always an array
+            });
           } else {
             toast({
               variant: 'destructive',
@@ -75,12 +80,37 @@ export default function NewsGeneratorPage() {
   const handleSelectChange = (name: keyof NewsCardData) => (value: string) => {
     setNewsData(prev => ({ ...prev, [name]: value as any }));
   };
+  
+  const handleLinkChange = (index: number, field: keyof NewsLink, value: string) => {
+    setNewsData(prev => {
+        const newLinks = [...(prev.links || [])];
+        newLinks[index] = { ...newLinks[index], [field]: value };
+        return { ...prev, links: newLinks };
+    });
+  };
+
+  const handleAddLink = () => {
+    setNewsData(prev => ({
+        ...prev,
+        links: [...(prev.links || []), { title: '', url: '' }]
+    }));
+  };
+
+  const handleRemoveLink = (index: number) => {
+    setNewsData(prev => ({
+        ...prev,
+        links: (prev.links || []).filter((_, i) => i !== index)
+    }));
+  };
 
   const handleSave = async () => {
     setIsSaving(true);
     
-    // If creating a new item, ensure id is not present
-    const dataToSave: Partial<NewsCardData> = { ...newsData };
+    // Filter out empty links before saving
+    const dataToSave: Partial<NewsCardData> = { 
+        ...newsData,
+        links: newsData.links?.filter(link => link.title && link.url)
+    };
     if (!isEditing) {
       delete dataToSave.id;
     }
@@ -158,6 +188,7 @@ export default function NewsGeneratorPage() {
     content: newsData.content || '',
     youtubeVideoId: newsData.youtubeVideoId || '',
     embedCode: newsData.embedCode || '',
+    order: 0,
   }
 
   if (isLoading) {
@@ -204,39 +235,71 @@ export default function NewsGeneratorPage() {
                 <Label htmlFor="content">Contenido (Opcional)</Label>
                 <Textarea id="content" name="content" value={newsData.content || ''} onChange={handleInputChange} placeholder="El contenido completo del artículo..." />
               </div>
-               <div className="space-y-2">
-                <Label htmlFor="embedCode">Código de Inserción (Opcional)</Label>
-                <Textarea id="embedCode" name="embedCode" value={newsData.embedCode || ''} onChange={handleInputChange} placeholder="&lt;blockquote class='instagram-media' ...&gt;...&lt;/blockquote&gt;" className="font-mono text-xs" />
-                 <p className="text-xs text-muted-foreground">
-                    Si rellenás esto, se mostrará en lugar del contenido principal, la imagen y el video de YouTube.
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="imageUrl">URL de Imagen</Label>
-                  <Input id="imageUrl" name="imageUrl" value={newsData.imageUrl || ''} onChange={handleInputChange} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="imageHint">Sugerencia de Imagen</Label>
-                  <Input id="imageHint" name="imageHint" value={newsData.imageHint || ''} onChange={handleInputChange} />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="youtubeVideoId">ID Video de YouTube (Opcional)</Label>
-                <Input id="youtubeVideoId" name="youtubeVideoId" value={newsData.youtubeVideoId || ''} onChange={handleInputChange} placeholder="Ej: YXlz1K6o_ps" />
-              </div>
-               <div className="space-y-2">
-                  <Label htmlFor="type">Tipo</Label>
-                  <Select name="type" onValueChange={handleSelectChange('type')} value={newsData.type || 'news'}>
-                    <SelectTrigger id="type">
-                      <SelectValue placeholder="Seleccionar tipo" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="news">Noticia</SelectItem>
-                      <SelectItem value="event">Evento</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              <Accordion type="single" collapsible className="w-full">
+                 <AccordionItem value="item-1">
+                    <AccordionTrigger>Opciones Avanzadas</AccordionTrigger>
+                    <AccordionContent className="pt-4 space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="embedCode">Código de Inserción (Opcional)</Label>
+                            <Textarea id="embedCode" name="embedCode" value={newsData.embedCode || ''} onChange={handleInputChange} placeholder="<blockquote class='instagram-media' ...>...</blockquote>" className="font-mono text-xs" />
+                            <p className="text-xs text-muted-foreground">
+                                Si rellenás esto, se mostrará en lugar del contenido principal, la imagen y el video de YouTube.
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                            <Label htmlFor="imageUrl">URL de Imagen</Label>
+                            <Input id="imageUrl" name="imageUrl" value={newsData.imageUrl || ''} onChange={handleInputChange} />
+                            </div>
+                            <div className="space-y-2">
+                            <Label htmlFor="imageHint">Sugerencia de Imagen</Label>
+                            <Input id="imageHint" name="imageHint" value={newsData.imageHint || ''} onChange={handleInputChange} />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="youtubeVideoId">ID Video de YouTube (Opcional)</Label>
+                            <Input id="youtubeVideoId" name="youtubeVideoId" value={newsData.youtubeVideoId || ''} onChange={handleInputChange} placeholder="Ej: YXlz1K6o_ps" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="type">Tipo</Label>
+                            <Select name="type" onValueChange={handleSelectChange('type')} value={newsData.type || 'news'}>
+                                <SelectTrigger id="type">
+                                <SelectValue placeholder="Seleccionar tipo" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                <SelectItem value="news">Noticia</SelectItem>
+                                <SelectItem value="event">Evento</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </AccordionContent>
+                 </AccordionItem>
+                 <AccordionItem value="item-2">
+                    <AccordionTrigger>Enlaces Adjuntos (Opcional)</AccordionTrigger>
+                    <AccordionContent className="pt-4 space-y-4">
+                        {(newsData.links || []).map((link, index) => (
+                             <div key={index} className="flex items-end gap-2 p-3 border rounded-md bg-muted/50">
+                                 <div className="grid grid-cols-2 gap-2 flex-grow">
+                                    <div className="space-y-1 col-span-2 sm:col-span-1">
+                                        <Label htmlFor={`link-title-${index}`}>Título del Enlace</Label>
+                                        <Input id={`link-title-${index}`} value={link.title} onChange={(e) => handleLinkChange(index, 'title', e.target.value)} placeholder="Ej: Ver en La Nación" />
+                                    </div>
+                                    <div className="space-y-1 col-span-2 sm:col-span-1">
+                                        <Label htmlFor={`link-url-${index}`}>URL del Enlace</Label>
+                                        <Input id={`link-url-${index}`} value={link.url} onChange={(e) => handleLinkChange(index, 'url', e.target.value)} placeholder="https://www.lanacion.com.ar/..." />
+                                    </div>
+                                 </div>
+                                 <Button type="button" variant="destructive" size="icon" onClick={() => handleRemoveLink(index)}>
+                                     <Trash2 className="h-4 w-4" />
+                                 </Button>
+                             </div>
+                        ))}
+                        <Button type="button" variant="outline" onClick={handleAddLink} className="w-full">
+                            <Plus className="mr-2 h-4 w-4" />Añadir Enlace
+                        </Button>
+                    </AccordionContent>
+                 </AccordionItem>
+              </Accordion>
             </TabsContent>
             <TabsContent value="ai" className="space-y-4 pt-4">
               <div className="space-y-2">
