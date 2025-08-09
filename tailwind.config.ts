@@ -99,7 +99,7 @@ const config = {
         "zoom-in-gentle": "zoom-in-gentle 0.5s ease-out forwards",
         "crossfade-in": "crossfade-in 1.2s ease-in-out forwards",
         "ken-burns-in": "ken-burns-in 8s ease-out forwards",
-        "pulse-subtle": "pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "pulse-subtle": "pulse-subtle 6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
