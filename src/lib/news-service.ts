@@ -4,6 +4,8 @@
 import { getDb } from './firebase';
 import { collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, writeBatch, query, orderBy } from 'firebase/firestore';
 import type { Firestore } from 'firebase/firestore';
+import fs from 'fs/promises';
+import path from 'path';
 
 export interface NewsCardData {
   id: string;
@@ -47,13 +49,43 @@ const toFirestore = (item: Partial<NewsCardData>): any => {
     return data;
 };
 
+// One-time seed function
+async function seedNewsDataFromLocalJson() {
+    console.log("Attempting to seed news data from local JSON...");
+    const db = getDb();
+    if (!db) return;
+
+    const newsCollection = getNewsCollection();
+    const filePath = path.join(process.cwd(), 'data', 'news.json');
+    try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const localNews: any[] = JSON.parse(fileContent);
+        
+        const batch = writeBatch(db);
+        localNews.forEach((item, index) => {
+            const docRef = doc(newsCollection, item.id || `${Date.now()}-${index}`);
+            const { id, ...data } = item;
+            batch.set(docRef, { ...data, order: index });
+        });
+        await batch.commit();
+        console.log(`Successfully seeded ${localNews.length} news items.`);
+    } catch (error) {
+        console.error("Error seeding news data:", error);
+    }
+}
+
+
 export async function getNewsItems(): Promise<NewsCardData[]> {
   const newsCollection = getNewsCollection();
   const q = query(newsCollection, orderBy("order", "asc"));
   const snapshot = await getDocs(q);
+  
   if (snapshot.empty) {
-    console.log("No news items found in Firestore. You may need to add some initial data.");
-    return [];
+    console.log("No news items found in Firestore. Attempting to seed from local data...");
+    await seedNewsDataFromLocalJson();
+    // Re-fetch after seeding
+    const newSnapshot = await getDocs(q);
+    return newSnapshot.docs.map(fromFirestore);
   }
   return snapshot.docs.map(fromFirestore);
 }

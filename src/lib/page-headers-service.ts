@@ -4,6 +4,8 @@
 import { getDb } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
+import fs from 'fs/promises';
+import path from 'path';
 
 const PageHeaderSchema = z.object({
   title: z.string(),
@@ -20,18 +22,39 @@ export type PageHeadersData = {
   [key: string]: PageHeaderData;
 };
 
+const PageHeadersSchema = z.record(z.string(), PageHeaderSchema);
+
+
 const getPageHeadersDocRef = () => {
     const db = getDb();
     if (!db) throw new Error("Firestore is not initialized.");
     return doc(db, 'site-config', 'pageHeaders');
 };
 
+async function seedPageHeadersData() {
+    const filePath = path.join(process.cwd(), 'data', 'page-headers.json');
+    try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const localData = JSON.parse(fileContent);
+        const validatedData = PageHeadersSchema.parse(localData);
+        await setDoc(getPageHeadersDocRef(), validatedData);
+        console.log("Successfully seeded page headers data.");
+        return validatedData;
+    } catch (error) {
+        console.error("Error seeding page headers data, returning empty object:", error);
+        return {};
+    }
+}
+
 export async function getAllPageHeaders(): Promise<PageHeadersData> {
     const docSnap = await getDoc(getPageHeadersDocRef());
     if (docSnap.exists()) {
-        return docSnap.data() as PageHeadersData;
+        const parsed = PageHeadersSchema.safeParse(docSnap.data());
+        if (parsed.success) {
+            return parsed.data;
+        }
     }
-    return {};
+    return await seedPageHeadersData();
 }
 
 export async function getPageHeaderData(pageKey: string): Promise<PageHeaderData | undefined> {
@@ -40,7 +63,6 @@ export async function getPageHeaderData(pageKey: string): Promise<PageHeaderData
 }
 
 export async function saveAllPageHeaders(data: PageHeadersData): Promise<void> {
-    const PageHeadersSchema = z.record(z.string(), PageHeaderSchema);
     const validation = PageHeadersSchema.safeParse(data);
 
     if (!validation.success) {

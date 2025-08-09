@@ -2,7 +2,15 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { saveNotificationData, NotificationSchema, type NotificationData } from '@/lib/notification-service';
+import { saveNotificationData, type NotificationData } from '@/lib/notification-service';
+import { z } from 'zod';
+
+const NotificationSchema = z.object({
+  enabled: z.boolean(),
+  text: z.string(),
+  link: z.string(),
+});
+
 
 export async function saveNotificationDataAction(data: NotificationData) {
     const validation = NotificationSchema.safeParse(data);

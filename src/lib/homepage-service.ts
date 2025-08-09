@@ -3,6 +3,21 @@
 
 import { getDb } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import fs from 'fs/promises';
+import path from 'path';
+
+// Helper to read local JSON files for one-time seeding
+async function readJsonData(fileName: string): Promise<any> {
+    const filePath = path.join(process.cwd(), 'data', fileName);
+    try {
+        const fileContent = await fs.readFile(filePath, 'utf-8');
+        return JSON.parse(fileContent);
+    } catch (error) {
+        console.error(`Error reading or parsing ${fileName}:`, error);
+        return [];
+    }
+}
+
 
 // Types for Banner Slides
 export interface BannerCtaData {
@@ -68,15 +83,25 @@ async function getHomepageData(): Promise<any> {
     if (docSnap.exists()) {
         return docSnap.data();
     }
-    // If the document doesn't exist, we can return a default structure.
-    // In a real app, you might want to initialize this from the old JSON files once.
-    console.log("Homepage config document not found in Firestore. Returning default empty structure.");
-    return {
-        banner: [],
-        mosaic: [],
-        accordion: [],
-        infoSection: { title: 'El Camino de la Libertad', description: 'Nuestros principios y cómo podés participar.' }
+    // If the document doesn't exist, seed it from the JSON files.
+    console.log("Homepage config document not found in Firestore. Seeding from local JSON files...");
+    const bannerData = await readJsonData('banner.json');
+    const mosaicData = await readJsonData('mosaic.json');
+    const accordionData = await readJsonData('accordion.json');
+    const infoSectionData = await readJsonData('info-section.json');
+    
+    // Add IDs to banner slides if they don't have them
+    const bannerWithIds = bannerData.map((slide: any, index: number) => ({...slide, id: slide.id || `banner-${index}-${Date.now()}`}))
+
+    const seededData = {
+        banner: bannerWithIds,
+        mosaic: mosaicData,
+        accordion: accordionData,
+        infoSection: infoSectionData,
     };
+    await setDoc(docRef, seededData);
+    console.log("Homepage data seeded successfully.");
+    return seededData;
 }
 
 async function saveHomepageData(data: any): Promise<void> {
@@ -88,7 +113,8 @@ async function saveHomepageData(data: any): Promise<void> {
 // Banner Functions
 export async function getBannerSlides(): Promise<BannerSlideData[]> {
     const data = await getHomepageData();
-    return data.banner || [];
+    // Add IDs to banner slides if they don't have them
+    return (data.banner || []).map((slide: any, index: number) => ({...slide, id: slide.id || `banner-${index}-${Date.now()}`}));
 }
 
 export async function saveBannerSlides(slides: BannerSlideData[]): Promise<void> {
@@ -99,7 +125,15 @@ export async function saveBannerSlides(slides: BannerSlideData[]): Promise<void>
 // Mosaic Functions
 export async function getMosaicTiles(): Promise<MosaicTileData[]> {
     const data = await getHomepageData();
-    return data.mosaic || [];
+    // Add IDs for dnd-kit compatibility
+    return (data.mosaic || []).map((tile: any, index: number) => ({
+      ...tile,
+      id: tile.id || `tile-${index}-${Date.now()}`,
+      images: (tile.images || []).map((img: any, imgIndex: number) => ({
+        ...img,
+        id: img.id || `img-mosaic-${index}-${Date.now()}-${imgIndex}-${Date.now()}`,
+      })),
+    }));
 }
 
 export async function saveMosaicTiles(tiles: MosaicTileData[]): Promise<void> {
@@ -111,8 +145,9 @@ export async function getAccordionItems(): Promise<AccordionItemData[]> {
     const data = await getHomepageData();
     const items = data.accordion || [];
     // Dynamically generate `value` from title for accordion functionality
-    return items.map((item: any) => ({
+    return items.map((item: any, index: number) => ({
       ...item,
+      id: item.id || `accordion-${index}-${Date.now()}`,
       value: item.title.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     }));
 }
