@@ -1,19 +1,10 @@
 
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormEditorClient } from './FormEditorClient';
-import { getFormDefinition } from '@/lib/afiliacion-service';
 
-export default async function ManageFormsPage() {
-  const afiliacionDef = await getFormDefinition('afiliacion');
-  const fiscalizacionDef = await getFormDefinition('fiscalizacion');
-  // Add other form defs here as needed
-
-  const initialForms = {
-    afiliacion: afiliacionDef,
-    fiscalizacion: fiscalizacionDef,
-    // contacto: ...
-  };
-
+export default function ManageFormsPage() {
   return (
     <Card>
       <CardHeader>
@@ -23,7 +14,7 @@ export default async function ManageFormsPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <FormEditorClient initialForms={initialForms} />
+        <FormEditorClient />
       </CardContent>
     </Card>
   );

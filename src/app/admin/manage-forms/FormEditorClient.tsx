@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import type { FormDefinition, FormField } from '@/lib/afiliacion-service';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -12,18 +12,18 @@ import { GripVertical, Loader2, Plus, Save, Trash2, Settings2, ShieldAlert } fro
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { saveFormDefinitionAction } from './actions';
+import { saveFormDefinitionAction, getFormDefinitionAction } from './actions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const FORM_NAMES = {
+const FORM_NAMES: Record<string, string> = {
     afiliacion: 'Formulario de Afiliación',
     fiscalizacion: 'Formulario de Fiscalización',
-    // contacto: 'Formulario de Contacto',
 };
 
 const SortableFieldItem = ({
@@ -100,7 +100,7 @@ const SortableFieldItem = ({
                             </div>
                         )}
                         <div className="flex items-center space-x-2 pt-2">
-                            <Checkbox id={`required-${field.id}`} checked={field.required} onCheckedChange={(c) => handleInputChange('required', c)} />
+                            <Checkbox id={`required-${field.id}`} checked={field.required} onCheckedChange={(c) => handleInputChange('required', c as boolean)} />
                             <Label htmlFor={`required-${field.id}`}>Este campo es obligatorio</Label>
                         </div>
 
@@ -191,20 +191,57 @@ const FormEditor = ({
 };
 
 
-export function FormEditorClient({ initialForms }: { initialForms: Record<string, FormDefinition> }) {
-  const [forms, setForms] = useState(initialForms);
+export function FormEditorClient() {
+  const [forms, setForms] = useState<Record<string, FormDefinition> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+
+  useEffect(() => {
+      const fetchAllForms = async () => {
+          try {
+            const formIds = Object.keys(FORM_NAMES) as Array<keyof typeof FORM_NAMES>;
+            const formPromises = formIds.map(id => getFormDefinitionAction(id));
+            const results = await Promise.all(formPromises);
+            
+            const allForms: Record<string, FormDefinition> = {};
+            results.forEach((result, index) => {
+                const formId = formIds[index];
+                if(result.success && result.definition) {
+                    allForms[formId] = result.definition;
+                } else {
+                    throw new Error(`Failed to load form: ${formId}`);
+                }
+            });
+
+            setForms(allForms);
+          } catch(e) {
+            toast({ variant: 'destructive', title: 'Error', description: 'No se pudieron cargar las definiciones de los formularios.' });
+          } finally {
+            setIsLoading(false);
+          }
+      };
+      fetchAllForms();
+  }, [toast]);
 
   const handleSaveForm = async (data: FormDefinition) => {
     const result = await saveFormDefinitionAction(data);
     if (result.success) {
       toast({ title: "¡Éxito!", description: result.message });
       // Update local state after successful save
-      setForms(prev => ({ ...prev, [data.id]: data }));
+      setForms(prev => (prev ? { ...prev, [data.id]: data } : null));
     } else {
       toast({ variant: "destructive", title: "Error", description: result.message });
     }
   };
+
+  if (isLoading || !forms) {
+      return (
+          <div className="space-y-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-64 w-full" />
+          </div>
+      )
+  }
 
   return (
     <div className="space-y-6">
