@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "misiones-libertad"
-  }
+    "default": "misiones-libertad",
+    "libre": "partido-libertario-mns"
+  },
+  "targets": {},
+  "etags": {}
 }
