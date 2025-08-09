@@ -78,7 +78,7 @@ export function HostManagerClient({ initialHosts }: { initialHosts: HostPattern[
           <TriangleAlert className="h-4 w-4 !text-destructive" />
           <AlertTitle>Paso Manual Requerido</AlertTitle>
           <AlertDescription>
-            Para que los cambios en esta página surtan efecto, es **imprescindible reiniciar el servidor de la aplicación manualmente** después de guardar. La aplicación no puede reiniciarse sola.
+            Para que los cambios en esta página surtan efecto, es **imprescindible reiniciar el servidor de la aplicación manualmente** después de guardar. En Vercel, esto significa que debes **iniciar un nuevo despliegue** (haciendo `git pull` y `git push` o usando el dashboard de Vercel).
           </AlertDescription>
         </Alert>
 
