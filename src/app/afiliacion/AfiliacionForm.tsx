@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { submitAfiliacionForm, afiliacionFormSchema, type AfiliacionFormValues, type AfiliacionFormState } from "@/app/afiliacion/actions";
+import { submitAfiliacionForm } from "@/app/afiliacion/actions";
+import { afiliacionFormSchema, type AfiliacionFormValues } from "@/lib/afiliacion-service";
 import { Loader2 } from "lucide-react";
 
 export function AfiliacionForm() {

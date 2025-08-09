@@ -22,26 +22,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
-import type { FiscalizacionFormValues } from "@/app/fiscalizacion/actions";
-
-const formSchema = z.object({
-  fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
-  dni: z.string().regex(/^\d{7,8}$/, { message: "El DNI debe tener 7 u 8 dígitos." }),
-  email: z.string().email({ message: "Correo electrónico inválido." }),
-  phone: z.string().min(7, { message: "El teléfono es requerido." }),
-  city: z.string().min(3, { message: "La localidad es requerida." }),
-  previousExperience: z.boolean().default(false).optional(),
-  availability: z.enum(["completa", "parcial", "indistinta"], {
-    required_error: "Debe seleccionar una disponibilidad.",
-  }),
-  notes: z.string().max(300, { message: "Las notas no pueden exceder los 300 caracteres." }).optional(),
-});
-
+import { fiscalizacionFormSchema, type FiscalizacionFormValues } from "@/lib/fiscalizacion-service";
 
 export function FiscalizacionForm() {
   const { toast } = useToast();
   const form = useForm<FiscalizacionFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(fiscalizacionFormSchema),
     defaultValues: {
       fullName: "",
       dni: "",

@@ -3,7 +3,22 @@
 
 import { getDb } from './firebase';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import type { FiscalizacionFormValues } from '@/app/fiscalizacion/actions';
+import * as z from "zod";
+
+export const fiscalizacionFormSchema = z.object({
+  fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
+  dni: z.string().regex(/^\d{7,8}$/, { message: "El DNI debe tener 7 u 8 dígitos." }),
+  email: z.string().email({ message: "Correo electrónico inválido." }),
+  phone: z.string().min(7, { message: "El teléfono es requerido." }),
+  city: z.string().min(3, { message: "La localidad es requerida." }),
+  previousExperience: z.boolean().default(false),
+  availability: z.enum(["completa", "parcial", "indistinta"], {
+    required_error: "Debe seleccionar una disponibilidad.",
+  }),
+  notes: z.string().max(300, { message: "Las notas no pueden exceder los 300 caracteres." }).optional(),
+});
+
+export type FiscalizacionFormValues = z.infer<typeof fiscalizacionFormSchema>;
 
 export interface FiscalizacionSubmission extends FiscalizacionFormValues {
     id: string;

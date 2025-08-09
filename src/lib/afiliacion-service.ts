@@ -3,7 +3,18 @@
 
 import { getDb } from './firebase';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import type { AfiliacionFormValues } from '@/app/afiliacion/actions';
+import * as z from "zod";
+
+export const afiliacionFormSchema = z.object({
+  fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
+  dni: z.string().regex(/^\d{7,8}$/, { message: "El DNI debe tener 7 u 8 dígitos." }),
+  email: z.string().email({ message: "Correo electrónico inválido." }),
+  phone: z.string().min(7, { message: "El teléfono es requerido." }),
+  city: z.string().min(3, { message: "La localidad es requerida." }),
+  address: z.string().min(5, { message: "La dirección es requerida." }),
+});
+
+export type AfiliacionFormValues = z.infer<typeof afiliacionFormSchema>;
 
 export interface AfiliacionSubmission extends AfiliacionFormValues {
     id: string;
