@@ -24,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 const FORM_NAMES: Record<string, string> = {
     afiliacion: 'Formulario de Afiliación',
     fiscalizacion: 'Formulario de Fiscalización',
+    contacto: 'Formulario de Contacto'
 };
 
 const SortableFieldItem = ({
@@ -135,6 +136,10 @@ const FormEditor = ({
 }) => {
     const [fields, setFields] = useState<FormField[]>(formDef.fields);
     const [isPending, startTransition] = useTransition();
+
+    useEffect(() => {
+        setFields(formDef.fields);
+    }, [formDef]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -253,7 +258,7 @@ export function FormEditorClient() {
             </AlertDescription>
         </Alert>
         <Tabs defaultValue={Object.keys(FORM_NAMES)[0]} className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
                 {Object.entries(FORM_NAMES).map(([key, name]) => (
                     <TabsTrigger key={key} value={key}>{name}</TabsTrigger>
                 ))}

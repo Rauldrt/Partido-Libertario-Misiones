@@ -66,6 +66,13 @@ const defaultAfiliacionFields: FormField[] = [
     { id: '6', name: 'address', label: 'Dirección', type: 'text', placeholder: 'Av. Corrientes 123', required: true, order: 6, validationRegex: '', validationMessage: '' },
 ];
 
+const defaultContactoFields: FormField[] = [
+    { id: 'c1', name: 'fullName', label: 'Nombre y Apellido', type: 'text', placeholder: 'John Doe', required: true, order: 1, validationRegex: '', validationMessage: '' },
+    { id: 'c2', name: 'email', label: 'Correo Electrónico', type: 'email', placeholder: 'john.doe@example.com', required: true, order: 2, validationRegex: '', validationMessage: '' },
+    { id: 'c3', name: 'message', label: 'Tu Mensaje', type: 'textarea', placeholder: 'Escribí acá tu consulta o propuesta...', required: true, order: 3, validationRegex: '', validationMessage: '' },
+]
+
+
 // --- Public Service Functions ---
 
 export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
@@ -83,7 +90,9 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
         let defaultFields: FormField[] = [];
         if (formId === 'afiliacion') {
             defaultFields = defaultAfiliacionFields;
-        } // Add else if for other forms if they have different defaults
+        } else if (formId === 'contacto') {
+            defaultFields = defaultContactoFields;
+        }
         
         const defaultFormDef: FormDefinition = { id: formId, fields: defaultFields };
         await setDoc(docRef, defaultFormDef);
