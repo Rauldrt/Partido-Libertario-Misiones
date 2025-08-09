@@ -111,6 +111,7 @@ export default function NewsGeneratorPage() {
         ...newsData,
         links: newsData.links?.filter(link => link.title && link.url)
     };
+
     if (!isEditing) {
       delete dataToSave.id;
     }
@@ -189,6 +190,7 @@ export default function NewsGeneratorPage() {
     youtubeVideoId: newsData.youtubeVideoId || '',
     embedCode: newsData.embedCode || '',
     order: 0,
+    links: newsData.links?.filter(link => link.title && link.url) || [],
   }
 
   if (isLoading) {
@@ -357,3 +359,5 @@ export default function NewsGeneratorPage() {
     </div>
   );
 }
+
+    
