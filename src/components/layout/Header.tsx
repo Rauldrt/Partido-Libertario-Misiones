@@ -156,13 +156,13 @@ export function Header() {
             side="top" 
             align="end" 
             sideOffset={12}
-            className="w-72 bg-[rgba(59,7,100,0.95)] shadow-xl rounded-lg p-2" 
+            className="w-72 bg-sidebar/95 text-sidebar-foreground backdrop-blur-md shadow-xl rounded-lg p-2" 
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 rounded-md" 
+                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}
@@ -175,7 +175,7 @@ export function Header() {
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-gradient-to-r hover:from-purple-950 hover:to-cyan-400 rounded-md" 
+                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}

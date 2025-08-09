@@ -14,25 +14,26 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 192 100% 44%; /* Azul Cian: #00B5E2 */
+    --primary: 196 100% 44%; /* Azul Cian: #00B5E2 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 36 100% 66%; /* Amarillo: #FFB549 */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 210 40% 9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 210 40% 45.1%;
+    --accent: 25 95% 53%; /* Amarillo: #FFB549 */
     --accent-foreground: 0 0% 3.9%;
-    --destructive: 357 70% 48%; /* Naranja-Rojo: #D22630 */
+    --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 192 100% 44%;
+    --border: 210 40% 89.8%;
+    --input: 210 40% 89.8%;
+    --ring: 196 100% 44%;
     --radius: 1.3rem;
-
+  
+    /* Colores personalizados para el sidebar del admin */
     --sidebar: 290 48% 27%; /* Morado Institucional: #572364 */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 290 48% 37%;
-    --sidebar-ring: 192 100% 44%;
+    --sidebar-ring: 196 100% 44%;
     --sidebar-accent: 290 48% 32%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
@@ -44,24 +45,25 @@
     --card-foreground: 0 0% 98%;
     --popover: 290 48% 27%;
     --popover-foreground: 0 0% 98%;
-    --primary: 192 100% 44%;
+    --primary: 196 100% 44%;
     --primary-foreground: 0 0% 100%;
     --secondary: 290 48% 37%;
     --secondary-foreground: 0 0% 98%;
     --muted: 290 48% 37%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 36 100% 66%;
+    --accent: 25 95% 53%;
     --accent-foreground: 0 0% 3.9%;
-    --destructive: 357 70% 48%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 290 48% 37%;
     --input: 290 48% 37%;
-    --ring: 192 100% 44%;
+    --ring: 196 100% 44%;
     
+    /* Mismos colores para el sidebar en modo oscuro */
     --sidebar: 290 48% 22%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 290 48% 32%;
-    --sidebar-ring: 192 100% 44%;
+    --sidebar-ring: 196 100% 44%;
     --sidebar-accent: 290 48% 32%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
