@@ -8,24 +8,24 @@
   }
 
   :root {
-    --background: 0 0% 100%; /* Blanco */
-    --foreground: 0 0% 3.9%; /* Negro */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --background: 275 42% 17%; /* Morado Institucional: #572364 */
+    --foreground: 0 0% 98%; /* Blanco */
+    --card: 275 42% 22%;
+    --card-foreground: 0 0% 98%;
+    --popover: 275 42% 17%;
+    --popover-foreground: 0 0% 98%;
     --primary: 196 100% 44%; /* Azul Cian: #00B5E2 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 210 40% 9%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 210 40% 45.1%;
+    --secondary: 275 42% 27%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 275 42% 27%;
+    --muted-foreground: 0 0% 63.9%;
     --accent: 25 95% 53%; /* Amarillo: #FFB549 */
     --accent-foreground: 0 0% 3.9%;
     --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
-    --border: 210 40% 89.8%;
-    --input: 210 40% 89.8%;
+    --border: 275 42% 27%;
+    --input: 275 42% 27%;
     --ring: 196 100% 44%;
     --radius: 1.3rem;
   
