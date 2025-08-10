@@ -49,7 +49,7 @@ export interface AfiliacionSubmission {
     [key: string]: any; // To hold dynamic form fields
 }
 
-export type FiscalizacionFormValues = z.infer<Awaited<ReturnType<typeof getFiscalizacionValidationSchema>>>;
+export type FiscalizacionFormValues = z.infer<z.ZodObject<any>>;
 export interface FiscalizacionSubmission extends FiscalizacionFormValues {
     id: string;
     createdAt: Date;
@@ -186,8 +186,3 @@ export const buildZodSchema = (fields: FormField[]) => {
   });
   return z.object(schemaShape);
 };
-
-export async function getFiscalizacionValidationSchema() {
-    const definition = await getFormDefinition('fiscalizacion');
-    return buildZodSchema(definition.fields);
-}
