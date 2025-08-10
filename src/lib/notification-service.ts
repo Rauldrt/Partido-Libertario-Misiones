@@ -7,6 +7,8 @@ import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
 
+const notificationFilePath = path.join(process.cwd(), 'data', 'notification.json');
+
 const NotificationSchema = z.object({
   enabled: z.boolean(),
   text: z.string(),
@@ -22,14 +24,25 @@ const defaultData: NotificationData = {
 };
 
 async function readNotificationJson(): Promise<NotificationData> {
-    const filePath = path.join(process.cwd(), 'data', 'notification.json');
     try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const fileContent = await fs.readFile(notificationFilePath, 'utf-8');
         const localData = JSON.parse(fileContent);
         return NotificationSchema.parse(localData);
     } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return defaultData;
+        }
         console.error("Error leyendo notification.json, usando valores por defecto:", error);
         return defaultData;
+    }
+}
+
+async function writeNotificationJson(data: NotificationData): Promise<void> {
+    try {
+        await fs.writeFile(notificationFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error escribiendo en notification.json:", error);
+        throw new Error("No se pudo escribir en el archivo de notificación local.");
     }
 }
 
@@ -67,14 +80,16 @@ export async function getNotificationData(): Promise<NotificationData> {
 
 export async function saveNotificationData(data: NotificationData): Promise<void> {
     const docRef = getNotificationDocRef();
-    if (!docRef) {
-        throw new Error("No se puede guardar la notificación: El SDK de administrador de Firebase no está inicializado.");
-    }
-
     const validation = NotificationSchema.safeParse(data);
     if (!validation.success) {
         console.error(validation.error.issues);
         throw new Error('Datos de notificación inválidos.');
+    }
+
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado. Guardando notificación en archivo local.");
+        await writeNotificationJson(validation.data);
+        return;
     }
 
     await setDoc(docRef, validation.data);

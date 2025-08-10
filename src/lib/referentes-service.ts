@@ -13,14 +13,27 @@ export interface ReferenteData {
   phone: string;
 }
 
+const referentesFilePath = path.join(process.cwd(), 'data', 'referentes.json');
+
 async function readReferentesJson(): Promise<any[]> {
-    const filePath = path.join(process.cwd(), 'data', 'referentes.json');
     try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const fileContent = await fs.readFile(referentesFilePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return [];
+        }
         console.error("Error leyendo referentes.json:", error);
         return [];
+    }
+}
+
+async function writeReferentesJson(data: any[]): Promise<void> {
+    try {
+        await fs.writeFile(referentesFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error escribiendo en referentes.json:", error);
+        throw new Error("No se pudo escribir en el archivo de referentes local.");
     }
 }
 
@@ -57,7 +70,9 @@ export async function getReferentes(): Promise<ReferenteData[]> {
 export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
     const docRef = getReferentesDocRef();
     if (!docRef) {
-        throw new Error("No se pueden guardar los referentes: El SDK de administrador de Firebase no está inicializado.");
+        console.warn("Admin SDK no inicializado. Guardando referentes en archivo local.");
+        await writeReferentesJson(referentes);
+        return;
     }
     await setDoc(docRef, { list: referentes });
 }

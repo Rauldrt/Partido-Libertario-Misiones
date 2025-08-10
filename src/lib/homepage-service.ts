@@ -18,6 +18,17 @@ async function readJsonData(fileName: string): Promise<any> {
     }
 }
 
+// Helper to write to local JSON files
+async function writeJsonData(fileName: string, data: any): Promise<void> {
+    const filePath = path.join(process.cwd(), 'data', fileName);
+    try {
+        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error(`Error al escribir en ${fileName}:`, error);
+        throw new Error(`No se pudo escribir en el archivo ${fileName}.`);
+    }
+}
+
 
 // Types for Banner Slides
 export interface BannerCtaData {
@@ -108,7 +119,12 @@ async function getHomepageData(useLocalFallback = false): Promise<any> {
 async function saveHomepageData(data: any): Promise<void> {
     const docRef = getHomepageDocRef();
     if (!docRef) {
-      throw new Error("No se puede guardar la configuración: El SDK de administrador de Firebase no está inicializado.");
+      console.warn("Admin SDK no inicializado. Guardando cambios en archivos locales.");
+      if (data.banner) await writeJsonData('banner.json', data.banner);
+      if (data.mosaic) await writeJsonData('mosaic.json', data.mosaic);
+      if (data.accordion) await writeJsonData('accordion.json', data.accordion);
+      if (data.infoSection) await writeJsonData('info-section.json', data.infoSection);
+      return;
     }
     await setDoc(docRef, data, { merge: true });
 }
@@ -117,6 +133,8 @@ async function saveHomepageData(data: any): Promise<void> {
 // Banner Functions
 export async function getBannerSlides(): Promise<BannerSlideData[]> {
     const data = await getHomepageData();
+    // Ensure every slide has a unique ID for client-side rendering.
+    // The || operator and Date.now() ensures that even slides without a pre-existing id get one.
     return (data.banner || []).map((slide: any, index: number) => ({...slide, id: slide.id || `banner-${index}-${Date.now()}`}));
 }
 

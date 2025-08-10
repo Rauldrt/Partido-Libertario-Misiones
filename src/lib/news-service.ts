@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, writeBatch, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, writeBatch, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -28,22 +28,43 @@ export interface NewsCardData {
   links?: NewsLink[];
 }
 
-// One-time seed function from local file
-async function getNewsFromLocalJson(): Promise<NewsCardData[]> {
-    const filePath = path.join(process.cwd(), 'data', 'news.json');
+const newsFilePath = path.join(process.cwd(), 'data', 'news.json');
+
+// Helper to read local JSON file
+async function readNewsJson(): Promise<any[]> {
     try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
-        const localNews: any[] = JSON.parse(fileContent);
-        return localNews.map((item, index) => ({
-            ...item,
-            id: item.id || `${Date.now()}-${index}`,
-            linkUrl: `/news/${item.id || `${Date.now()}-${index}`}`,
-            order: item.order ?? index,
-        }));
+        const fileContent = await fs.readFile(newsFilePath, 'utf-8');
+        return JSON.parse(fileContent);
     } catch (error) {
+        // If file doesn't exist or is empty, return empty array
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return [];
+        }
         console.error("Error leyendo news.json:", error);
         return [];
     }
+}
+
+// Helper to write to local JSON file
+async function writeNewsJson(data: any[]): Promise<void> {
+    try {
+        await fs.writeFile(newsFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error escribiendo en news.json:", error);
+        throw new Error("No se pudo escribir en el archivo de noticias local.");
+    }
+}
+
+
+// One-time seed function from local file
+async function getNewsFromLocalJson(): Promise<NewsCardData[]> {
+    const localNews = await readNewsJson();
+    return localNews.map((item, index) => ({
+        ...item,
+        id: item.id || `${Date.now()}-${index}`,
+        linkUrl: `/news/${item.id || `${Date.now()}-${index}`}`,
+        order: item.order ?? index,
+    }));
 }
 
 // Firestore collection reference
@@ -84,7 +105,17 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
     
     if (snapshot.empty) {
       console.log("No hay noticias en Firestore. Usando datos locales.");
-      return getNewsFromLocalJson();
+      const localData = await getNewsFromLocalJson();
+      if(localData.length > 0) {
+        console.log(`Sembrando ${localData.length} artículos desde news.json a Firestore.`);
+        const batch = writeBatch(newsCollection.firestore);
+        localData.forEach(item => {
+            const docRef = doc(newsCollection, item.id);
+            batch.set(docRef, toFirestore(item));
+        });
+        await batch.commit();
+      }
+      return localData;
     }
     return snapshot.docs.map(fromFirestore);
   } catch (error) {
@@ -118,26 +149,43 @@ export async function getNewsItemById(id: string): Promise<NewsCardData | undefi
 
 export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): Promise<NewsCardData> {
   const newsCollection = getNewsCollection();
-  if (!newsCollection) {
-      throw new Error("No se puede añadir el artículo: El SDK de administrador de Firebase no está inicializado.");
-  }
-  const allItems = await getNewsItems();
+  const allItems = await getNewsItems(); // Gets from firestore or local
   const newOrder = allItems.length > 0 ? Math.min(...allItems.map(i => i.order)) - 1 : 0;
+  const newId = `${Date.now()}`;
   
-  const docRef = await addDoc(newsCollection, toFirestore({ ...item, order: newOrder }));
-  return {
+  const newItem: NewsCardData = {
     ...item,
-    id: docRef.id,
-    linkUrl: `/news/${docRef.id}`,
+    id: newId,
+    linkUrl: `/news/${newId}`,
     order: newOrder
   };
+
+  if (!newsCollection) {
+      const updatedItems = [toFirestore(newItem), ...allItems.map(toFirestore)];
+      await writeNewsJson(updatedItems);
+      return newItem;
+  }
+
+  const docRef = doc(newsCollection, newId);
+  await setDoc(docRef, toFirestore(newItem));
+  return newItem;
 }
 
 export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
   const newsCollection = getNewsCollection();
+  
   if (!newsCollection) {
-      throw new Error("No se puede actualizar el artículo: El SDK de administrador de Firebase no está inicializado.");
+      let allItems = await getNewsFromLocalJson();
+      const itemIndex = allItems.findIndex(item => item.id === id);
+      if (itemIndex === -1) {
+          throw new Error(`No se pudo encontrar el artículo con ID ${id} para actualizar.`);
+      }
+      const updatedItem = { ...allItems[itemIndex], ...updates };
+      allItems[itemIndex] = updatedItem;
+      await writeNewsJson(allItems);
+      return updatedItem;
   }
+  
   const docRef = doc(newsCollection, id);
   await setDoc(docRef, toFirestore(updates), { merge: true });
   
@@ -147,9 +195,17 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
   const newsCollection = getNewsCollection();
+
    if (!newsCollection) {
-      throw new Error("No se puede eliminar el artículo: El SDK de administrador de Firebase no está inicializado.");
+       let allItems = await getNewsFromLocalJson();
+       const updatedItems = allItems.filter(item => item.id !== id);
+       if (allItems.length === updatedItems.length) {
+            return { success: false };
+       }
+       await writeNewsJson(updatedItems);
+       return { success: true };
   }
+
   const docRef = doc(newsCollection, id);
   await deleteDoc(docRef);
   return { success: true };
@@ -157,9 +213,23 @@ export async function deleteNewsItem(id: string): Promise<{ success: boolean }> 
 
 export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
     const newsCollection = getNewsCollection();
+
     if (!newsCollection) {
-      throw new Error("No se puede reordenar: El SDK de administrador de Firebase no está inicializado.");
+      let allItems = await getNewsFromLocalJson();
+      const reordered = orderedIds.map((id, index) => {
+          const item = allItems.find(i => i.id === id);
+          return { ...item, order: index };
+      });
+      // Add any items that were not in orderedIds back to the list
+      allItems.forEach(item => {
+        if (!orderedIds.includes(item.id)) {
+            reordered.push(item);
+        }
+      });
+      await writeNewsJson(reordered);
+      return;
     }
+    
     const db = newsCollection.firestore;
     const batch = writeBatch(db);
     
@@ -186,5 +256,6 @@ export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
     published: false,
   };
   
+  // This will handle both Firestore and local file cases.
   return addNewsItem(newItemData);
 }

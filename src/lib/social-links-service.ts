@@ -7,6 +7,8 @@ import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
 
+const socialLinksFilePath = path.join(process.cwd(), 'data', 'social-links.json');
+
 const SocialLinkSchema = z.object({
     id: z.string(),
     label: z.string(),
@@ -17,15 +19,27 @@ export type SocialLink = z.infer<typeof SocialLinkSchema>;
 const SocialLinksSchema = z.array(SocialLinkSchema);
 
 async function readSocialLinksJson(): Promise<SocialLink[]> {
-    const filePath = path.join(process.cwd(), 'data', 'social-links.json');
     try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const fileContent = await fs.readFile(socialLinksFilePath, 'utf-8');
         return SocialLinksSchema.parse(JSON.parse(fileContent));
     } catch (error) {
+         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return [];
+        }
         console.error("Error leyendo social-links.json:", error);
         return [];
     }
 }
+
+async function writeSocialLinksJson(data: SocialLink[]): Promise<void> {
+    try {
+        await fs.writeFile(socialLinksFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error escribiendo en social-links.json:", error);
+        throw new Error("No se pudo escribir en el archivo de enlaces sociales local.");
+    }
+}
+
 
 const getSocialLinksDocRef = () => {
     const db = getAdminDb();
@@ -57,13 +71,16 @@ export async function getSocialLinks(): Promise<SocialLink[]> {
 
 export async function saveSocialLinks(data: SocialLink[]): Promise<void> {
     const docRef = getSocialLinksDocRef();
-    if (!docRef) {
-        throw new Error("No se pueden guardar los enlaces: El SDK de administrador de Firebase no está inicializado.");
-    }
-
     const validation = SocialLinksSchema.safeParse(data);
     if (!validation.success) {
         throw new Error('Datos de enlaces sociales inválidos.');
     }
+
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado. Guardando enlaces sociales en archivo local.");
+        await writeSocialLinksJson(validation.data);
+        return;
+    }
+    
     await setDoc(docRef, { links: validation.data });
 }

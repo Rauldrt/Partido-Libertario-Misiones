@@ -7,15 +7,29 @@ import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
 
+const pageHeadersFilePath = path.join(process.cwd(), 'data', 'page-headers.json');
+
 // Helper to read local JSON file
 async function readPageHeadersJson(): Promise<any> {
-    const filePath = path.join(process.cwd(), 'data', 'page-headers.json');
     try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const fileContent = await fs.readFile(pageHeadersFilePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return {};
+        }
         console.error("Error leyendo page-headers.json:", error);
         return {}; // Return empty object on error
+    }
+}
+
+// Helper to write to local JSON file
+async function writePageHeadersJson(data: any): Promise<void> {
+    try {
+        await fs.writeFile(pageHeadersFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error escribiendo en page-headers.json:", error);
+        throw new Error("No se pudo escribir en el archivo de encabezados de página local.");
     }
 }
 
@@ -71,15 +85,17 @@ export async function getPageHeaderData(pageKey: string): Promise<PageHeaderData
 
 export async function saveAllPageHeaders(data: PageHeadersData): Promise<void> {
     const docRef = getPageHeadersDocRef();
-    if (!docRef) {
-        throw new Error("No se puede guardar la configuración: El SDK de administrador de Firebase no está inicializado.");
-    }
-    
     const validation = PageHeadersSchema.safeParse(data);
     if (!validation.success) {
         console.error(validation.error.issues);
         throw new Error('Datos de encabezados inválidos.');
     }
 
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado. Guardando encabezados en archivo local.");
+        await writePageHeadersJson(validation.data);
+        return;
+    }
+    
     await setDoc(docRef, validation.data);
 }

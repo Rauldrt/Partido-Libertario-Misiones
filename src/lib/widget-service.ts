@@ -12,20 +12,34 @@ export interface SocialWidgetData {
     embedCode: string;
 }
 
+const widgetFilePath = path.join(process.cwd(), 'data', 'social-widget.json');
+
 const SocialWidgetSchema = z.object({
     embedCode: z.string().trim(),
 });
 
 async function readWidgetJson(): Promise<SocialWidgetData> {
-    const filePath = path.join(process.cwd(), 'data', 'social-widget.json');
     try {
-        const fileContent = await fs.readFile(filePath, 'utf-8');
+        const fileContent = await fs.readFile(widgetFilePath, 'utf-8');
         return SocialWidgetSchema.parse(JSON.parse(fileContent));
     } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            return { embedCode: '' };
+        }
         console.error("Error leyendo social-widget.json:", error);
         return { embedCode: '' };
     }
 }
+
+async function writeWidgetJson(data: SocialWidgetData): Promise<void> {
+    try {
+        await fs.writeFile(widgetFilePath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error("Error escribiendo en social-widget.json:", error);
+        throw new Error("No se pudo escribir en el archivo del widget social local.");
+    }
+}
+
 
 const getWidgetDocRef = () => {
     const db = getAdminDb();
@@ -61,12 +75,16 @@ export async function getSocialWidgetData(): Promise<SocialWidgetData> {
 
 export async function saveSocialWidgetData(data: SocialWidgetData): Promise<void> {
     const docRef = getWidgetDocRef();
-    if (!docRef) {
-        throw new Error("No se puede guardar el widget: El SDK de administrador de Firebase no está inicializado.");
-    }
     const validation = SocialWidgetSchema.safeParse(data);
     if (!validation.success) {
         throw new Error('Datos de widget inválidos.');
     }
+    
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado. Guardando widget social en archivo local.");
+        await writeWidgetJson(validation.data);
+        return;
+    }
+
     await setDoc(docRef, validation.data);
 }
