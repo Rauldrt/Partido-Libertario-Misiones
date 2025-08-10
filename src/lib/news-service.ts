@@ -59,12 +59,18 @@ async function writeNewsJson(data: any[]): Promise<void> {
 // One-time seed function from local file
 async function getNewsFromLocalJson(): Promise<NewsCardData[]> {
     const localNews = await readNewsJson();
-    return localNews.map((item, index) => ({
-        ...item,
-        id: item.id || `${Date.now()}-${index}`,
-        linkUrl: `/news/${item.id || `${Date.now()}-${index}`}`,
-        order: item.order ?? index,
-    }));
+    // CRITICAL FIX: Ensure every item has a unique and consistent ID.
+    // Using a combination of a generated timestamp and the index ensures uniqueness
+    // even for items that don't have an ID in the JSON file.
+    return localNews.map((item, index) => {
+        const id = item.id || `${Date.now()}-${index}`;
+        return {
+            ...item,
+            id: id,
+            linkUrl: `/news/${id}`,
+            order: item.order ?? index,
+        }
+    });
 }
 
 // Firestore collection reference
@@ -158,24 +164,23 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): P
   const newsCollection = getNewsCollection();
   const allItems = await getNewsItems(); // Gets from firestore or local
   const newOrder = allItems.length > 0 ? Math.min(...allItems.map(i => i.order)) - 1 : 0;
-  const newId = `${Date.now()}`;
+  
+  const newItemWithId = { ...item, id: `${Date.now()}`};
   
   const newItemData: Partial<NewsCardData> = {
-    ...item,
-    id: newId,
-    // linkUrl is derived, so no need to store it
+    ...newItemWithId,
     order: newOrder
   };
 
   if (!newsCollection) {
       const updatedItems = [toJsonSerializable(newItemData), ...allItems.map(toJsonSerializable)];
       await writeNewsJson(updatedItems);
-      return { ...newItemData, linkUrl: `/news/${newId}` } as NewsCardData;
+      return { ...newItemData, linkUrl: `/news/${newItemData.id}` } as NewsCardData;
   }
 
-  const docRef = doc(newsCollection, newId);
+  const docRef = doc(newsCollection, newItemData.id);
   await setDoc(docRef, toFirestore(newItemData));
-  return { ...newItemData, linkUrl: `/news/${newId}` } as NewsCardData;
+  return { ...newItemData, linkUrl: `/news/${newItemData.id}` } as NewsCardData;
 }
 
 export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
@@ -227,7 +232,7 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
           const item = allItems.find(i => i.id === id);
           if (!item) return null; // Should not happen
           return { ...item, order: index };
-      }).filter(Boolean);
+      }).filter((item): item is NewsCardData => !!item);
       
       // Add any items that were not in orderedIds back to the list
       const existingIds = new Set(orderedIds);
