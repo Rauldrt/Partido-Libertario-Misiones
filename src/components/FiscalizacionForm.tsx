@@ -156,7 +156,7 @@ const renderField = (fieldInfo: FormFieldType, control: any) => {
 
 export function FiscalizacionForm() {
   const { toast } = useToast();
-  const [formDefinition, React.useState<FormDefinition | null>(null);
+  const [formDefinition, setFormDefinition] = React.useState<FormDefinition | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const form = useForm({
