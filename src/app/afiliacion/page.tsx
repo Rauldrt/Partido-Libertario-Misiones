@@ -5,10 +5,17 @@ import Image from 'next/image';
 import type { PageHeaderData } from '@/lib/page-headers-service';
 import { DynamicIcon } from '@/components/DynamicIcon';
 import { AfiliacionForm } from './AfiliacionForm';
+import { getAfiliacionFormDef } from './actions';
+import { notFound } from 'next/navigation';
 
 
 export default async function AfiliacionPage() {
   const headerData = await getPageHeaderData('afiliacion');
+  const formDefinition = await getAfiliacionFormDef();
+
+  if (!formDefinition) {
+    notFound();
+  }
   
   const pageData: PageHeaderData = headerData || {
     title: "Sumate Libertario",
@@ -45,7 +52,7 @@ export default async function AfiliacionPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <AfiliacionForm />
+              <AfiliacionForm formDefinition={formDefinition} />
             </CardContent>
           </Card>
           

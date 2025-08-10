@@ -1,4 +1,3 @@
-
 import { Section } from '@/components/ui/Section';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
@@ -6,10 +5,17 @@ import { getPageHeaderData } from '@/lib/page-headers-service';
 import type { PageHeaderData } from '@/lib/page-headers-service';
 import { DynamicIcon } from '@/components/DynamicIcon';
 import { FiscalizacionForm } from '@/components/FiscalizacionForm';
+import { getFiscalizacionFormDef } from './actions';
+import { notFound } from 'next/navigation';
 
 
 export default async function FiscalizacionPage() {
   const headerData = await getPageHeaderData('fiscalizacion');
+  const formDefinition = await getFiscalizacionFormDef();
+
+  if (!formDefinition) {
+    notFound();
+  }
 
   const pageData: PageHeaderData = headerData || {
     title: "Defendé el Voto",
@@ -48,7 +54,7 @@ export default async function FiscalizacionPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <FiscalizacionForm />
+              <FiscalizacionForm formDefinition={formDefinition} />
             </CardContent>
           </Card>
           

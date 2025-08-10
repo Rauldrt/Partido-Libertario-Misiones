@@ -1,36 +1,47 @@
-
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Deny all reads and writes by default
+    // Default deny all reads and writes
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Allow admins (any authenticated user) to read/write anything
-    match /{document=**} {
-        allow read, write: if request.auth != null;
+    // Allow admin read/write to all collections
+    match /{path=**} {
+      allow read, write: if request.auth != null;
     }
 
-    // Allow public read access to form definitions
+    // Allow public read for specific configuration collections
+    match /site-config/{docId} {
+      allow get: if true;
+    }
+
+    // Allow public read for form definitions
     match /form-definitions/{formId} {
-        allow read: if true;
+      allow get: if true;
+    }
+    
+    // Allow public read for published news
+    match /news/{newsId} {
+      allow get: if resource.data.published == true;
+    }
+    match /news/{newsId} {
+      allow list: if true; // `list` is required for collection queries
     }
 
-    // Allow anyone to create (submit) a form
+    // Allow public create for submissions
     match /afiliaciones/{submissionId} {
-      allow create: if request.resource.data.size() > 0;
+        allow create: if true;
     }
-
-    // Allow anyone to create (submit) a form
+    
     match /fiscalizaciones/{submissionId} {
-      allow create: if request.resource.data.size() > 0;
+        allow create: if true;
     }
 
-    // Allow anyone to create (submit) a form
     match /contactSubmissions/{submissionId} {
-      allow create: if request.resource.data.size() > 0;
+        allow create: if true;
     }
   }
 }

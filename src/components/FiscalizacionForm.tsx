@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,9 +20,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { submitFiscalizacionForm, getFiscalizacionFormDef } from "@/app/fiscalizacion/actions";
+import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
-import { Skeleton } from './ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 
@@ -98,42 +97,22 @@ const renderField = (fieldInfo: FormFieldType, control: any) => {
     )
 }
 
-export function FiscalizacionForm() {
+interface FiscalizacionFormProps {
+  formDefinition: FormDefinition;
+}
+
+export function FiscalizacionForm({ formDefinition }: FiscalizacionFormProps) {
   const { toast } = useToast();
-  const [formDefinition, setFormDefinition] = React.useState<FormDefinition | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
+  
+  const formSchema = React.useMemo(() => buildZodSchema(formDefinition.fields), [formDefinition]);
+  const defaultValues = React.useMemo(() => Object.fromEntries(
+    formDefinition.fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
+  ), [formDefinition]);
 
   const form = useForm({
-    // resolver will be updated dynamically
+    resolver: zodResolver(formSchema),
+    defaultValues,
   });
-
-  React.useEffect(() => {
-    const fetchAndSetForm = async () => {
-        setIsLoading(true);
-        try {
-            const definition = await getFiscalizacionFormDef();
-            if (!definition) {
-                throw new Error('Error desconocido al cargar el formulario.');
-            }
-            setFormDefinition(definition);
-            
-            const schema = buildZodSchema(definition.fields);
-            const defaultValues = Object.fromEntries(
-                definition.fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
-            );
-            
-            form.reset(defaultValues);
-            (form as any)._options.resolver = zodResolver(schema);
-
-        } catch (error) {
-            toast({ variant: 'destructive', title: 'Error', description: 'No se pudo cargar la definición del formulario.' });
-        } finally {
-            setIsLoading(false);
-        }
-    }
-    fetchAndSetForm();
-  }, [form, toast]);
-
 
   const { formState: { isSubmitting } } = form;
 
@@ -170,18 +149,6 @@ export function FiscalizacionForm() {
       });
     }
   }
-
-  if (isLoading || !formDefinition) {
-    return (
-        <div className="space-y-6">
-            <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
-            <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
-            <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-24 w-full" /></div>
-            <Skeleton className="h-12 w-full" />
-        </div>
-    )
-  }
-
 
   return (
     <Form {...form}>

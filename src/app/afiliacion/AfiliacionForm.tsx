@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from 'zod';
@@ -16,10 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { getAfiliacionFormDef, submitAfiliacionForm } from "@/app/afiliacion/actions";
+import { submitAfiliacionForm } from "@/app/afiliacion/actions";
 import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 import { Loader2 } from "lucide-react";
-import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -90,44 +89,22 @@ const renderField = (fieldInfo: FormFieldType, control: any) => {
     )
 }
 
-export function AfiliacionForm() {
+interface AfiliacionFormProps {
+  formDefinition: FormDefinition;
+}
+
+export function AfiliacionForm({ formDefinition }: AfiliacionFormProps) {
   const { toast } = useToast();
-  const [formDefinition, setFormDefinition] = useState<FormDefinition | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const formSchema = React.useMemo(() => buildZodSchema(formDefinition.fields), [formDefinition]);
+  const defaultValues = React.useMemo(() => Object.fromEntries(
+    formDefinition.fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
+  ), [formDefinition]);
 
   const form = useForm({
-      // Zod resolver will be updated dynamically in useEffect
+    resolver: zodResolver(formSchema),
+    defaultValues,
   });
-
-  useEffect(() => {
-    const fetchFormDef = async () => {
-      try {
-        setIsLoading(true);
-        const definition = await getAfiliacionFormDef();
-        if (!definition) {
-            throw new Error('Error desconocido al cargar el formulario.');
-        }
-        setFormDefinition(definition);
-        
-        // Dynamically create default values and resolver
-        const defaultValues = Object.fromEntries(
-          definition.fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
-        );
-        const schema = buildZodSchema(definition.fields);
-        
-        form.reset(defaultValues);
-        // This is a way to update the resolver dynamically, though not officially documented
-        (form as any)._options.resolver = zodResolver(schema);
-
-      } catch (error) {
-        toast({ variant: 'destructive', title: 'Error', description: 'No se pudo cargar la definición del formulario.' });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchFormDef();
-  }, [form, toast]);
-
 
   const { formState: { isSubmitting } } = form;
 
@@ -163,22 +140,6 @@ export function AfiliacionForm() {
         variant: "destructive",
       });
     }
-  }
-  
-  if (isLoading || !formDefinition) {
-    return (
-        <div className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
-                <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
-            </div>
-             <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
-                <div className="space-y-2"><Skeleton className="h-4 w-1/4" /><Skeleton className="h-10 w-full" /></div>
-            </div>
-            <Skeleton className="h-12 w-full" />
-        </div>
-    )
   }
 
   return (
