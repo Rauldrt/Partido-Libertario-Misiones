@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import type { BannerSlideData } from '@/lib/homepage-service';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { saveBannerAction } from './actions';
+import { saveBannerAction, getBannerSlidesAction } from './actions';
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +21,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlideData, setSlides: React.Dispatch<React.SetStateAction<BannerSlideData[]>>, isPending: boolean }) => {
   const {
@@ -127,15 +128,41 @@ const SortableSlideItem = ({ slide, setSlides, isPending }: { slide: BannerSlide
 };
 
 
-export function BannerEditorClient({ initialSlides }: { initialSlides: BannerSlideData[] }) {
-  const [slides, setSlides] = useState<BannerSlideData[]>(initialSlides);
+export function BannerEditorClient() {
+  const [slides, setSlides] = useState<BannerSlideData[] | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+
+  useEffect(() => {
+    getBannerSlidesAction().then(result => {
+        if(result.success && result.data) {
+            setSlides(result.data);
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Error al cargar',
+                description: result.message || 'No se pudieron cargar los slides del banner.'
+            });
+            setSlides([]); // Set to empty array on error to stop loading
+        }
+    });
+  }, [toast]);
+
+  if (slides === null) {
+      return (
+        <div className="space-y-4">
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-24 w-full" />
+        </div>
+      );
+  }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
         setSlides((items) => {
+            if (!items) return [];
             const oldIndex = items.findIndex((item) => item.id === active.id);
             const newIndex = items.findIndex((item) => item.id === over.id);
             return arrayMove(items, oldIndex, newIndex);
@@ -158,10 +185,11 @@ export function BannerEditorClient({ initialSlides }: { initialSlides: BannerSli
         videoUrl: '',
         embedCode: '',
     };
-    setSlides(prev => [...prev, newSlide]);
+    setSlides(prev => [...(prev || []), newSlide]);
   };
 
   const handleSaveChanges = () => {
+    if (!slides) return;
     startTransition(async () => {
       const result = await saveBannerAction(slides);
       if (result.success) {
@@ -196,7 +224,7 @@ export function BannerEditorClient({ initialSlides }: { initialSlides: BannerSli
                 <Plus className="mr-2 h-4 w-4" />
                 Añadir Diapositiva
             </Button>
-            <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
+            <Button onClick={handleSaveChanges} disabled={isPending || !slides} size="lg">
                 {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                 Guardar Cambios
             </Button>

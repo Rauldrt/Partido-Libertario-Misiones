@@ -1,11 +1,10 @@
 
-import { getNotificationData } from '@/lib/notification-service';
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NotificationEditorClient } from './NotificationEditorClient';
 
-export default async function ManageNotificationPage() {
-  const data = await getNotificationData();
-
+export default function ManageNotificationPage() {
   return (
     <Card>
       <CardHeader>
@@ -15,7 +14,7 @@ export default async function ManageNotificationPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <NotificationEditorClient initialData={data} />
+        <NotificationEditorClient />
       </CardContent>
     </Card>
   );

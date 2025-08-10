@@ -2,7 +2,7 @@
 'use server';
 
 import { z } from 'zod';
-import { saveBannerSlides, type BannerSlideData } from '@/lib/homepage-service';
+import { saveBannerSlides, getBannerSlides as getSlidesFromDb, type BannerSlideData } from '@/lib/homepage-service';
 import { revalidatePath } from 'next/cache';
 
 const CtaSchema = z.object({
@@ -48,6 +48,15 @@ export async function saveBannerAction(data: BannerSlideData[]) {
         revalidatePath('/');
         
         return { success: true, message: '¡Banner guardado con éxito!' };
+    } catch (error) {
+        return { success: false, message: (error as Error).message };
+    }
+}
+
+export async function getBannerSlidesAction() {
+    try {
+        const slides = await getSlidesFromDb();
+        return { success: true, data: slides };
     } catch (error) {
         return { success: false, message: (error as Error).message };
     }

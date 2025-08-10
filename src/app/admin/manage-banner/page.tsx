@@ -1,11 +1,10 @@
 
-import { getBannerSlides } from '@/lib/homepage-service';
+"use client";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BannerEditorClient } from './BannerEditorClient';
 
-export default async function ManageBannerPage() {
-  const slides = await getBannerSlides();
-
+export default function ManageBannerPage() {
   return (
     <Card>
       <CardHeader>
@@ -15,7 +14,7 @@ export default async function ManageBannerPage() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <BannerEditorClient initialSlides={slides} />
+        <BannerEditorClient />
       </CardContent>
     </Card>
   );

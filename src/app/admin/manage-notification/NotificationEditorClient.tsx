@@ -1,29 +1,56 @@
 
 "use client";
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect } from 'react';
 import type { NotificationData } from '@/lib/notification-service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { saveNotificationDataAction } from './actions';
+import { saveNotificationDataAction, getNotificationDataAction } from './actions';
 import { Loader2, Save } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export function NotificationEditorClient({ initialData }: { initialData: NotificationData }) {
-  const [data, setData] = useState<NotificationData>(initialData);
+export function NotificationEditorClient() {
+  const [data, setData] = useState<NotificationData | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  
+  useEffect(() => {
+    getNotificationDataAction().then(result => {
+        if (result.success && result.data) {
+            setData(result.data);
+        } else {
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: result.message || 'No se pudo cargar la configuración de notificación.'
+            });
+            setData({ enabled: false, text: '', link: ''});
+        }
+    })
+  }, [toast]);
+
+  if (!data) {
+    return (
+        <div className="space-y-6">
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+        </div>
+    )
+  }
 
   const handleInputChange = (field: keyof NotificationData, value: string | boolean) => {
-    setData(prev => ({ ...prev, [field]: value }));
+    setData(prev => (prev ? { ...prev, [field]: value } : null));
   };
 
   const handleSaveChanges = () => {
+    if (!data) return;
     startTransition(async () => {
       const result = await saveNotificationDataAction(data);
       if (result.success) {
