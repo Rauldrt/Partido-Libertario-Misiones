@@ -67,7 +67,6 @@ export async function getNotificationData(): Promise<NotificationData> {
             return parsed.data;
         }
     }
-    // If doc doesn't exist or is invalid, seed from JSON
     console.log("Sembrando datos de notificación desde JSON local a Firestore.");
     const localData = await readNotificationJson();
     await setDoc(docRef, localData);

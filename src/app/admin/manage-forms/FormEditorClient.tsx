@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useTransition, useEffect } from 'react';
-import type { FormDefinition, FormField } from '@/lib/afiliacion-service';
+import type { FormDefinition, FormField } from '@/lib/form-service';
 import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -162,7 +162,8 @@ const FormEditor = ({
 
     const handleSaveChanges = () => {
         startTransition(() => {
-            onSave({ ...formDef, fields });
+            const reorderedFields = fields.map((field, index) => ({ ...field, order: index }));
+            onSave({ ...formDef, fields: reorderedFields });
         });
     }
 
@@ -232,7 +233,6 @@ export function FormEditorClient() {
     const result = await saveFormDefinitionAction(data);
     if (result.success) {
       toast({ title: "¡Éxito!", description: result.message });
-      // Update local state after successful save
       setForms(prev => (prev ? { ...prev, [data.id]: data } : null));
     } else {
       toast({ variant: "destructive", title: "Error", description: result.message });

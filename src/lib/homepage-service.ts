@@ -87,15 +87,19 @@ const getHomepageDocRef = () => {
     return doc(db, 'site-config', 'homepage');
 };
 
-async function getHomepageData(useLocalFallback = false): Promise<any> {
+async function getHomepageData(useLocal = false): Promise<any> {
     const docRef = getHomepageDocRef();
     
-    if (!docRef || useLocalFallback) {
+    const loadFromLocal = async () => {
         const banner = await readJsonData('banner.json');
         const mosaic = await readJsonData('mosaic.json');
         const accordion = await readJsonData('accordion.json');
         const infoSection = await readJsonData('info-section.json');
         return { banner, mosaic, accordion, infoSection };
+    }
+
+    if (!docRef || useLocal) {
+        return loadFromLocal();
     }
 
     try {
@@ -105,13 +109,13 @@ async function getHomepageData(useLocalFallback = false): Promise<any> {
         }
         // If the document doesn't exist in Firestore, seed it from local files.
         console.log("Documento de configuración de inicio no encontrado en Firestore. Sembrando desde archivos JSON locales...");
-        const seededData = await getHomepageData(true); // use local files
+        const seededData = await loadFromLocal();
         await setDoc(docRef, seededData);
         console.log("Datos de inicio sembrados en Firestore correctamente.");
         return seededData;
     } catch (error) {
         console.error("Error al obtener datos de inicio de Firestore, usando respaldo local:", error);
-        return getHomepageData(true);
+        return loadFromLocal();
     }
 }
 

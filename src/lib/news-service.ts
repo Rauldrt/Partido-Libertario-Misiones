@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, writeBatch, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch, query, orderBy } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -36,7 +36,6 @@ async function readNewsJson(): Promise<any[]> {
         const fileContent = await fs.readFile(newsFilePath, 'utf-8');
         return JSON.parse(fileContent);
     } catch (error) {
-        // If file doesn't exist or is empty, return empty array
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
             return [];
         }
@@ -55,13 +54,9 @@ async function writeNewsJson(data: any[]): Promise<void> {
     }
 }
 
-
 // One-time seed function from local file
 async function getNewsFromLocalJson(): Promise<NewsCardData[]> {
     const localNews = await readNewsJson();
-    // CRITICAL FIX: Ensure every item has a unique and consistent ID.
-    // Using a combination of a generated timestamp and the index ensures uniqueness
-    // even for items that don't have an ID in the JSON file.
     return localNews.map((item, index) => {
         const id = item.id || `${Date.now()}-${index}`;
         return {
@@ -97,7 +92,6 @@ const toFirestore = (item: Partial<NewsCardData>): any => {
     return data;
 };
 
-// Helper to convert NewsCardData to a plain object for JSON serialization
 const toJsonSerializable = (item: Partial<NewsCardData>): any => {
     const { linkUrl, ...data } = item;
     return data;
@@ -117,16 +111,16 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
     const snapshot = await getDocs(q);
     
     if (snapshot.empty) {
-      console.log("No hay noticias en Firestore. Usando datos locales.");
+      console.log("No hay noticias en Firestore. Sembrando desde el archivo local.");
       const localData = await getNewsFromLocalJson();
       if(localData.length > 0) {
-        console.log(`Sembrando ${localData.length} artículos desde news.json a Firestore.`);
         const batch = writeBatch(newsCollection.firestore);
         localData.forEach(item => {
             const docRef = doc(newsCollection, item.id);
             batch.set(docRef, toFirestore(item));
         });
         await batch.commit();
+        console.log(`${localData.length} artículos sembrados en Firestore.`);
       }
       return localData;
     }
@@ -147,7 +141,6 @@ export async function getNewsItemById(id: string): Promise<NewsCardData | undefi
   try {
     const docRef = doc(newsCollection, id);
     const docSnap = await getDoc(docRef);
-
     if (docSnap.exists()) {
         return fromFirestore(docSnap);
     } 
@@ -155,31 +148,28 @@ export async function getNewsItemById(id: string): Promise<NewsCardData | undefi
      console.error(`Error obteniendo el artículo ${id} de Firestore.`, error);
   }
   
-  // Fallback for both not found in Firestore or Firestore error
   const allItems = await getNewsFromLocalJson();
   return allItems.find(item => item.id === id);
 }
 
 export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): Promise<NewsCardData> {
-  const newsCollection = getNewsCollection();
-  const allItems = await getNewsItems(); // Gets from firestore or local
+  const allItems = await getNewsItems();
   const newOrder = allItems.length > 0 ? Math.min(...allItems.map(i => i.order)) - 1 : 0;
   
-  const newItemWithId = { ...item, id: `${Date.now()}`};
-  
   const newItemData: Partial<NewsCardData> = {
-    ...newItemWithId,
+    ...item,
+    id: `${Date.now()}`,
     order: newOrder
   };
-
+  
+  const newsCollection = getNewsCollection();
   if (!newsCollection) {
       const updatedItems = [toJsonSerializable(newItemData), ...allItems.map(toJsonSerializable)];
       await writeNewsJson(updatedItems);
-      return { ...newItemData, linkUrl: `/news/${newItemData.id}` } as NewsCardData;
+  } else {
+      const docRef = doc(newsCollection, newItemData.id);
+      await setDoc(docRef, toFirestore(newItemData));
   }
-
-  const docRef = doc(newsCollection, newItemData.id);
-  await setDoc(docRef, toFirestore(newItemData));
   return { ...newItemData, linkUrl: `/news/${newItemData.id}` } as NewsCardData;
 }
 
@@ -230,11 +220,10 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
       let allItems = await getNewsFromLocalJson();
       const reordered = orderedIds.map((id, index) => {
           const item = allItems.find(i => i.id === id);
-          if (!item) return null; // Should not happen
+          if (!item) return null;
           return { ...item, order: index };
       }).filter((item): item is NewsCardData => !!item);
       
-      // Add any items that were not in orderedIds back to the list
       const existingIds = new Set(orderedIds);
       allItems.forEach(item => {
         if (!existingIds.has(item.id)) {
@@ -258,19 +247,14 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
 
 export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
   const originalItem = await getNewsItemById(id);
-
   if (!originalItem) {
     throw new Error(`Artículo con id ${id} no encontrado.`);
   }
-  
   const { id: originalId, linkUrl, order, ...dataToCopy } = originalItem;
-
   const newItemData = {
     ...dataToCopy,
     title: `(Copia) ${originalItem.title}`,
     published: false,
   };
-  
-  // This will handle both Firestore and local file cases.
   return addNewsItem(newItemData);
 }

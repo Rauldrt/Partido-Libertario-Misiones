@@ -103,9 +103,8 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
         return defaults[formId];
     }
     
-    const docRef = doc(formDefCollection, formId);
-
     try {
+        const docRef = doc(formDefCollection, formId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -127,6 +126,8 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
     const formDefCollection = getFormDefCollection();
      if (!formDefCollection) {
+        // En un escenario de solo local, la edición de formularios no es posible.
+        // Se podría implementar el guardado en JSON si fuera un requisito.
         throw new Error("No se puede guardar la definición: El SDK de administrador de Firebase no está inicializado.");
     }
     const docRef = doc(formDefCollection, formId);

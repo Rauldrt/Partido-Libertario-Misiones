@@ -45,10 +45,14 @@ const getReferentesDocRef = () => {
 
 export async function getReferentes(): Promise<ReferenteData[]> {
     const docRef = getReferentesDocRef();
-    if (!docRef) {
-        console.warn("Admin SDK no inicializado, usando referentes.json como respaldo.");
+    const getFromLocal = async () => {
         const localData = await readReferentesJson();
         return localData.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
+    };
+
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado, usando referentes.json como respaldo.");
+        return getFromLocal();
     }
     
     try {
@@ -62,8 +66,7 @@ export async function getReferentes(): Promise<ReferenteData[]> {
         return localData.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
     } catch (error) {
          console.error("Error obteniendo referentes de Firestore, usando respaldo local:", error);
-         const localData = await readReferentesJson();
-         return localData.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
+         return getFromLocal();
     }
 }
 
