@@ -2,7 +2,8 @@
 'use server';
 
 import * as z from "zod";
-import { addFiscalizacionSubmission, getFiscalizacionValidationSchema } from "@/lib/fiscalizacion-service";
+import { addFiscalizacionSubmission } from "@/lib/fiscalizacion-service";
+import { getFiscalizacionValidationSchema } from "@/lib/form-service";
 import { revalidatePath } from "next/cache";
 
 export type FiscalizacionFormState = {

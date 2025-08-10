@@ -17,69 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { submitAfiliacionForm } from "@/app/afiliacion/actions";
-import { getFormDefinition, type FormDefinition, type FormField as FormFieldType } from "@/lib/afiliacion-service";
+import { getFormDefinition, buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-
-
-// Helper to build a Zod schema from a form definition
-const buildZodSchema = (fields: FormFieldType[]) => {
-  const schemaShape: Record<string, z.ZodTypeAny> = {};
-  fields.forEach(field => {
-    let fieldSchema: z.ZodTypeAny;
-
-    switch (field.type) {
-        case 'email':
-            fieldSchema = z.string().email({ message: "Correo electrónico inválido." });
-            break;
-        case 'checkbox':
-            fieldSchema = z.boolean().default(false);
-            break;
-        case 'number':
-        case 'tel':
-        default:
-            fieldSchema = z.string();
-    }
-    
-    if (field.required && field.type !== 'checkbox') {
-        fieldSchema = fieldSchema.min(1, { message: `${field.label} es requerido.` });
-    }
-
-    if (field.required && field.type === 'checkbox') {
-        fieldSchema = fieldSchema.refine(val => val === true, {
-            message: `${field.label} es requerido.`
-        });
-    }
-
-    if(field.validationRegex) {
-        try {
-            const regex = new RegExp(field.validationRegex);
-            fieldSchema = (fieldSchema as z.ZodString).regex(regex, { message: field.validationMessage || "Formato inválido."});
-        } catch (e) {
-            console.error("Invalid regex in form definition:", field.validationRegex)
-        }
-    }
-    
-    if (!field.required) {
-        fieldSchema = fieldSchema.optional();
-    }
-    
-    // For radio groups, ensure the value is one of the options
-    if (field.type === 'radio' && field.options) {
-        fieldSchema = z.enum(field.options as [string, ...string[]], {
-            required_error: `${field.label} es requerido.`
-        })
-    }
-
-    schemaShape[field.name] = fieldSchema;
-  });
-  return z.object(schemaShape);
-};
-
 
 const renderField = (fieldInfo: FormFieldType, control: any) => {
     return (
