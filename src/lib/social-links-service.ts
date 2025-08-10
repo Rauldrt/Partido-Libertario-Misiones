@@ -1,7 +1,7 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
 import fs from 'fs/promises';
@@ -17,8 +17,7 @@ export type SocialLink = z.infer<typeof SocialLinkSchema>;
 const SocialLinksSchema = z.array(SocialLinkSchema);
 
 const getSocialLinksDocRef = () => {
-    const db = getDb();
-    if (!db) throw new Error("Firestore is not initialized.");
+    const db = getAdminDb();
     return doc(db, 'site-config', 'socialLinks');
 };
 

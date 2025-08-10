@@ -1,7 +1,7 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
@@ -71,8 +71,7 @@ export interface InfoSectionData {
 
 // Firestore document reference for homepage data
 const getHomepageDocRef = () => {
-    const db = getDb();
-    if (!db) throw new Error("Firestore is not initialized.");
+    const db = getAdminDb();
     // Store all homepage-related data in a single document for simplicity
     return doc(db, 'site-config', 'homepage');
 };

@@ -1,15 +1,12 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { collection, getDocs, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import type { FiscalizacionFormValues, FiscalizacionSubmission } from './form-service';
 
 const getFiscalizacionCollection = () => {
-  const db = getDb();
-  if (!db) {
-    throw new Error("Firestore is not initialized.");
-  }
+  const db = getAdminDb();
   return collection(db, 'fiscalizaciones');
 };
 

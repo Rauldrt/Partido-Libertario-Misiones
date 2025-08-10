@@ -1,5 +1,7 @@
 
-import { getDb } from './firebase';
+'use server';
+
+import { getAdminDb } from './firebase-admin';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
 import * as z from "zod";
 
@@ -17,10 +19,7 @@ export interface ContactSubmission extends ContactFormValues {
 }
 
 const getContactCollection = () => {
-  const db = getDb();
-  if (!db) {
-    throw new Error("Firestore is not initialized.");
-  }
+  const db = getAdminDb();
   return collection(db, 'contactSubmissions');
 };
 

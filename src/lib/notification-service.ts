@@ -1,7 +1,7 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { z } from 'zod';
 import fs from 'fs/promises';
@@ -16,8 +16,7 @@ const NotificationSchema = z.object({
 export type NotificationData = z.infer<typeof NotificationSchema>;
 
 const getNotificationDocRef = () => {
-    const db = getDb();
-    if (!db) throw new Error("Firestore is not initialized.");
+    const db = getAdminDb();
     return doc(db, 'site-config', 'notification');
 };
 

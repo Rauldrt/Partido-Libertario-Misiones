@@ -1,14 +1,13 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
 import type { AfiliacionSubmission } from './form-service';
 
 // --- Firestore Collection References ---
 const getAfiliacionCollection = () => {
-  const db = getDb();
-  if (!db) throw new Error("Firestore is not initialized.");
+  const db = getAdminDb();
   return collection(db, 'afiliaciones');
 };
 

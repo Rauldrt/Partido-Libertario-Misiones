@@ -1,9 +1,8 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { collection, getDocs, doc, getDoc, setDoc, addDoc, deleteDoc, writeBatch, query, orderBy } from 'firebase/firestore';
-import type { Firestore } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -31,10 +30,7 @@ export interface NewsCardData {
 
 // Firestore collection reference
 const getNewsCollection = () => {
-  const db = getDb();
-  if (!db) {
-    throw new Error("Firestore is not initialized. Check your Firebase configuration.");
-  }
+  const db = getAdminDb();
   return collection(db, 'news');
 };
 
@@ -58,8 +54,7 @@ const toFirestore = (item: Partial<NewsCardData>): any => {
 // One-time seed function
 async function seedNewsDataFromLocalJson() {
     console.log("Attempting to seed news data from local JSON...");
-    const db = getDb();
-    if (!db) return;
+    const db = getAdminDb();
 
     const newsCollection = getNewsCollection();
     const filePath = path.join(process.cwd(), 'data', 'news.json');
@@ -97,8 +92,7 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
 }
 
 export async function getNewsItemById(id: string): Promise<NewsCardData | undefined> {
-  const db = getDb();
-  if (!db) throw new Error("Firestore not initialized.");
+  const db = getAdminDb();
   const docRef = doc(db, 'news', id);
   const docSnap = await getDoc(docRef);
 
@@ -124,8 +118,7 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): P
 }
 
 export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
-  const db = getDb();
-  if (!db) throw new Error("Firestore not initialized.");
+  const db = getAdminDb();
   const docRef = doc(db, 'news', id);
   await setDoc(docRef, toFirestore(updates), { merge: true });
   
@@ -134,16 +127,14 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
 }
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
-  const db = getDb();
-  if (!db) throw new Error("Firestore not initialized.");
+  const db = getAdminDb();
   const docRef = doc(db, 'news', id);
   await deleteDoc(docRef);
   return { success: true };
 }
 
 export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
-    const db = getDb();
-    if (!db) throw new Error("Firestore not initialized.");
+    const db = getAdminDb();
     const batch = writeBatch(db);
     
     orderedIds.forEach((id, index) => {

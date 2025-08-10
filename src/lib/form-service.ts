@@ -1,5 +1,7 @@
 
-import { getDb } from './firebase';
+'use server';
+
+import { getAdminDb } from './firebase-admin';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 import { z } from 'zod';
 
@@ -42,8 +44,7 @@ export interface FiscalizacionSubmission extends FiscalizacionFormValues {
 
 // --- Firestore Collection References ---
 const getFormDefCollection = () => {
-    const db = getDb();
-    if (!db) throw new Error("Firestore is not initialized.");
+    const db = getAdminDb();
     return collection(db, 'form-definitions');
 };
 

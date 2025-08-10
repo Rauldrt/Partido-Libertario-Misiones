@@ -1,7 +1,7 @@
 
 'use server';
 
-import { getDb } from './firebase';
+import { getAdminDb } from './firebase-admin';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
@@ -15,8 +15,7 @@ export interface ReferenteData {
 }
 
 const getReferentesDocRef = () => {
-    const db = getDb();
-    if (!db) throw new Error("Firestore is not initialized.");
+    const db = getAdminDb();
     return doc(db, 'site-config', 'referentes');
 };
 
