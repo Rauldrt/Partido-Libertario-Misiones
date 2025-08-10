@@ -126,9 +126,7 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
     const formDefCollection = getFormDefCollection();
      if (!formDefCollection) {
-        // En un escenario de solo local, la edición de formularios no es posible.
-        // Se podría implementar el guardado en JSON si fuera un requisito.
-        throw new Error("No se puede guardar la definición: El SDK de administrador de Firebase no está inicializado.");
+        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
     const docRef = doc(formDefCollection, formId);
     const dataToSave = { id: formId, fields };

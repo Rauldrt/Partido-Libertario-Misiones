@@ -31,16 +31,6 @@ async function readSocialLinksJson(): Promise<SocialLink[]> {
     }
 }
 
-async function writeSocialLinksJson(data: SocialLink[]): Promise<void> {
-    try {
-        await fs.writeFile(socialLinksFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error("Error escribiendo en social-links.json:", error);
-        throw new Error("No se pudo escribir en el archivo de enlaces sociales local.");
-    }
-}
-
-
 const getSocialLinksDocRef = () => {
     const db = getAdminDb();
     if (!db) return null;
@@ -77,9 +67,7 @@ export async function saveSocialLinks(data: SocialLink[]): Promise<void> {
     }
 
     if (!docRef) {
-        console.warn("Admin SDK no inicializado. Guardando enlaces sociales en archivo local.");
-        await writeSocialLinksJson(validation.data);
-        return;
+        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
     
     await setDoc(docRef, { links: validation.data });

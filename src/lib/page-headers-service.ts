@@ -9,7 +9,7 @@ import path from 'path';
 
 const pageHeadersFilePath = path.join(process.cwd(), 'data', 'page-headers.json');
 
-// Helper to read local JSON file
+// Helper to read local JSON file for seeding
 async function readPageHeadersJson(): Promise<any> {
     try {
         const fileContent = await fs.readFile(pageHeadersFilePath, 'utf-8');
@@ -20,16 +20,6 @@ async function readPageHeadersJson(): Promise<any> {
         }
         console.error("Error leyendo page-headers.json:", error);
         return {}; // Return empty object on error
-    }
-}
-
-// Helper to write to local JSON file
-async function writePageHeadersJson(data: any): Promise<void> {
-    try {
-        await fs.writeFile(pageHeadersFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error("Error escribiendo en page-headers.json:", error);
-        throw new Error("No se pudo escribir en el archivo de encabezados de página local.");
     }
 }
 
@@ -92,9 +82,7 @@ export async function saveAllPageHeaders(data: PageHeadersData): Promise<void> {
     }
 
     if (!docRef) {
-        console.warn("Admin SDK no inicializado. Guardando encabezados en archivo local.");
-        await writePageHeadersJson(validation.data);
-        return;
+        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
     
     await setDoc(docRef, validation.data);

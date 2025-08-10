@@ -6,7 +6,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Helper to read local JSON files
+// Helper to read local JSON files for seeding
 async function readJsonData(fileName: string): Promise<any> {
     const filePath = path.join(process.cwd(), 'data', fileName);
     try {
@@ -17,18 +17,6 @@ async function readJsonData(fileName: string): Promise<any> {
         return [];
     }
 }
-
-// Helper to write to local JSON files
-async function writeJsonData(fileName: string, data: any): Promise<void> {
-    const filePath = path.join(process.cwd(), 'data', fileName);
-    try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error(`Error al escribir en ${fileName}:`, error);
-        throw new Error(`No se pudo escribir en el archivo ${fileName}.`);
-    }
-}
-
 
 // Types for Banner Slides
 export interface BannerCtaData {
@@ -123,12 +111,8 @@ async function getHomepageData(useLocal = false): Promise<any> {
 async function saveHomepageData(data: any): Promise<void> {
     const docRef = getHomepageDocRef();
     if (!docRef) {
-      console.warn("Admin SDK no inicializado. Guardando cambios en archivos locales.");
-      if (data.banner) await writeJsonData('banner.json', data.banner);
-      if (data.mosaic) await writeJsonData('mosaic.json', data.mosaic);
-      if (data.accordion) await writeJsonData('accordion.json', data.accordion);
-      if (data.infoSection) await writeJsonData('info-section.json', data.infoSection);
-      return;
+      // This error will be shown to the admin user on Vercel if the service key is not set.
+      throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
     await setDoc(docRef, data, { merge: true });
 }
@@ -176,6 +160,7 @@ export async function getAccordionItems(): Promise<AccordionItemData[]> {
 }
 
 export async function saveAccordionItems(items: AccordionItemData[]): Promise<void> {
+    // The 'value' property is client-side only for the accordion state, so we strip it before saving.
     const dataToSave = items.map(({ value, ...rest }) => rest);
     await saveHomepageData({ accordion: dataToSave });
 }

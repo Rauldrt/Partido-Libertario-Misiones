@@ -28,15 +28,6 @@ async function readReferentesJson(): Promise<any[]> {
     }
 }
 
-async function writeReferentesJson(data: any[]): Promise<void> {
-    try {
-        await fs.writeFile(referentesFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error("Error escribiendo en referentes.json:", error);
-        throw new Error("No se pudo escribir en el archivo de referentes local.");
-    }
-}
-
 const getReferentesDocRef = () => {
     const db = getAdminDb();
     if (!db) return null;
@@ -73,9 +64,7 @@ export async function getReferentes(): Promise<ReferenteData[]> {
 export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
     const docRef = getReferentesDocRef();
     if (!docRef) {
-        console.warn("Admin SDK no inicializado. Guardando referentes en archivo local.");
-        await writeReferentesJson(referentes);
-        return;
+        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
     await setDoc(docRef, { list: referentes });
 }

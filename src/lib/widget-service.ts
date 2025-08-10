@@ -31,16 +31,6 @@ async function readWidgetJson(): Promise<SocialWidgetData> {
     }
 }
 
-async function writeWidgetJson(data: SocialWidgetData): Promise<void> {
-    try {
-        await fs.writeFile(widgetFilePath, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (error) {
-        console.error("Error escribiendo en social-widget.json:", error);
-        throw new Error("No se pudo escribir en el archivo del widget social local.");
-    }
-}
-
-
 const getWidgetDocRef = () => {
     const db = getAdminDb();
     if (!db) return null;
@@ -81,9 +71,7 @@ export async function saveSocialWidgetData(data: SocialWidgetData): Promise<void
     }
     
     if (!docRef) {
-        console.warn("Admin SDK no inicializado. Guardando widget social en archivo local.");
-        await writeWidgetJson(validation.data);
-        return;
+        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
 
     await setDoc(docRef, validation.data);
