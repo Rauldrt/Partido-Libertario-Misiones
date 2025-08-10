@@ -16,8 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { submitAfiliacionForm } from "@/app/afiliacion/actions";
-import { getFormDefinitionAction } from '@/admin/manage-forms/actions';
+import { getAfiliacionFormDef, submitAfiliacionForm } from "@/app/afiliacion/actions";
 import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
@@ -104,11 +103,10 @@ export function AfiliacionForm() {
     const fetchFormDef = async () => {
       try {
         setIsLoading(true);
-        const result = await getFormDefinitionAction('afiliacion');
-        if (!result.success || !result.definition) {
-            throw new Error(result.message || 'Error desconocido');
+        const definition = await getAfiliacionFormDef();
+        if (!definition) {
+            throw new Error('Error desconocido al cargar el formulario.');
         }
-        const definition = result.definition;
         setFormDefinition(definition);
         
         // Dynamically create default values and resolver

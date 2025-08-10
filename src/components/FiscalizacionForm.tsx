@@ -20,11 +20,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
+import { submitFiscalizacionForm, getFiscalizacionFormDef } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from './ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { getFormDefinitionAction } from '@/admin/manage-forms/actions';
 import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 
 const renderField = (fieldInfo: FormFieldType, control: any) => {
@@ -112,11 +111,10 @@ export function FiscalizacionForm() {
     const fetchAndSetForm = async () => {
         setIsLoading(true);
         try {
-            const result = await getFormDefinitionAction('fiscalizacion');
-            if (!result.success || !result.definition) {
-                throw new Error(result.message || 'Error desconocido');
+            const definition = await getFiscalizacionFormDef();
+            if (!definition) {
+                throw new Error('Error desconocido al cargar el formulario.');
             }
-            const definition = result.definition;
             setFormDefinition(definition);
             
             const schema = buildZodSchema(definition.fields);
