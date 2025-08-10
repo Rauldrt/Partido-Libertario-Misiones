@@ -24,7 +24,8 @@ import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from './ui/skeleton';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { getFormDefinition, buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
+import { getFormDefinitionAction } from '@/admin/manage-forms/actions';
+import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 
 const renderField = (fieldInfo: FormFieldType, control: any) => {
     return (
@@ -111,7 +112,11 @@ export function FiscalizacionForm() {
     const fetchAndSetForm = async () => {
         setIsLoading(true);
         try {
-            const definition = await getFormDefinition('fiscalizacion');
+            const result = await getFormDefinitionAction('fiscalizacion');
+            if (!result.success || !result.definition) {
+                throw new Error(result.message || 'Error desconocido');
+            }
+            const definition = result.definition;
             setFormDefinition(definition);
             
             const schema = buildZodSchema(definition.fields);

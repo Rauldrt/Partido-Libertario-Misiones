@@ -17,7 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { submitAfiliacionForm } from "@/app/afiliacion/actions";
-import { getFormDefinition, buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
+import { getFormDefinitionAction } from '@/admin/manage-forms/actions';
+import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
 import { Loader2 } from "lucide-react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -103,7 +104,11 @@ export function AfiliacionForm() {
     const fetchFormDef = async () => {
       try {
         setIsLoading(true);
-        const definition = await getFormDefinition('afiliacion');
+        const result = await getFormDefinitionAction('afiliacion');
+        if (!result.success || !result.definition) {
+            throw new Error(result.message || 'Error desconocido');
+        }
+        const definition = result.definition;
         setFormDefinition(definition);
         
         // Dynamically create default values and resolver
