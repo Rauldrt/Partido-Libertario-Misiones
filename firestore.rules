@@ -1,53 +1,51 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
     // Helper functions
-    function isUserAuthenticated() {
+    function isAdmin() {
       return request.auth != null;
     }
 
-    // Rules for news collection
-    match /news/{newsId} {
-      // Anyone can read news articles
-      allow read: if true;
-      // Allow anyone to write (create, update, delete).
-      // The admin panel is protected by its own auth, so server-side actions
-      // from Vercel (which are not authenticated) will be allowed.
-      allow write: if true;
+    // Default deny all reads and writes
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    // Rules for site-config documents
-    match /site-config/{configId} {
-      // Anyone can read config documents
-      allow read: if true;
-      // Only authenticated users can write to config.
-      // This is correct as config is only managed from the admin panel UI.
-      allow write: if isUserAuthenticated();
+    // Allow admins full access to all collections
+    match /news/{document=**} {
+      allow read, write: if isAdmin();
     }
-    
-    // Rules for form submissions, which can be created by anyone.
-    match /afiliaciones/{afiliacionId} {
-        allow create: if true;
-        allow read, update, delete: if isUserAuthenticated();
+    match /site-config/{document=**} {
+      allow read, write: if isAdmin();
     }
-    
-    match /fiscalizaciones/{fiscalizacionId} {
-        allow create: if true;
-        allow read, update, delete: if isUserAuthenticated();
+    match /afiliaciones/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    match /contactSubmissions/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    match /fiscalizaciones/{document=**} {
+      allow read, write: if isAdmin();
     }
 
-    match /contactSubmissions/{contactId} {
-        allow create: if true;
-        allow read, update, delete: if isUserAuthenticated();
-    }
+    // --- Public Access Rules ---
     
-    // Rules for form definitions, managed from admin panel
+    // Allow anyone to READ the form definitions
     match /form-definitions/{formId} {
-      allow read: if true;
-      allow write: if isUserAuthenticated();
+      allow get: if true;
+    }
+
+    // Allow anyone to CREATE (write) new submissions, but not read them.
+    match /afiliaciones/{submissionId} {
+        allow create: if true;
+    }
+    match /contactSubmissions/{submissionId} {
+        allow create: if true;
+    }
+    match /fiscalizaciones/{submissionId} {
+        allow create: if true;
     }
   }
 }
