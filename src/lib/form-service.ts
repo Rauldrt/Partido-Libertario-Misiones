@@ -4,6 +4,20 @@
 import { getAdminDb } from './firebase-admin';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 import { z } from 'zod';
+import fs from 'fs/promises';
+import path from 'path';
+
+// Helper to read local JSON files
+async function readFormDefinitionsJson(): Promise<any> {
+    // This is a simplified approach. A real app might have separate files.
+    // For now, we assume defaults are the source of truth if Firestore fails.
+    return {
+        afiliacion: { id: 'afiliacion', fields: defaultAfiliacionFields },
+        fiscalizacion: { id: 'fiscalizacion', fields: defaultFiscalizacionFields },
+        contacto: { id: 'contacto', fields: defaultContactoFields },
+    };
+}
+
 
 // Defines a single field in a form
 export const FormFieldSchema = z.object({
@@ -45,6 +59,7 @@ export interface FiscalizacionSubmission extends FiscalizacionFormValues {
 // --- Firestore Collection References ---
 const getFormDefCollection = () => {
     const db = getAdminDb();
+    if (!db) return null;
     return collection(db, 'form-definitions');
 };
 
@@ -80,34 +95,41 @@ const defaultFiscalizacionFields: FormField[] = [
 // --- Public Service Functions ---
 
 export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
-    const docRef = doc(getFormDefCollection(), formId);
-    const docSnap = await getDoc(docRef);
+    const formDefCollection = getFormDefCollection();
+    const defaults = await readFormDefinitionsJson();
+    
+    if (!formDefCollection) {
+        console.warn(`Admin SDK no inicializado, usando definición de formulario por defecto para '${formId}'.`);
+        return defaults[formId];
+    }
+    
+    const docRef = doc(formDefCollection, formId);
 
-    if (docSnap.exists()) {
-        const data = docSnap.data() as FormDefinition;
-        data.fields.sort((a, b) => a.order - b.order);
-        return data;
-    } else {
-        // Seed with default data if it doesn't exist
-        console.log(`Seeding default form definition for '${formId}'.`);
-        
-        let defaultFields: FormField[] = [];
-        if (formId === 'afiliacion') {
-            defaultFields = defaultAfiliacionFields;
-        } else if (formId === 'fiscalizacion') {
-            defaultFields = defaultFiscalizacionFields;
-        } else if (formId === 'contacto') {
-            defaultFields = defaultContactoFields;
+    try {
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data() as FormDefinition;
+            data.fields.sort((a, b) => a.order - b.order);
+            return data;
+        } else {
+            console.log(`Sembrando definición por defecto para '${formId}' en Firestore.`);
+            const defaultFormDef = defaults[formId];
+            await setDoc(docRef, defaultFormDef);
+            return defaultFormDef;
         }
-        
-        const defaultFormDef: FormDefinition = { id: formId, fields: defaultFields };
-        await setDoc(docRef, defaultFormDef);
-        return defaultFormDef;
+    } catch (error) {
+        console.error(`Error obteniendo la definición del formulario '${formId}' de Firestore, usando respaldo local:`, error);
+        return defaults[formId];
     }
 }
 
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
-    const docRef = doc(getFormDefCollection(), formId);
+    const formDefCollection = getFormDefCollection();
+     if (!formDefCollection) {
+        throw new Error("No se puede guardar la definición: El SDK de administrador de Firebase no está inicializado.");
+    }
+    const docRef = doc(formDefCollection, formId);
     const dataToSave = { id: formId, fields };
     await setDoc(docRef, dataToSave);
 }

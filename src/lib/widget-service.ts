@@ -16,44 +16,57 @@ const SocialWidgetSchema = z.object({
     embedCode: z.string().trim(),
 });
 
-const getWidgetDocRef = () => {
-    const db = getAdminDb();
-    return doc(db, 'site-config', 'socialWidget');
-};
-
-async function seedWidgetData() {
+async function readWidgetJson(): Promise<SocialWidgetData> {
     const filePath = path.join(process.cwd(), 'data', 'social-widget.json');
     try {
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        const localData = JSON.parse(fileContent);
-        const validatedData = SocialWidgetSchema.parse(localData);
-        await setDoc(getWidgetDocRef(), validatedData);
-        console.log("Successfully seeded social widget data.");
-        return validatedData;
+        return SocialWidgetSchema.parse(JSON.parse(fileContent));
     } catch (error) {
-        console.error("Error seeding social widget data, returning empty object:", error);
+        console.error("Error leyendo social-widget.json:", error);
         return { embedCode: '' };
     }
 }
 
+const getWidgetDocRef = () => {
+    const db = getAdminDb();
+    if (!db) return null;
+    return doc(db, 'site-config', 'socialWidget');
+};
+
 export async function getSocialWidgetData(): Promise<SocialWidgetData> {
-    const docSnap = await getDoc(getWidgetDocRef());
-    if (docSnap.exists()) {
-        const parsed = SocialWidgetSchema.safeParse(docSnap.data());
-        if(parsed.success) {
-            return parsed.data;
-        }
+    const docRef = getWidgetDocRef();
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado, usando social-widget.json como respaldo.");
+        return readWidgetJson();
     }
-    return await seedWidgetData();
+
+    try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const parsed = SocialWidgetSchema.safeParse(docSnap.data());
+            if(parsed.success) {
+                return parsed.data;
+            }
+        }
+        console.log("Sembrando datos del widget social desde JSON local a Firestore.");
+        const localData = await readWidgetJson();
+        await setDoc(docRef, localData);
+        return localData;
+    } catch (error) {
+        console.error("Error obteniendo widget de Firestore, usando respaldo local:", error);
+        return readWidgetJson();
+    }
 }
 
 
 export async function saveSocialWidgetData(data: SocialWidgetData): Promise<void> {
-    const validation = SocialWidgetSchema.safeParse(data);
-
-    if (!validation.success) {
-        throw new Error('Invalid widget data provided.');
+    const docRef = getWidgetDocRef();
+    if (!docRef) {
+        throw new Error("No se puede guardar el widget: El SDK de administrador de Firebase no está inicializado.");
     }
-
-    await setDoc(getWidgetDocRef(), validation.data);
+    const validation = SocialWidgetSchema.safeParse(data);
+    if (!validation.success) {
+        throw new Error('Datos de widget inválidos.');
+    }
+    await setDoc(docRef, validation.data);
 }

@@ -16,39 +16,54 @@ const SocialLinkSchema = z.object({
 export type SocialLink = z.infer<typeof SocialLinkSchema>;
 const SocialLinksSchema = z.array(SocialLinkSchema);
 
-const getSocialLinksDocRef = () => {
-    const db = getAdminDb();
-    return doc(db, 'site-config', 'socialLinks');
-};
-
-async function seedSocialLinksData() {
+async function readSocialLinksJson(): Promise<SocialLink[]> {
     const filePath = path.join(process.cwd(), 'data', 'social-links.json');
     try {
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        const localData = JSON.parse(fileContent);
-        const validatedData = SocialLinksSchema.parse(localData);
-        await setDoc(getSocialLinksDocRef(), { links: validatedData });
-        console.log("Successfully seeded social links data.");
-        return validatedData;
+        return SocialLinksSchema.parse(JSON.parse(fileContent));
     } catch (error) {
-        console.error("Error seeding social links data, returning empty array:", error);
+        console.error("Error leyendo social-links.json:", error);
         return [];
     }
 }
 
+const getSocialLinksDocRef = () => {
+    const db = getAdminDb();
+    if (!db) return null;
+    return doc(db, 'site-config', 'socialLinks');
+};
 
 export async function getSocialLinks(): Promise<SocialLink[]> {
-    const docSnap = await getDoc(getSocialLinksDocRef());
-    if (docSnap.exists() && docSnap.data().links) {
-        return docSnap.data().links;
+    const docRef = getSocialLinksDocRef();
+    if (!docRef) {
+        console.warn("Admin SDK no inicializado, usando social-links.json como respaldo.");
+        return readSocialLinksJson();
     }
-    return await seedSocialLinksData();
+
+    try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().links) {
+            return docSnap.data().links;
+        }
+        console.log("Sembrando datos de enlaces sociales desde JSON local a Firestore.");
+        const localData = await readSocialLinksJson();
+        await setDoc(docRef, { links: localData });
+        return localData;
+    } catch (error) {
+        console.error("Error obteniendo enlaces sociales de Firestore, usando respaldo local:", error);
+        return readSocialLinksJson();
+    }
 }
 
 export async function saveSocialLinks(data: SocialLink[]): Promise<void> {
+    const docRef = getSocialLinksDocRef();
+    if (!docRef) {
+        throw new Error("No se pueden guardar los enlaces: El SDK de administrador de Firebase no está inicializado.");
+    }
+
     const validation = SocialLinksSchema.safeParse(data);
     if (!validation.success) {
-        throw new Error('Invalid social links data provided.');
+        throw new Error('Datos de enlaces sociales inválidos.');
     }
-    await setDoc(getSocialLinksDocRef(), { links: validation.data });
+    await setDoc(docRef, { links: validation.data });
 }
