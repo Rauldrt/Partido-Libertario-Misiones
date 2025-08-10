@@ -91,6 +91,13 @@ const toFirestore = (item: Partial<NewsCardData>): any => {
     return data;
 };
 
+// Helper to convert NewsCardData to a plain object for JSON serialization
+const toJsonSerializable = (item: Partial<NewsCardData>): any => {
+    const { linkUrl, ...data } = item;
+    return data;
+};
+
+
 export async function getNewsItems(): Promise<NewsCardData[]> {
   const newsCollection = getNewsCollection();
 
@@ -153,22 +160,22 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): P
   const newOrder = allItems.length > 0 ? Math.min(...allItems.map(i => i.order)) - 1 : 0;
   const newId = `${Date.now()}`;
   
-  const newItem: NewsCardData = {
+  const newItemData: Partial<NewsCardData> = {
     ...item,
     id: newId,
-    linkUrl: `/news/${newId}`,
+    // linkUrl is derived, so no need to store it
     order: newOrder
   };
 
   if (!newsCollection) {
-      const updatedItems = [toFirestore(newItem), ...allItems.map(toFirestore)];
+      const updatedItems = [toJsonSerializable(newItemData), ...allItems.map(toJsonSerializable)];
       await writeNewsJson(updatedItems);
-      return newItem;
+      return { ...newItemData, linkUrl: `/news/${newId}` } as NewsCardData;
   }
 
   const docRef = doc(newsCollection, newId);
-  await setDoc(docRef, toFirestore(newItem));
-  return newItem;
+  await setDoc(docRef, toFirestore(newItemData));
+  return { ...newItemData, linkUrl: `/news/${newId}` } as NewsCardData;
 }
 
 export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
@@ -182,7 +189,7 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
       }
       const updatedItem = { ...allItems[itemIndex], ...updates };
       allItems[itemIndex] = updatedItem;
-      await writeNewsJson(allItems);
+      await writeNewsJson(allItems.map(toJsonSerializable));
       return updatedItem;
   }
   
@@ -202,7 +209,7 @@ export async function deleteNewsItem(id: string): Promise<{ success: boolean }> 
        if (allItems.length === updatedItems.length) {
             return { success: false };
        }
-       await writeNewsJson(updatedItems);
+       await writeNewsJson(updatedItems.map(toJsonSerializable));
        return { success: true };
   }
 
@@ -218,15 +225,18 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
       let allItems = await getNewsFromLocalJson();
       const reordered = orderedIds.map((id, index) => {
           const item = allItems.find(i => i.id === id);
+          if (!item) return null; // Should not happen
           return { ...item, order: index };
-      });
+      }).filter(Boolean);
+      
       // Add any items that were not in orderedIds back to the list
+      const existingIds = new Set(orderedIds);
       allItems.forEach(item => {
-        if (!orderedIds.includes(item.id)) {
+        if (!existingIds.has(item.id)) {
             reordered.push(item);
         }
       });
-      await writeNewsJson(reordered);
+      await writeNewsJson(reordered.map(toJsonSerializable));
       return;
     }
     
