@@ -1,7 +1,7 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -126,7 +126,7 @@ const renderField = (fieldInfo: FormFieldType, control: any) => {
                                         <FormControl>
                                             <RadioGroupItem value={option} />
                                         </FormControl>
-                                        <FormLabel className="font-normal capitalize">{option.replace('_', ' ')}</FormLabel>
+                                        <FormLabel className="font-normal capitalize">{option.replace(/_/g, ' ')}</FormLabel>
                                     </FormItem>
                                 ))}
                             </RadioGroup>

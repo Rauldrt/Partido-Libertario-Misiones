@@ -113,15 +113,6 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
     }
 }
 
-export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
-    const docRef = doc(getFormDefCollection(), formId);
-    const dataToSave: FormDefinition = {
-        id: formId,
-        fields: fields.map((field, index) => ({...field, order: index})) // Re-assign order based on array index
-    }
-    await setDoc(docRef, dataToSave);
-}
-
 export async function addAfiliacionSubmission(submission: Record<string, any>): Promise<void> {
     const afiliacionCollection = getAfiliacionCollection();
     await addDoc(afiliacionCollection, {

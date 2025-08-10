@@ -39,32 +39,32 @@
   }
 
   .dark {
-    --background: 290 48% 27%; /* Morado Institucional: #572364 */
+    --background: 275 42% 17%; /* Morado Institucional: #572364 */
     --foreground: 0 0% 98%;
-    --card: 290 48% 32%;
+    --card: 275 42% 22%;
     --card-foreground: 0 0% 98%;
-    --popover: 290 48% 27%;
+    --popover: 275 42% 17%;
     --popover-foreground: 0 0% 98%;
     --primary: 196 100% 44%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 290 48% 37%;
+    --secondary: 275 42% 27%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 290 48% 37%;
+    --muted: 275 42% 27%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 25 95% 53%;
     --accent-foreground: 0 0% 3.9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 290 48% 37%;
-    --input: 290 48% 37%;
+    --border: 275 42% 27%;
+    --input: 275 42% 27%;
     --ring: 196 100% 44%;
     
     /* Mismos colores para el sidebar en modo oscuro */
-    --sidebar: 290 48% 22%;
+    --sidebar: 275 42% 17%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-border: 290 48% 32%;
+    --sidebar-border: 275 42% 27%;
     --sidebar-ring: 196 100% 44%;
-    --sidebar-accent: 290 48% 32%;
+    --sidebar-accent: 275 42% 22%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
 }

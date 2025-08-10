@@ -225,7 +225,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent className="px-6 pb-6">
-                                <p className="font-body text-lg pl-[56px]">
+                                <p className="font-body text-lg pl-[56px] text-muted-foreground">
                                     {item.content}
                                 </p>
                             </AccordionContent>
