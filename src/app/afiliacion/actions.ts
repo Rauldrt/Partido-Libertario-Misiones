@@ -25,18 +25,18 @@ async function getValidationSchema(): Promise<z.ZodObject<any, any, any>> {
 export async function submitAfiliacionForm(
   values: Record<string, any>
 ): Promise<AfiliacionFormState> {
-  const validationSchema = await getValidationSchema();
-  const validatedFields = validationSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      errors: validatedFields.error.issues,
-      message: "Por favor, corrija los errores en el formulario.",
-    };
-  }
-
   try {
+    const validationSchema = await getValidationSchema();
+    const validatedFields = validationSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return {
+        success: false,
+        errors: validatedFields.error.issues,
+        message: "Por favor, corrija los errores en el formulario.",
+      };
+    }
+
     await addAfiliacionSubmission(validatedFields.data);
     revalidatePath('/admin/manage-afiliaciones');
     return {

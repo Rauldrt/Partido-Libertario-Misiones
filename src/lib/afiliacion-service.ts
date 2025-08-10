@@ -7,8 +7,11 @@ import type { AfiliacionSubmission } from './form-service';
 
 // --- Firestore Collection References ---
 const getAfiliacionCollection = () => {
-  const db = getAdminDb();
-  return collection(db, 'afiliaciones');
+    const db = getAdminDb();
+    if (!db) {
+        throw new Error("No se puede acceder a la base de datos: El SDK de administrador de Firebase no está inicializado.");
+    }
+    return collection(db, 'afiliaciones');
 };
 
 

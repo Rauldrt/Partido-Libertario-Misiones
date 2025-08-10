@@ -147,6 +147,8 @@ export const buildZodSchema = (fields: FormField[]) => {
             fieldSchema = z.boolean().default(false);
             break;
         case 'number':
+             fieldSchema = z.string().min(1, { message: `${field.label} es requerido.` });
+             break;
         case 'tel':
         default:
             fieldSchema = z.string();

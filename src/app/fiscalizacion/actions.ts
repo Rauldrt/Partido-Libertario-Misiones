@@ -16,7 +16,7 @@ export async function getFiscalizacionFormDef(): Promise<FormDefinition> {
     return getFormDefinition('fiscalizacion');
 }
 
-async function getValidationSchema() {
+async function getValidationSchema(): Promise<z.ZodObject<any, any, any>> {
     const definition = await getFormDefinition('fiscalizacion');
     return buildZodSchema(definition.fields);
 }
@@ -24,18 +24,18 @@ async function getValidationSchema() {
 export async function submitFiscalizacionForm(
   values: z.infer<z.ZodObject<any>>
 ): Promise<FiscalizacionFormState> {
-  const validationSchema = await getValidationSchema();
-  const validatedFields = validationSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      errors: validatedFields.error.issues,
-      message: "Por favor, corrija los errores en el formulario.",
-    };
-  }
-
   try {
+    const validationSchema = await getValidationSchema();
+    const validatedFields = validationSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return {
+        success: false,
+        errors: validatedFields.error.issues,
+        message: "Por favor, corrija los errores en el formulario.",
+      };
+    }
+
     await addFiscalizacionSubmission(validatedFields.data);
     revalidatePath('/admin/manage-fiscales');
     return {
