@@ -1,3 +1,6 @@
+
+'use server';
+
 import { getDb } from './firebase';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import * as z from "zod";
@@ -57,17 +60,13 @@ const buildZodSchema = (fields: FormField[]) => {
   return z.object(schemaShape);
 };
 
-// Export a validation schema that is built dynamically.
-// This is more of an example, as the server actions will build it on-the-fly.
-export let fiscalizacionFormSchema = z.object({});
-export const getFiscalizacionValidationSchema = async () => {
+export async function getFiscalizacionValidationSchema() {
     const { getFormDefinition } = await import('./afiliacion-service');
     const definition = await getFormDefinition('fiscalizacion');
     return buildZodSchema(definition.fields);
 }
-getFiscalizacionValidationSchema().then(schema => fiscalizacionFormSchema = schema);
 
-export type FiscalizacionFormValues = z.infer<typeof fiscalizacionFormSchema>;
+export type FiscalizacionFormValues = z.infer<Awaited<ReturnType<typeof getFiscalizacionValidationSchema>>>;
 
 export interface FiscalizacionSubmission extends FiscalizacionFormValues {
     id: string;

@@ -30,11 +30,11 @@
     --radius: 1.3rem;
   
     /* Colores personalizados para el sidebar del admin */
-    --sidebar: 290 48% 27%; /* Morado Institucional: #572364 */
+    --sidebar: 275 42% 17%; /* Morado Institucional: #572364 */
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-border: 290 48% 37%;
+    --sidebar-border: 275 42% 27%;
     --sidebar-ring: 196 100% 44%;
-    --sidebar-accent: 290 48% 32%;
+    --sidebar-accent: 275 42% 22%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
 

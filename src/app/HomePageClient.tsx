@@ -258,7 +258,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
             <div className="col-span-1">
                  <Card className="shadow-lg w-full">
                     <CardHeader>
-                        <CardTitle className="flex items-center">
+                        <CardTitle className="flex items-center text-foreground">
                             <LucideIcons.Rss className="h-6 w-6 text-primary mr-3" />
                             Conectate en Redes
                         </CardTitle>
