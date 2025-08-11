@@ -15,13 +15,15 @@ export interface SocialWidgetData {
 const widgetFilePath = path.join(process.cwd(), 'data', 'social-widget.json');
 
 const SocialWidgetSchema = z.object({
-    embedCode: z.string().trim(),
+    embedCode: z.string().trim().optional().default(''),
 });
 
 async function readWidgetJson(): Promise<SocialWidgetData> {
     try {
         const fileContent = await fs.readFile(widgetFilePath, 'utf-8');
-        return SocialWidgetSchema.parse(JSON.parse(fileContent));
+        const parsed = SocialWidgetSchema.safeParse(JSON.parse(fileContent));
+        if (parsed.success) return parsed.data;
+        return { embedCode: '' };
     } catch (error) {
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
             return { embedCode: '' };
