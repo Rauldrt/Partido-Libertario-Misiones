@@ -7,18 +7,6 @@ import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Helper to read local JSON files
-async function readFormDefinitionsJson(): Promise<any> {
-    // This is a simplified approach. A real app might have separate files.
-    // For now, we assume defaults are the source of truth if Firestore fails.
-    return {
-        afiliacion: { id: 'afiliacion', fields: defaultAfiliacionFields },
-        fiscalizacion: { id: 'fiscalizacion', fields: defaultFiscalizacionFields },
-        contacto: { id: 'contacto', fields: defaultContactoFields },
-    };
-}
-
-
 // Defines a single field in a form
 export const FormFieldSchema = z.object({
   id: z.string(),
@@ -91,16 +79,22 @@ const defaultFiscalizacionFields: FormField[] = [
     { id: 'f8', name: 'notes', label: 'Aclaraciones (Opcional)', type: 'textarea', required: false, order: 8, placeholder: 'Dejanos cualquier otra información que consideres relevante.', validationRegex: '', validationMessage: '' },
 ];
 
+// Helper to read local JSON files for seeding
+const defaultFormDefinitions: Record<string, FormDefinition> = {
+    afiliacion: { id: 'afiliacion', fields: defaultAfiliacionFields },
+    fiscalizacion: { id: 'fiscalizacion', fields: defaultFiscalizacionFields },
+    contacto: { id: 'contacto', fields: defaultContactoFields },
+};
 
 // --- Public Service Functions ---
 
 export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
     const formDefCollection = getFormDefCollection();
-    const defaults = await readFormDefinitionsJson();
+    const defaults = defaultFormDefinitions[formId];
     
     if (!formDefCollection) {
         console.warn(`Admin SDK no inicializado, usando definición de formulario por defecto para '${formId}'.`);
-        return defaults[formId];
+        return defaults;
     }
     
     try {
@@ -109,82 +103,26 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 
         if (docSnap.exists()) {
             const data = docSnap.data() as FormDefinition;
+            // Sort fields by order just in case they are not stored correctly
             data.fields.sort((a, b) => a.order - b.order);
             return data;
         } else {
             console.log(`Sembrando definición por defecto para '${formId}' en Firestore.`);
-            const defaultFormDef = defaults[formId];
-            await setDoc(docRef, defaultFormDef);
-            return defaultFormDef;
+            await setDoc(docRef, defaults);
+            return defaults;
         }
     } catch (error) {
         console.error(`Error obteniendo la definición del formulario '${formId}' de Firestore, usando respaldo local:`, error);
-        return defaults[formId];
+        return defaults;
     }
 }
 
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
     const formDefCollection = getFormDefCollection();
-     if (!formDefCollection) {
+    if (!formDefCollection) {
         throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
     }
     const docRef = doc(formDefCollection, formId);
     const dataToSave = { id: formId, fields };
     await setDoc(docRef, dataToSave);
 }
-
-// Helper to build a Zod schema from a form definition
-export const buildZodSchema = (fields: FormField[]) => {
-  const schemaShape: Record<string, z.ZodTypeAny> = {};
-  fields.forEach(field => {
-    let fieldSchema: z.ZodTypeAny;
-
-    switch (field.type) {
-        case 'email':
-            fieldSchema = z.string().email({ message: "Correo electrónico inválido." });
-            break;
-        case 'checkbox':
-            fieldSchema = z.boolean().default(false);
-            break;
-        case 'number':
-             fieldSchema = z.string().min(1, { message: `${field.label} es requerido.` });
-             break;
-        case 'tel':
-        default:
-            fieldSchema = z.string();
-    }
-    
-    if (field.required && field.type !== 'checkbox') {
-        fieldSchema = fieldSchema.min(1, { message: `${field.label} es requerido.` });
-    }
-
-    if (field.required && field.type === 'checkbox') {
-        fieldSchema = fieldSchema.refine(val => val === true, {
-            message: `${field.label} es requerido.`
-        });
-    }
-
-    if(field.validationRegex) {
-        try {
-            const regex = new RegExp(field.validationRegex);
-            fieldSchema = (fieldSchema as z.ZodString).regex(regex, { message: field.validationMessage || "Formato inválido."});
-        } catch (e) {
-            console.error("Invalid regex in form definition:", field.validationRegex)
-        }
-    }
-    
-    if (!field.required) {
-        fieldSchema = fieldSchema.optional();
-    }
-
-    // For radio groups, ensure the value is one of the options
-    if (field.type === 'radio' && field.options) {
-        fieldSchema = z.enum(field.options as [string, ...string[]], {
-            required_error: `${field.label} es requerido.`
-        })
-    }
-    
-    schemaShape[field.name] = fieldSchema;
-  });
-  return z.object(schemaShape);
-};

@@ -3,7 +3,8 @@
 
 import * as z from "zod";
 import { addAfiliacionSubmission } from "@/lib/afiliacion-service";
-import { getFormDefinition, buildZodSchema, type FormDefinition } from "@/lib/form-service";
+import { getFormDefinition, type FormDefinition } from "@/lib/form-service";
+import { buildZodSchema } from "@/lib/zod-schema-builder";
 import { revalidatePath } from "next/cache";
 
 export type AfiliacionFormState = {
@@ -16,17 +17,12 @@ export async function getAfiliacionFormDef(): Promise<FormDefinition> {
     return getFormDefinition('afiliacion');
 }
 
-// This function now dynamically builds a Zod schema from the form definition
-async function getValidationSchema(): Promise<z.ZodObject<any, any, any>> {
-  const formDefinition = await getFormDefinition('afiliacion');
-  return buildZodSchema(formDefinition.fields);
-}
-
 export async function submitAfiliacionForm(
   values: Record<string, any>
 ): Promise<AfiliacionFormState> {
   try {
-    const validationSchema = await getValidationSchema();
+    const formDefinition = await getFormDefinition('afiliacion');
+    const validationSchema = buildZodSchema(formDefinition.fields);
     const validatedFields = validationSchema.safeParse(values);
 
     if (!validatedFields.success) {

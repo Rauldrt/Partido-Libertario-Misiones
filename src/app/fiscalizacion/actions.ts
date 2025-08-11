@@ -3,7 +3,8 @@
 
 import * as z from "zod";
 import { addFiscalizacionSubmission } from "@/lib/fiscalizacion-service";
-import { getFormDefinition, buildZodSchema, type FormDefinition } from "@/lib/form-service";
+import { getFormDefinition, type FormDefinition } from "@/lib/form-service";
+import { buildZodSchema } from "@/lib/zod-schema-builder";
 import { revalidatePath } from "next/cache";
 
 export type FiscalizacionFormState = {
@@ -16,16 +17,12 @@ export async function getFiscalizacionFormDef(): Promise<FormDefinition> {
     return getFormDefinition('fiscalizacion');
 }
 
-async function getValidationSchema(): Promise<z.ZodObject<any, any, any>> {
-    const definition = await getFormDefinition('fiscalizacion');
-    return buildZodSchema(definition.fields);
-}
-
 export async function submitFiscalizacionForm(
   values: z.infer<z.ZodObject<any>>
 ): Promise<FiscalizacionFormState> {
   try {
-    const validationSchema = await getValidationSchema();
+    const definition = await getFormDefinition('fiscalizacion');
+    const validationSchema = buildZodSchema(definition.fields);
     const validatedFields = validationSchema.safeParse(values);
 
     if (!validatedFields.success) {

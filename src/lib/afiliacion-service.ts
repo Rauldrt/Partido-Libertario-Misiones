@@ -2,15 +2,15 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, setDoc, doc } from 'firebase/firestore';
 import type { AfiliacionSubmission } from './form-service';
+import fs from 'fs/promises';
+import path from 'path';
 
 // --- Firestore Collection References ---
 const getAfiliacionCollection = () => {
     const db = getAdminDb();
-    if (!db) {
-        throw new Error("No se puede acceder a la base de datos: El SDK de administrador de Firebase no está inicializado.");
-    }
+    if (!db) return null;
     return collection(db, 'afiliaciones');
 };
 
@@ -28,6 +28,26 @@ const fromFirestore = (doc: any): AfiliacionSubmission => {
 // --- Public Service Functions ---
 export async function addAfiliacionSubmission(submission: Record<string, any>): Promise<void> {
     const afiliacionCollection = getAfiliacionCollection();
+    if (!afiliacionCollection) {
+        // Fallback to local file if DB is not available
+        console.warn('Firebase Admin SDK not initialized. Saving afiliacion submission to local JSON file.');
+        const filePath = path.join(process.cwd(), 'data', 'form-submissions-afiliacion.json');
+        try {
+            let submissions: any[] = [];
+            try {
+                const fileContent = await fs.readFile(filePath, 'utf-8');
+                submissions = JSON.parse(fileContent);
+            } catch (error) {
+                // File might not exist yet, which is fine
+            }
+            submissions.push({ ...submission, createdAt: new Date().toISOString() });
+            await fs.writeFile(filePath, JSON.stringify(submissions, null, 2), 'utf-8');
+            return;
+        } catch (error) {
+            console.error('Failed to write to local afiliacion submission file:', error);
+            throw new Error('La base de datos no está disponible y no se pudo guardar localmente.');
+        }
+    }
     await addDoc(afiliacionCollection, {
         ...submission,
         createdAt: serverTimestamp(),
@@ -36,6 +56,22 @@ export async function addAfiliacionSubmission(submission: Record<string, any>): 
 
 export async function getAfiliacionSubmissions(): Promise<AfiliacionSubmission[]> {
     const afiliacionCollection = getAfiliacionCollection();
+    if (!afiliacionCollection) {
+         console.warn('Firebase Admin SDK not initialized. Reading afiliacion submissions from local JSON file.');
+         const filePath = path.join(process.cwd(), 'data', 'form-submissions-afiliacion.json');
+         try {
+            const fileContent = await fs.readFile(filePath, 'utf-8');
+            const data = JSON.parse(fileContent);
+            // Simulate the same data shape as Firestore
+            return data.map((item: any, index: number) => ({
+                id: `local-${index}`,
+                ...item,
+                createdAt: new Date(item.createdAt)
+            })).sort((a: any, b: any) => b.createdAt - a.createdAt);
+         } catch (error) {
+            return []; // File might not exist
+         }
+    }
     const q = query(afiliacionCollection, orderBy("createdAt", "desc"));
     const snapshot = await getDocs(q);
 
