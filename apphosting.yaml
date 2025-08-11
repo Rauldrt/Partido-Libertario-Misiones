@@ -1,7 +1,24 @@
 # Settings to manage and configure a Firebase App Hosting backend.
 # https://firebase.google.com/docs/app-hosting/configure
 
+# Specifies the region to run your App Hosting backend in.
+# Defaults to us-central1.
+# https://firebase.google.com/docs/app-hosting/locations
+location: us-central1
+
+# Specifies the minimum and maximum number of instances to run.
+# Defaults to min: 0, max: 100.
 runConfig:
-  # Increase this value if you'd like to automatically spin up
-  # more instances in response to increased traffic.
-  maxInstances: 1
+  minInstances: 0
+  maxInstances: 100
+
+# Specifies the CPU, memory, and concurrency for each instance.
+# Defaults to cpu: 1, memoryMiB: 512, concurrency: 80.
+resources:
+  cpu: 1
+  memoryMiB: 512
+  concurrency: 80
+
+# Specifies the timeout for requests.
+# Defaults to 60s.
+timeoutSeconds: 120
