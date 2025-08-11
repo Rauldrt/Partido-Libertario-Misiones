@@ -3,54 +3,7 @@
 
 import { getAdminDb } from './firebase-admin';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
-import { z } from 'zod';
-import fs from 'fs/promises';
-import path from 'path';
-
-// Defines a single field in a form
-export const FormFieldSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1, 'El nombre del campo es requerido.'),
-  label: z.string().min(1, 'La etiqueta es requerida.'),
-  type: z.enum(['text', 'email', 'tel', 'number', 'textarea', 'checkbox', 'radio', 'select']),
-  placeholder: z.string().optional(),
-  required: z.boolean().default(false),
-  options: z.array(z.string()).optional(), // For radio/select
-  order: z.number().int(),
-  validationRegex: z.string().optional(),
-  validationMessage: z.string().optional(),
-});
-
-// Defines a whole form
-export const FormDefinitionSchema = z.object({
-    id: z.string(),
-    fields: z.array(FormFieldSchema)
-});
-
-export type FormField = z.infer<typeof FormFieldSchema>;
-export type FormDefinition = z.infer<typeof FormDefinitionSchema>;
-
-// Represents a user's submission for a form
-export interface AfiliacionSubmission {
-    id: string;
-    createdAt: Date;
-    [key: string]: any; // To hold dynamic form fields
-}
-
-export type FiscalizacionFormValues = z.infer<z.ZodObject<any>>;
-export interface FiscalizacionSubmission extends FiscalizacionFormValues {
-    id: string;
-    createdAt: Date;
-}
-
-
-// --- Firestore Collection References ---
-const getFormDefCollection = () => {
-    const db = getAdminDb();
-    if (!db) return null;
-    return collection(db, 'form-definitions');
-};
-
+import type { FormDefinition, FormField } from './form-defs';
 
 // --- Default Form Definitions ---
 const defaultAfiliacionFields: FormField[] = [
@@ -79,12 +32,19 @@ const defaultFiscalizacionFields: FormField[] = [
     { id: 'f8', name: 'notes', label: 'Aclaraciones (Opcional)', type: 'textarea', required: false, order: 8, placeholder: 'Dejanos cualquier otra información que consideres relevante.', validationRegex: '', validationMessage: '' },
 ];
 
-// Helper to read local JSON files for seeding
 const defaultFormDefinitions: Record<string, FormDefinition> = {
     afiliacion: { id: 'afiliacion', fields: defaultAfiliacionFields },
     fiscalizacion: { id: 'fiscalizacion', fields: defaultFiscalizacionFields },
     contacto: { id: 'contacto', fields: defaultContactoFields },
 };
+
+// --- Firestore Collection References ---
+const getFormDefCollection = () => {
+    const db = getAdminDb();
+    if (!db) return null;
+    return collection(db, 'form-definitions');
+};
+
 
 // --- Public Service Functions ---
 
@@ -103,7 +63,6 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 
         if (docSnap.exists()) {
             const data = docSnap.data() as FormDefinition;
-            // Sort fields by order just in case they are not stored correctly
             data.fields.sort((a, b) => a.order - b.order);
             return data;
         } else {

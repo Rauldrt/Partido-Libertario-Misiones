@@ -23,7 +23,8 @@ import { useToast } from "@/hooks/use-toast";
 import { submitFiscalizacionForm } from "@/app/fiscalizacion/actions";
 import { Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
+import { buildZodSchema } from "@/lib/zod-schema-builder";
+import type { FormDefinition, FormField as FormFieldType } from "@/lib/form-defs";
 
 const renderField = (fieldInfo: FormFieldType, control: any) => {
     return (

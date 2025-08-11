@@ -4,7 +4,6 @@
 import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from 'zod';
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { submitAfiliacionForm } from "@/app/afiliacion/actions";
-import { buildZodSchema, type FormDefinition, type FormField as FormFieldType } from "@/lib/form-service";
+import { buildZodSchema } from "@/lib/zod-schema-builder";
+import type { FormDefinition, FormField as FormFieldType } from "@/lib/form-defs";
 import { Loader2 } from "lucide-react";
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';

@@ -3,7 +3,7 @@
 
 import { getAdminDb } from './firebase-admin';
 import { collection, getDocs, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import type { FiscalizacionSubmission, FiscalizacionFormValues } from './form-service';
+import type { FiscalizacionSubmission, FiscalizacionFormValues } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
 

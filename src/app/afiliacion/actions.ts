@@ -3,9 +3,10 @@
 
 import * as z from "zod";
 import { addAfiliacionSubmission } from "@/lib/afiliacion-service";
-import { getFormDefinition, type FormDefinition } from "@/lib/form-service";
+import { getFormDefinition } from "@/lib/form-service";
 import { buildZodSchema } from "@/lib/zod-schema-builder";
 import { revalidatePath } from "next/cache";
+import type { FormDefinition } from "@/lib/form-defs";
 
 export type AfiliacionFormState = {
   success: boolean;

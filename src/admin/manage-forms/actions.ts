@@ -3,7 +3,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { FormFieldSchema, saveFormDefinition, getFormDefinition, type FormDefinition } from '@/lib/form-service';
+import { FormFieldSchema } from '@/lib/form-defs';
+import { saveFormDefinition, getFormDefinition, type FormDefinition } from '@/lib/form-service';
 
 const FormDefinitionUpdateSchema = z.object({
   id: z.string(),

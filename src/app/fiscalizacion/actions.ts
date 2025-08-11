@@ -3,9 +3,10 @@
 
 import * as z from "zod";
 import { addFiscalizacionSubmission } from "@/lib/fiscalizacion-service";
-import { getFormDefinition, type FormDefinition } from "@/lib/form-service";
+import { getFormDefinition } from "@/lib/form-service";
 import { buildZodSchema } from "@/lib/zod-schema-builder";
 import { revalidatePath } from "next/cache";
+import type { FormDefinition } from "@/lib/form-defs";
 
 export type FiscalizacionFormState = {
   success: boolean;

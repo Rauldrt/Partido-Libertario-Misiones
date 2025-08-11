@@ -1,9 +1,7 @@
 
 import { z } from 'zod';
-import type { FormField } from './form-service';
+import type { FormField } from './form-defs';
 
-// This function is sunchronous and lives in a neutral module
-// without the 'use server' directive.
 export const buildZodSchema = (fields: FormField[]) => {
   const schemaShape: Record<string, z.ZodTypeAny> = {};
   
@@ -48,11 +46,10 @@ export const buildZodSchema = (fields: FormField[]) => {
         fieldSchema = fieldSchema.optional();
     }
 
-    // For radio groups, ensure the value is one of the options
-    if (field.type === 'radio' && field.options) {
+    if ((field.type === 'radio' || field.type === 'select') && field.options && field.options.length > 0) {
         fieldSchema = z.enum(field.options as [string, ...string[]], {
             required_error: `${field.label} es requerido.`
-        })
+        });
     }
     
     schemaShape[field.name] = fieldSchema;

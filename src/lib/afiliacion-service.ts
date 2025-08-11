@@ -2,8 +2,10 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, setDoc, doc } from 'firebase/firestore';
-import type { AfiliacionSubmission } from './form-service';
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
+import type { AfiliacionSubmission, FormField } from './form-defs';
+import { getFormDefinition } from './form-service';
+import { buildZodSchema } from './zod-schema-builder';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -29,7 +31,6 @@ const fromFirestore = (doc: any): AfiliacionSubmission => {
 export async function addAfiliacionSubmission(submission: Record<string, any>): Promise<void> {
     const afiliacionCollection = getAfiliacionCollection();
     if (!afiliacionCollection) {
-        // Fallback to local file if DB is not available
         console.warn('Firebase Admin SDK not initialized. Saving afiliacion submission to local JSON file.');
         const filePath = path.join(process.cwd(), 'data', 'form-submissions-afiliacion.json');
         try {
