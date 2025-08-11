@@ -12,7 +12,7 @@ const socialLinksFilePath = path.join(process.cwd(), 'data', 'social-links.json'
 const SocialLinkSchema = z.object({
     id: z.string(),
     label: z.string(),
-    embedCode: z.string(),
+    embedCode: z.string().optional().default(''),
 });
 
 export type SocialLink = z.infer<typeof SocialLinkSchema>;
