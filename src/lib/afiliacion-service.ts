@@ -21,7 +21,7 @@ const fromFirestore = (doc: any): FormSubmission => {
     return {
         id: doc.id,
         ...data,
-        createdAt: data.createdAt.toDate(), // Convert Firestore Timestamp to Date
+        createdAt: data.createdAt?.toDate(), // Convert Firestore Timestamp to Date safely
     };
 };
 
