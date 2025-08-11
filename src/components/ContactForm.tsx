@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from "@/app/contact/actions";
-import { contactFormSchema, type ContactFormValues } from "@/lib/contact-service";
+import { contactFormSchema, type ContactFormValues } from "@/lib/form-defs";
 import { Loader2 } from "lucide-react";
 
 export function ContactForm() {

@@ -3,18 +3,8 @@
 
 import { getAdminDb } from './firebase-admin';
 import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, updateDoc, deleteDoc } from 'firebase/firestore';
-import * as z from "zod";
-import fs from 'fs/promises';
-import path from 'path';
-import type { FormSubmission } from './form-defs';
+import type { FormSubmission, ContactFormValues } from './form-defs';
 
-export const contactFormSchema = z.object({
-  fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
-  email: z.string().email({ message: "Correo electrónico inválido." }),
-  message: z.string().min(10, { message: "El mensaje debe tener al menos 10 caracteres." }),
-});
-
-export type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 const getContactCollection = () => {
   const db = getAdminDb();

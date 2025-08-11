@@ -30,3 +30,12 @@ export interface FormSubmission {
     createdAt: Date;
     [key: string]: any; // To hold dynamic form fields
 }
+
+// Schema for the standard Contact Form
+export const contactFormSchema = z.object({
+  fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
+  email: z.string().email({ message: "Correo electrónico inválido." }),
+  message: z.string().min(10, { message: "El mensaje debe tener al menos 10 caracteres." }),
+});
+
+export type ContactFormValues = z.infer<typeof contactFormSchema>;

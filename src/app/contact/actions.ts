@@ -2,7 +2,8 @@
 "use server";
 
 import * as z from "zod";
-import { addContactSubmission, contactFormSchema, type ContactFormValues } from "@/lib/contact-service";
+import { addContactSubmission } from "@/lib/contact-service";
+import { contactFormSchema, type ContactFormValues } from "@/lib/form-defs";
 import { revalidatePath } from "next/cache";
 
 export type ContactFormState = {
