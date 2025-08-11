@@ -24,15 +24,9 @@ export const FormDefinitionSchema = z.object({
 export type FormField = z.infer<typeof FormFieldSchema>;
 export type FormDefinition = z.infer<typeof FormDefinitionSchema>;
 
-// Represents a user's submission for a form
-export interface AfiliacionSubmission {
+// A generic interface for any form submission
+export interface FormSubmission {
     id: string;
     createdAt: Date;
     [key: string]: any; // To hold dynamic form fields
-}
-
-export type FiscalizacionFormValues = z.infer<z.ZodObject<any>>;
-export interface FiscalizacionSubmission extends FiscalizacionFormValues {
-    id: string;
-    createdAt: Date;
 }

@@ -3,9 +3,7 @@
 
 import { getAdminDb } from './firebase-admin';
 import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
-import type { AfiliacionSubmission, FormField } from './form-defs';
-import { getFormDefinition } from './form-service';
-import { buildZodSchema } from './zod-schema-builder';
+import type { FormSubmission } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -18,7 +16,7 @@ const getAfiliacionCollection = () => {
 
 
 // --- Helper Functions ---
-const fromFirestore = (doc: any): AfiliacionSubmission => {
+const fromFirestore = (doc: any): FormSubmission => {
     const data = doc.data();
     return {
         id: doc.id,
@@ -55,7 +53,7 @@ export async function addAfiliacionSubmission(submission: Record<string, any>): 
     });
 }
 
-export async function getAfiliacionSubmissions(): Promise<AfiliacionSubmission[]> {
+export async function getAfiliacionSubmissions(): Promise<FormSubmission[]> {
     const afiliacionCollection = getAfiliacionCollection();
     if (!afiliacionCollection) {
          console.warn('Firebase Admin SDK not initialized. Reading afiliacion submissions from local JSON file.');

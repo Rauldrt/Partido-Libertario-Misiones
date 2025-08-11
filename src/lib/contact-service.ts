@@ -6,6 +6,7 @@ import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp } fro
 import * as z from "zod";
 import fs from 'fs/promises';
 import path from 'path';
+import type { FormSubmission } from './form-defs';
 
 export const contactFormSchema = z.object({
   fullName: z.string().min(3, { message: "El nombre completo es requerido." }),
@@ -15,18 +16,13 @@ export const contactFormSchema = z.object({
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
 
-export interface ContactSubmission extends ContactFormValues {
-    id: string;
-    createdAt: Date;
-}
-
 const getContactCollection = () => {
   const db = getAdminDb();
   if (!db) return null;
   return collection(db, 'contactSubmissions');
 };
 
-const fromFirestore = (doc: any): ContactSubmission => {
+const fromFirestore = (doc: any): FormSubmission => {
     const data = doc.data();
     return {
         id: doc.id,
@@ -62,7 +58,7 @@ export async function addContactSubmission(submission: ContactFormValues): Promi
     });
 }
 
-export async function getContactSubmissions(): Promise<ContactSubmission[]> {
+export async function getContactSubmissions(): Promise<FormSubmission[]> {
     const contactCollection = getContactCollection();
     
     if (!contactCollection) {

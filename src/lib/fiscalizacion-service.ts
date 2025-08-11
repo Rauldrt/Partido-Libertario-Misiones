@@ -3,7 +3,7 @@
 
 import { getAdminDb } from './firebase-admin';
 import { collection, getDocs, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
-import type { FiscalizacionSubmission, FiscalizacionFormValues } from './form-defs';
+import type { FormSubmission } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -17,7 +17,7 @@ const getFiscalizacionCollection = () => {
 
 
 // --- Helper Functions ---
-const fromFirestore = (doc: any): FiscalizacionSubmission => {
+const fromFirestore = (doc: any): FormSubmission => {
     const data = doc.data();
     return {
         id: doc.id,
@@ -27,7 +27,7 @@ const fromFirestore = (doc: any): FiscalizacionSubmission => {
 };
 
 // --- Public Service Functions ---
-export async function addFiscalizacionSubmission(submission: FiscalizacionFormValues): Promise<void> {
+export async function addFiscalizacionSubmission(submission: Record<string, any>): Promise<void> {
     const fiscalizacionCollection = getFiscalizacionCollection();
     if (!fiscalizacionCollection) {
         console.warn('Firebase Admin SDK not initialized. Saving fiscalizacion submission to local JSON file.');
@@ -54,7 +54,7 @@ export async function addFiscalizacionSubmission(submission: FiscalizacionFormVa
     });
 }
 
-export async function getFiscalizacionSubmissions(): Promise<FiscalizacionSubmission[]> {
+export async function getFiscalizacionSubmissions(): Promise<FormSubmission[]> {
     const fiscalizacionCollection = getFiscalizacionCollection();
     
     if (!fiscalizacionCollection) {
