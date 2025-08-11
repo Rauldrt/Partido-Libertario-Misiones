@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, addDoc, serverTimestamp, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, orderBy, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import type { FormSubmission } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
@@ -29,23 +29,7 @@ const fromFirestore = (doc: any): FormSubmission => {
 export async function addAfiliacionSubmission(submission: Record<string, any>): Promise<void> {
     const afiliacionCollection = getAfiliacionCollection();
     if (!afiliacionCollection) {
-        console.warn('Firebase Admin SDK not initialized. Saving afiliacion submission to local JSON file.');
-        const filePath = path.join(process.cwd(), 'data', 'form-submissions-afiliacion.json');
-        try {
-            let submissions: any[] = [];
-            try {
-                const fileContent = await fs.readFile(filePath, 'utf-8');
-                submissions = JSON.parse(fileContent);
-            } catch (error) {
-                // File might not exist yet, which is fine
-            }
-            submissions.push({ ...submission, createdAt: new Date().toISOString() });
-            await fs.writeFile(filePath, JSON.stringify(submissions, null, 2), 'utf-8');
-            return;
-        } catch (error) {
-            console.error('Failed to write to local afiliacion submission file:', error);
-            throw new Error('La base de datos no está disponible y no se pudo guardar localmente.');
-        }
+        throw new Error('La base de datos no está disponible.');
     }
     await addDoc(afiliacionCollection, {
         ...submission,
@@ -57,19 +41,7 @@ export async function getAfiliacionSubmissions(): Promise<FormSubmission[]> {
     const afiliacionCollection = getAfiliacionCollection();
     if (!afiliacionCollection) {
          console.warn('Firebase Admin SDK not initialized. Reading afiliacion submissions from local JSON file.');
-         const filePath = path.join(process.cwd(), 'data', 'form-submissions-afiliacion.json');
-         try {
-            const fileContent = await fs.readFile(filePath, 'utf-8');
-            const data = JSON.parse(fileContent);
-            // Simulate the same data shape as Firestore
-            return data.map((item: any, index: number) => ({
-                id: `local-${index}`,
-                ...item,
-                createdAt: new Date(item.createdAt)
-            })).sort((a: any, b: any) => b.createdAt - a.createdAt);
-         } catch (error) {
-            return []; // File might not exist
-         }
+         return []; // No local file support for this page
     }
     const q = query(afiliacionCollection, orderBy("createdAt", "desc"));
     const snapshot = await getDocs(q);
@@ -79,4 +51,33 @@ export async function getAfiliacionSubmissions(): Promise<FormSubmission[]> {
     }
     
     return snapshot.docs.map(fromFirestore);
+}
+
+export async function updateAfiliacionSubmission(id: string, data: Record<string, any>): Promise<{ success: boolean; message: string; }> {
+    const afiliacionCollection = getAfiliacionCollection();
+    if (!afiliacionCollection) {
+        return { success: false, message: "La base de datos no está disponible." };
+    }
+    try {
+        const docRef = doc(afiliacionCollection, id);
+        await updateDoc(docRef, data);
+        return { success: true, message: "Afiliación actualizada con éxito." };
+    } catch (error) {
+        console.error("Error updating afiliacion submission:", error);
+        return { success: false, message: "No se pudo actualizar la afiliación." };
+    }
+}
+
+export async function deleteAfiliacionSubmission(id: string): Promise<{ success: boolean; message: string; }> {
+    const afiliacionCollection = getAfiliacionCollection();
+    if (!afiliacionCollection) {
+        return { success: false, message: "La base de datos no está disponible." };
+    }
+    try {
+        await deleteDoc(doc(afiliacionCollection, id));
+        return { success: true, message: "Afiliación eliminada con éxito." };
+    } catch (error) {
+        console.error("Error deleting afiliacion submission:", error);
+        return { success: false, message: "No se pudo eliminar la afiliación." };
+    }
 }

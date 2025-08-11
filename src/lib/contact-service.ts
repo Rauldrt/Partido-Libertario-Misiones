@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, updateDoc, deleteDoc } from 'firebase/firestore';
 import * as z from "zod";
 import fs from 'fs/promises';
 import path from 'path';
@@ -34,23 +34,7 @@ const fromFirestore = (doc: any): FormSubmission => {
 export async function addContactSubmission(submission: ContactFormValues): Promise<void> {
     const contactCollection = getContactCollection();
     if (!contactCollection) {
-        console.warn('Firebase Admin SDK not initialized. Saving contact submission to local JSON file.');
-        const filePath = path.join(process.cwd(), 'data', 'form-submissions-contact.json');
-        try {
-            let submissions: any[] = [];
-            try {
-                const fileContent = await fs.readFile(filePath, 'utf-8');
-                submissions = JSON.parse(fileContent);
-            } catch (error) {
-                // File might not exist yet
-            }
-            submissions.push({ ...submission, createdAt: new Date().toISOString() });
-            await fs.writeFile(filePath, JSON.stringify(submissions, null, 2), 'utf-8');
-            return;
-        } catch (error) {
-            console.error('Failed to write to local contact submission file:', error);
-            throw new Error('La base de datos no está disponible y no se pudo guardar localmente.');
-        }
+        throw new Error('La base de datos no está disponible.');
     }
     await addDoc(contactCollection, {
         ...submission,
@@ -63,18 +47,7 @@ export async function getContactSubmissions(): Promise<FormSubmission[]> {
     
     if (!contactCollection) {
         console.warn('Firebase Admin SDK not initialized. Reading contact submissions from local JSON file.');
-        const filePath = path.join(process.cwd(), 'data', 'form-submissions-contact.json');
-        try {
-            const fileContent = await fs.readFile(filePath, 'utf-8');
-            const data = JSON.parse(fileContent);
-            return data.map((item: any, index: number) => ({
-                id: `local-${index}`,
-                ...item,
-                createdAt: new Date(item.createdAt)
-            })).sort((a:any, b:any) => b.createdAt - a.createdAt);
-        } catch (error) {
-            return []; // File might not exist
-        }
+        return [];
     }
     
     const q = query(contactCollection, orderBy("createdAt", "desc"));
@@ -85,4 +58,33 @@ export async function getContactSubmissions(): Promise<FormSubmission[]> {
     }
     
     return snapshot.docs.map(fromFirestore);
+}
+
+export async function updateContactSubmission(id: string, data: Record<string, any>): Promise<{ success: boolean; message: string; }> {
+    const contactCollection = getContactCollection();
+    if (!contactCollection) {
+        return { success: false, message: "La base de datos no está disponible." };
+    }
+    try {
+        const docRef = doc(contactCollection, id);
+        await updateDoc(docRef, data);
+        return { success: true, message: "Mensaje actualizado con éxito." };
+    } catch (error) {
+        console.error("Error updating contact submission:", error);
+        return { success: false, message: "No se pudo actualizar el mensaje." };
+    }
+}
+
+export async function deleteContactSubmission(id: string): Promise<{ success: boolean; message: string; }> {
+    const contactCollection = getContactCollection();
+    if (!contactCollection) {
+        return { success: false, message: "La base de datos no está disponible." };
+    }
+    try {
+        await deleteDoc(doc(contactCollection, id));
+        return { success: true, message: "Mensaje eliminado con éxito." };
+    } catch (error) {
+        console.error("Error deleting contact submission:", error);
+        return { success: false, message: "No se pudo eliminar el mensaje." };
+    }
 }

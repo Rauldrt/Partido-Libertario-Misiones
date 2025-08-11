@@ -2,29 +2,33 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getAfiliacionSubmissions } from '@/lib/afiliacion-service';
-import type { FormSubmission } from '@/lib/form-defs';
+import { getAfiliacionSubmissions, deleteAfiliacionSubmission, updateAfiliacionSubmission } from '@/lib/afiliacion-service';
+import { getAfiliacionFormDef } from '@/app/afiliacion/actions';
+import type { FormSubmission, FormDefinition } from '@/lib/form-defs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SubmissionTable } from '@/components/SubmissionTable';
 import { Loader2 } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 export default function ManageAfiliacionesPage() {
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
+  const [formDef, setFormDef] = useState<FormDefinition | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getAfiliacionSubmissions()
-      .then(data => {
-        setSubmissions(data);
-      })
-      .catch(error => {
-        console.error("Failed to load afiliacion submissions:", error);
-        setError("No se pudieron cargar las afiliaciones. Por favor, intente de nuevo.");
-      })
-      .finally(() => {
+    Promise.all([
+        getAfiliacionSubmissions(),
+        getAfiliacionFormDef()
+    ]).then(([submissionData, formDefData]) => {
+        setSubmissions(submissionData);
+        setFormDef(formDefData);
+    }).catch(error => {
+        console.error("Failed to load data:", error);
+        setError("No se pudieron cargar los datos. Por favor, intente de nuevo.");
+    }).finally(() => {
         setIsLoading(false);
-      });
+    });
   }, []);
   
   const displayColumns = [
@@ -42,7 +46,7 @@ export default function ManageAfiliacionesPage() {
       <CardHeader>
         <CardTitle>Gestionar Solicitudes de Afiliación</CardTitle>
         <CardDescription>
-          Aquí puedes ver todos los datos de las personas que han completado el formulario de afiliación.
+          Aquí puedes ver, editar y eliminar los datos de las personas que han completado el formulario de afiliación.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -52,14 +56,20 @@ export default function ManageAfiliacionesPage() {
                 <p className="ml-4 text-lg">Cargando afiliaciones...</p>
             </div>
         ) : error ? (
-            <div className="text-center p-12 text-destructive">{error}</div>
-        ) : (
+             <Alert variant="destructive">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+            </Alert>
+        ) : formDef ? (
             <SubmissionTable
               initialData={submissions}
               displayColumns={displayColumns}
               exportFileName="afiliaciones.csv"
+              formDefinition={formDef}
+              onDelete={deleteAfiliacionSubmission}
+              onUpdate={updateAfiliacionSubmission}
             />
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );

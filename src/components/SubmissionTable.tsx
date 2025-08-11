@@ -1,8 +1,8 @@
 
 "use client";
 
-import React, { useState } from 'react';
-import type { FormSubmission } from '@/lib/form-defs';
+import React, { useState, useTransition } from 'react';
+import type { FormDefinition, FormField, FormSubmission } from '@/lib/form-defs';
 import {
   Table,
   TableBody,
@@ -15,29 +15,48 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Download, Search } from 'lucide-react';
+import { Download, Search, Trash2, Edit, Loader2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
+import { useToast } from '@/hooks/use-toast';
+import { SubmissionEditForm } from './SubmissionEditForm';
 
 interface SubmissionTableProps {
   initialData: FormSubmission[];
   displayColumns: { key: string; label: string }[];
   exportFileName: string;
+  formDefinition: FormDefinition;
+  onDelete: (id: string) => Promise<{ success: boolean; message: string; }>;
+  onUpdate: (id: string, data: Record<string, any>) => Promise<{ success: boolean; message: string; }>;
 }
 
-export function SubmissionTable({ initialData, displayColumns, exportFileName }: SubmissionTableProps) {
+export function SubmissionTable({ initialData, displayColumns, exportFileName, formDefinition, onDelete, onUpdate }: SubmissionTableProps) {
+  const [data, setData] = useState(initialData);
   const [searchTerm, setSearchTerm] = useState('');
+  const [itemToDelete, setItemToDelete] = useState<FormSubmission | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
-  const filteredData = initialData.filter(item => {
-    // Search across all string/number values in the item
+  const filteredData = data.filter(item => {
     return Object.values(item).some(val => 
       String(val).toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -69,7 +88,22 @@ export function SubmissionTable({ initialData, displayColumns, exportFileName }:
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
+  };
+  
+  const handleConfirmDelete = () => {
+    if (!itemToDelete) return;
+
+    startTransition(async () => {
+        const result = await onDelete(itemToDelete.id);
+        if (result.success) {
+            setData(currentData => currentData.filter(d => d.id !== itemToDelete.id));
+            toast({ title: "¡Éxito!", description: result.message });
+        } else {
+            toast({ variant: "destructive", title: "Error", description: result.message });
+        }
+        setItemToDelete(null);
+    });
+  };
 
   const renderCell = (item: FormSubmission, key: string) => {
     const value = item[key];
@@ -83,7 +117,7 @@ export function SubmissionTable({ initialData, displayColumns, exportFileName }:
         return <a href={value} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate">{value}</a>
     }
     return <span className="truncate">{String(value)}</span>;
-  }
+  };
 
   return (
     <div className="space-y-4">
@@ -105,57 +139,81 @@ export function SubmissionTable({ initialData, displayColumns, exportFileName }:
       <div className="rounded-md border">
         <ScrollArea className="w-full whitespace-nowrap">
             <Table>
-            <TableHeader>
-                <TableRow>
-                {displayColumns.map(col => (
-                    <TableHead key={col.key}>{col.label}</TableHead>
-                ))}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {filteredData.length > 0 ? (
-                filteredData.map((item) => (
-                    <Dialog key={item.id}>
-                    <DialogTrigger asChild>
-                        <TableRow className="cursor-pointer">
+                <TableHeader>
+                    <TableRow>
+                    {displayColumns.map(col => (
+                        <TableHead key={col.key}>{col.label}</TableHead>
+                    ))}
+                    <TableHead className="text-right">Acciones</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {filteredData.length > 0 ? (
+                    filteredData.map((item) => (
+                        <TableRow key={item.id}>
                             {displayColumns.map(col => (
                                 <TableCell key={`${item.id}-${col.key}`}>
                                     {renderCell(item, col.key)}
                                 </TableCell>
                             ))}
+                            <TableCell className="text-right space-x-2">
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" size="icon"><Edit className="h-4 w-4" /></Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Editar Envío</DialogTitle>
+                                            <DialogDescription>Modificá los datos del registro. Los cambios se guardarán inmediatamente.</DialogDescription>
+                                        </DialogHeader>
+                                        <SubmissionEditForm
+                                            formDefinition={formDefinition}
+                                            submission={item}
+                                            onSave={async (updatedData) => {
+                                                const result = await onUpdate(item.id, updatedData);
+                                                if (result.success) {
+                                                    setData(currentData => currentData.map(d => d.id === item.id ? { ...d, ...updatedData } : d));
+                                                }
+                                                return result;
+                                            }}
+                                        />
+                                    </DialogContent>
+                                </Dialog>
+
+                                <Button variant="destructive" size="icon" onClick={() => setItemToDelete(item)}>
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </TableCell>
                         </TableRow>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                        <DialogTitle>Detalle del Envío</DialogTitle>
-                        <DialogDescription>
-                            Enviado el {format(item.createdAt, "PPPp", { locale: es })}
-                        </DialogDescription>
-                        </DialogHeader>
-                        <ScrollArea className="max-h-[60vh]">
-                            <div className="py-4 space-y-4 pr-4">
-                                {Object.entries(item).filter(([key]) => key !== 'id' && key !== 'createdAt').map(([key, value]) => (
-                                    <div key={key} className="grid grid-cols-3 gap-4">
-                                        <dt className="font-semibold capitalize text-muted-foreground col-span-1">{key.replace(/_/g, ' ')}</dt>
-                                        <dd className="col-span-2">{renderCell(item, key)}</dd>
-                                    </div>
-                                ))}
-                            </div>
-                        </ScrollArea>
-                    </DialogContent>
-                    </Dialog>
-                ))
-                ) : (
-                <TableRow>
-                    <TableCell colSpan={displayColumns.length} className="h-24 text-center">
-                    No se encontraron resultados.
-                    </TableCell>
-                </TableRow>
-                )}
-            </TableBody>
+                    ))
+                    ) : (
+                    <TableRow>
+                        <TableCell colSpan={displayColumns.length + 1} className="h-24 text-center">
+                        No se encontraron resultados.
+                        </TableCell>
+                    </TableRow>
+                    )}
+                </TableBody>
             </Table>
         </ScrollArea>
       </div>
+        <AlertDialog open={!!itemToDelete} onOpenChange={(open) => !open && setItemToDelete(null)}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Esta acción es permanente y no se puede deshacer. Esto eliminará el registro de la base de datos.
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel disabled={isPending}>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmDelete} disabled={isPending} className="bg-destructive hover:bg-destructive/90">
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Sí, eliminar
+                </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     </div>
   );
 }

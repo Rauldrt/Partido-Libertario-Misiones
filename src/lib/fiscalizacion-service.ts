@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, getDocs, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import type { FormSubmission } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
@@ -30,23 +30,7 @@ const fromFirestore = (doc: any): FormSubmission => {
 export async function addFiscalizacionSubmission(submission: Record<string, any>): Promise<void> {
     const fiscalizacionCollection = getFiscalizacionCollection();
     if (!fiscalizacionCollection) {
-        console.warn('Firebase Admin SDK not initialized. Saving fiscalizacion submission to local JSON file.');
-        const filePath = path.join(process.cwd(), 'data', 'form-submissions-fiscalizacion.json');
-        try {
-            let submissions: any[] = [];
-            try {
-                const fileContent = await fs.readFile(filePath, 'utf-8');
-                submissions = JSON.parse(fileContent);
-            } catch (error) {
-                // File might not exist yet, which is fine
-            }
-            submissions.push({ ...submission, createdAt: new Date().toISOString() });
-            await fs.writeFile(filePath, JSON.stringify(submissions, null, 2), 'utf-8');
-            return;
-        } catch (error) {
-            console.error('Failed to write to local fiscalizacion submission file:', error);
-            throw new Error('La base de datos no está disponible y no se pudo guardar localmente.');
-        }
+        throw new Error('La base de datos no está disponible.');
     }
     await addDoc(fiscalizacionCollection, {
         ...submission,
@@ -59,19 +43,7 @@ export async function getFiscalizacionSubmissions(): Promise<FormSubmission[]> {
     
     if (!fiscalizacionCollection) {
          console.warn('Firebase Admin SDK not initialized. Reading fiscalizacion submissions from local JSON file.');
-         const filePath = path.join(process.cwd(), 'data', 'form-submissions-fiscalizacion.json');
-         try {
-            const fileContent = await fs.readFile(filePath, 'utf-8');
-            const data = JSON.parse(fileContent);
-            // Simulate the same data shape as Firestore
-            return data.map((item: any, index: number) => ({
-                id: `local-${index}`,
-                ...item,
-                createdAt: new Date(item.createdAt)
-            })).sort((a: any, b: any) => b.createdAt - a.createdAt);
-         } catch (error) {
-            return []; // File might not exist
-         }
+         return [];
     }
 
     const q = query(fiscalizacionCollection, orderBy("createdAt", "desc"));
@@ -82,4 +54,33 @@ export async function getFiscalizacionSubmissions(): Promise<FormSubmission[]> {
     }
     
     return snapshot.docs.map(fromFirestore);
+}
+
+export async function updateFiscalizacionSubmission(id: string, data: Record<string, any>): Promise<{ success: boolean; message: string; }> {
+    const fiscalizacionCollection = getFiscalizacionCollection();
+    if (!fiscalizacionCollection) {
+        return { success: false, message: "La base de datos no está disponible." };
+    }
+    try {
+        const docRef = doc(fiscalizacionCollection, id);
+        await updateDoc(docRef, data);
+        return { success: true, message: "Inscripción actualizada con éxito." };
+    } catch (error) {
+        console.error("Error updating fiscalizacion submission:", error);
+        return { success: false, message: "No se pudo actualizar la inscripción." };
+    }
+}
+
+export async function deleteFiscalizacionSubmission(id: string): Promise<{ success: boolean; message: string; }> {
+    const fiscalizacionCollection = getFiscalizacionCollection();
+    if (!fiscalizacionCollection) {
+        return { success: false, message: "La base de datos no está disponible." };
+    }
+    try {
+        await deleteDoc(doc(fiscalizacionCollection, id));
+        return { success: true, message: "Inscripción eliminada con éxito." };
+    } catch (error) {
+        console.error("Error deleting fiscalizacion submission:", error);
+        return { success: false, message: "No se pudo eliminar la inscripción." };
+    }
 }

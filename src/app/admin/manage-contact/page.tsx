@@ -2,29 +2,33 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getContactSubmissions } from '@/lib/contact-service';
-import type { FormSubmission } from '@/lib/form-defs';
+import { getContactSubmissions, deleteContactSubmission, updateContactSubmission } from '@/lib/contact-service';
+import { getFormDefinition } from '@/lib/form-service';
+import type { FormSubmission, FormDefinition } from '@/lib/form-defs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SubmissionTable } from '@/components/SubmissionTable';
 import { Loader2 } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 export default function ManageContactPage() {
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
+  const [formDef, setFormDef] = useState<FormDefinition | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getContactSubmissions()
-      .then(data => {
-        setSubmissions(data);
-      })
-      .catch(error => {
-        console.error("Failed to load contact messages:", error);
+    Promise.all([
+        getContactSubmissions(),
+        getFormDefinition('contacto')
+    ]).then(([submissionData, formDefData]) => {
+        setSubmissions(submissionData);
+        setFormDef(formDefData);
+    }).catch(error => {
+        console.error("Failed to load contact data:", error);
         setError("No se pudieron cargar los mensajes. Por favor, intente de nuevo.");
-      })
-      .finally(() => {
+    }).finally(() => {
         setIsLoading(false);
-      });
+    });
   }, []);
   
   const displayColumns = [
@@ -39,7 +43,7 @@ export default function ManageContactPage() {
       <CardHeader>
         <CardTitle>Gestionar Mensajes de Contacto</CardTitle>
         <CardDescription>
-          Aquí puedes ver todos los mensajes enviados desde el formulario de contacto del sitio web.
+          Aquí puedes ver, editar y eliminar los mensajes enviados desde el formulario de contacto del sitio web.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -49,14 +53,20 @@ export default function ManageContactPage() {
                 <p className="ml-4 text-lg">Cargando mensajes...</p>
             </div>
         ) : error ? (
-             <div className="text-center p-12 text-destructive">{error}</div>
-        ) : (
+             <Alert variant="destructive">
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+            </Alert>
+        ) : formDef ? (
             <SubmissionTable
               initialData={submissions}
               displayColumns={displayColumns}
               exportFileName="mensajes_contacto.csv"
+              formDefinition={formDef}
+              onDelete={deleteContactSubmission}
+              onUpdate={updateContactSubmission}
             />
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );
