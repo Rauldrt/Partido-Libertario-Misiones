@@ -1,6 +1,7 @@
 
 "use client";
 
+import React from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -13,26 +14,101 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from "@/app/contact/actions";
-import { contactFormSchema, type ContactFormValues } from "@/lib/form-defs";
+import { buildZodSchema } from "@/lib/zod-schema-builder";
+import type { FormDefinition, FormField as FormFieldType } from "@/lib/form-defs";
 import { Loader2 } from "lucide-react";
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
-export function ContactForm() {
+const renderField = (fieldInfo: FormFieldType, control: any) => {
+    return (
+        <FormField
+            key={fieldInfo.id}
+            control={control}
+            name={fieldInfo.name}
+            render={({ field }) => (
+                <FormItem>
+                    <FormLabel>{fieldInfo.label}</FormLabel>
+                    <FormControl>
+                        {fieldInfo.type === 'textarea' ? (
+                            <Textarea placeholder={fieldInfo.placeholder} {...field} />
+                        ) : fieldInfo.type === 'checkbox' ? (
+                            <div className="flex items-center space-x-2 pt-2">
+                                <Checkbox
+                                    id={fieldInfo.id}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                                <label
+                                    htmlFor={fieldInfo.id}
+                                    className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                    {fieldInfo.placeholder}
+                                </label>
+                            </div>
+                        ) : fieldInfo.type === 'radio' && fieldInfo.options ? (
+                             <RadioGroup
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                                className="flex flex-col space-y-1"
+                            >
+                                {fieldInfo.options.map(option => (
+                                    <FormItem key={option} className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value={option} />
+                                        </FormControl>
+                                        <FormLabel className="font-normal">{option}</FormLabel>
+                                    </FormItem>
+                                ))}
+                            </RadioGroup>
+                        ) : fieldInfo.type === 'select' && fieldInfo.options ? (
+                             <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder={fieldInfo.placeholder} />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {fieldInfo.options.map(option => (
+                                        <SelectItem key={option} value={option}>{option}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        ) : (
+                            <Input type={fieldInfo.type} placeholder={fieldInfo.placeholder} {...field} />
+                        )}
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+    )
+}
+
+interface ContactFormProps {
+  formDefinition: FormDefinition;
+}
+
+export function ContactForm({ formDefinition }: ContactFormProps) {
   const { toast } = useToast();
-  const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      message: "",
-    },
+
+  const formSchema = React.useMemo(() => buildZodSchema(formDefinition.fields), [formDefinition]);
+  const defaultValues = React.useMemo(() => Object.fromEntries(
+    formDefinition.fields.map(f => [f.name, f.type === 'checkbox' ? false : ''])
+  ), [formDefinition]);
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues,
   });
 
   const { formState: { isSubmitting } } = form;
 
-  async function onSubmit(values: ContactFormValues) {
+  async function onSubmit(values: Record<string, any>) {
     try {
       const result = await submitContactForm(values);
 
@@ -45,7 +121,7 @@ export function ContactForm() {
       } else {
         form.clearErrors();
         result.errors?.forEach((error) => {
-          form.setError(error.path[0] as keyof ContactFormValues, {
+          form.setError(error.path[0] as any, {
             type: "manual",
             message: error.message,
           });
@@ -69,53 +145,7 @@ export function ContactForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-6">
-            <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Nombre y Apellido</FormLabel>
-                <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-            <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-                <FormItem>
-                <FormLabel>Correo Electrónico</FormLabel>
-                <FormControl>
-                    <Input type="email" placeholder="john.doe@example.com" {...field} />
-                </FormControl>
-                <FormMessage />
-                </FormItem>
-            )}
-            />
-        </div>
-        
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tu Mensaje</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Escribí acá tu consulta o propuesta..."
-                  className="resize-y"
-                  rows={5}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {formDefinition.fields.map(field => renderField(field, form.control))}
         
         <Button type="submit" className="w-full" disabled={isSubmitting}>
           {isSubmitting ? (

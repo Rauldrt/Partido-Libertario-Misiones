@@ -7,10 +7,13 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { DynamicIcon } from '@/components/DynamicIcon';
 import { ContactForm } from '@/components/ContactForm';
+import { getFormDefinition } from '@/lib/form-service';
 
 export default async function ContactPage() {
   const headerData = await getPageHeaderData('contact');
-  if (!headerData) {
+  const formDefinition = await getFormDefinition('contacto');
+  
+  if (!headerData || !formDefinition) {
     notFound();
   }
 
@@ -42,7 +45,7 @@ export default async function ContactPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex-grow flex flex-col">
-              <ContactForm />
+              <ContactForm formDefinition={formDefinition} />
             </CardContent>
           </Card>
 

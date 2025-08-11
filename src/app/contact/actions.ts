@@ -1,9 +1,10 @@
 
-"use server";
+'use server';
 
 import * as z from "zod";
 import { addContactSubmission } from "@/lib/contact-service";
-import { contactFormSchema, type ContactFormValues } from "@/lib/form-defs";
+import { getFormDefinition } from "@/lib/form-service";
+import { buildZodSchema } from "@/lib/zod-schema-builder";
 import { revalidatePath } from "next/cache";
 
 export type ContactFormState = {
@@ -13,19 +14,21 @@ export type ContactFormState = {
 };
 
 export async function submitContactForm(
-  values: ContactFormValues
+  values: Record<string, any>
 ): Promise<ContactFormState> {
-  const validatedFields = contactFormSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      errors: validatedFields.error.issues,
-      message: "Por favor, corrija los errores en el formulario.",
-    };
-  }
-
   try {
+    const formDefinition = await getFormDefinition('contacto');
+    const validationSchema = buildZodSchema(formDefinition.fields);
+    const validatedFields = validationSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return {
+        success: false,
+        errors: validatedFields.error.issues,
+        message: "Por favor, corrija los errores en el formulario.",
+      };
+    }
+
     await addContactSubmission(validatedFields.data);
     revalidatePath('/admin/manage-contact');
     return {
