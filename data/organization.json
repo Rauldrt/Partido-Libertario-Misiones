@@ -1,4 +1,3 @@
-
 [
   {
     "id": "org-1",
@@ -9,6 +8,14 @@
     "imageHint": "person professional"
   },
   {
+    "id": "new-1755035066452",
+    "name": "Nuevo Miembro",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person",
+    "role": "Vicepresidente"
+  },
+  {
     "id": "org-2",
     "name": "Miembro del Partido 2",
     "role": "Secretario General",
@@ -17,11 +24,11 @@
     "imageHint": "woman portrait"
   },
   {
-    "id": "org-3",
-    "name": "Miembro del Partido 3",
-    "role": "Tesorero",
-    "description": "Responsable de la gestión financiera, asegurando la transparencia y el uso adecuado de los recursos.",
+    "id": "new-1755033835090",
+    "name": "Nuevo Miembro",
+    "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "man smiling"
+    "imageHint": "portrait person",
+    "role": "Tesorero"
   }
 ]
