@@ -5,16 +5,10 @@ import React, { useEffect } from 'react';
 
 export function ThemeManager() {
   useEffect(() => {
-    const currentHour = new Date().getHours();
-    
-    // Set dark mode from 7 PM (19) to 6 AM (5)
-    const isNightTime = currentHour >= 19 || currentHour < 6;
-    
-    if (isNightTime) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    // We are now setting the dark theme via globals.css by default
+    // This component can be used in the future to toggle themes
+    // For now, we can remove the logic that overrides it based on time.
+    document.documentElement.classList.add('dark');
   }, []); // Empty dependency array means this runs once on client mount
 
   return null; // This component does not render anything

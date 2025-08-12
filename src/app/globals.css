@@ -8,12 +8,12 @@
   }
 
   :root {
-    --background: 210 20% 98%;
-    --foreground: 210 4% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 210 4% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 4% 10%;
+    --background: 260 30% 15%; /* Dark Purple from image */
+    --foreground: 210 20% 98%;
+    --card: 260 30% 20%;
+    --card-foreground: 210 20% 98%;
+    --popover: 260 30% 10%;
+    --popover-foreground: 210 20% 98%;
     
     /* Colores Institucionales */
     --primary: 193.1 100% 44.3%; /* Azul Cian: #00B5E2 */
@@ -23,12 +23,12 @@
     --accent: 34.1 100% 64.1%; /* Amarillo: #FFB549 */
     --accent-foreground: 210 4% 10%;
     
-    --muted: 210 20% 94%;
-    --muted-foreground: 210 4% 45%;
+    --muted: 260 30% 25%;
+    --muted-foreground: 210 20% 75%;
     --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
-    --border: 210 20% 87%;
-    --input: 210 20% 87%;
+    --border: 260 30% 30%;
+    --input: 260 30% 30%;
     --ring: 193.1 100% 44.3%; /* Azul Cian Ring */
     --radius: 0.8rem;
 
@@ -42,12 +42,12 @@
   }
 
   .dark {
-    --background: 220 13% 11%;
-    --foreground: 0 0% 98%;
-    --card: 220 13% 18%;
-    --card-foreground: 0 0% 98%;
-    --popover: 220 13% 11%;
-    --popover-foreground: 0 0% 98%;
+    --background: 260 30% 15%; /* Dark Purple from image */
+    --foreground: 210 20% 98%;
+    --card: 260 30% 20%;
+    --card-foreground: 210 20% 98%;
+    --popover: 260 30% 10%;
+    --popover-foreground: 210 20% 98%;
 
     /* Colores Institucionales Dark Mode*/
     --primary: 193.1 100% 44.3%; /* Azul Cian: #00B5E2 */
@@ -59,10 +59,10 @@
     --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
 
-    --muted: 220 13% 25%;
-    --muted-foreground: 0 0% 63.9%;
-    --border: 220 13% 25%;
-    --input: 220 13% 25%;
+    --muted: 260 30% 25%;
+    --muted-foreground: 210 20% 75%;
+    --border: 260 30% 30%;
+    --input: 260 30% 30%;
     --ring: 193.1 100% 44.3%;
     
     /* Sidebar colors for dark mode */
