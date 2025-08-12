@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${montserrat.variable} ${roboto.variable}`}>
       <head>
-        <title>Misiones Libertad</title>
+        <title>Partido Libertario Misiones</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background text-foreground">
