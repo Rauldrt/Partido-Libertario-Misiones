@@ -1,0 +1,16 @@
+[
+  {
+    "id": "cand-1",
+    "name": "Candidato Principal 1",
+    "description": "Un líder comprometido con la libertad y el progreso de Misiones. Su visión es transformar la provincia en un faro de oportunidades.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "political portrait"
+  },
+  {
+    "id": "cand-2",
+    "name": "Candidato Principal 2",
+    "description": "Experiencia y dedicación al servicio de los ciudadanos. Propone políticas claras para un gobierno eficiente y transparente.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "leader smiling"
+  }
+]

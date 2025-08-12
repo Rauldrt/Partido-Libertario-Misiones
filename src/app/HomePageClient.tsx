@@ -23,9 +23,8 @@ import type { BannerSlideData, MosaicImageData, MosaicTileData, AccordionItemDat
 import { EmbedDisplay } from '@/components/EmbedDisplay';
 import { DynamicIcon } from '@/components/DynamicIcon';
 import type { NotificationData } from '@/lib/notification-service';
-
-// PLEASE REPLACE THIS URL WITH YOUR GOOGLE FORM "EMBED" URL
-const googleFormUrl = "https://www.appsheet.com/start/1e3ae975-00d1-4d84-a243-f034e9174233#appName=Fiscales-753264&row=&table=Msj+web&view=Msj+web_Form+2";
+import type { TeamMember } from '@/lib/dynamic-sections-service';
+import { TeamCard } from '@/components/TeamCard';
 
 const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (images: MosaicImageData[], startIndex: number) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -79,7 +78,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
 };
 
 
-export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget, infoSectionData, notificationData }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode, infoSectionData: InfoSectionData, notificationData: NotificationData }>) {
+export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget, infoSectionData, notificationData, candidates, organization }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode, infoSectionData: InfoSectionData, notificationData: NotificationData, candidates: TeamMember[], organization: TeamMember[] }>) {
   const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
   const [notificationClicked, setNotificationClicked] = useState(false);
@@ -192,6 +191,34 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
             </Button>
         </div>
       </Section>
+
+      {candidates && candidates.length > 0 && (
+          <Section id="candidates" className="py-16 md:py-24 bg-muted/20">
+              <div className="text-center mb-12">
+                  <h2 className="font-headline text-4xl font-bold text-foreground">Nuestros Candidatos</h2>
+                  <p className="font-body text-lg text-muted-foreground mt-2">Conocé a quienes nos representan.</p>
+              </div>
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+                  {candidates.map(candidate => (
+                      <TeamCard key={candidate.id} {...candidate} />
+                  ))}
+              </div>
+          </Section>
+      )}
+
+      {organization && organization.length > 0 && (
+          <Section id="organization" className="py-16 md:py-24">
+              <div className="text-center mb-12">
+                  <h2 className="font-headline text-4xl font-bold text-foreground">Organigrama del Partido</h2>
+                  <p className="font-body text-lg text-muted-foreground mt-2">El equipo que trabaja por la libertad en Misiones.</p>
+              </div>
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
+                  {organization.map(member => (
+                      <TeamCard key={member.id} {...member} />
+                  ))}
+              </div>
+          </Section>
+      )}
       
       <Section id="info" className="py-16 md:py-24">
         <div className="text-center mb-12">
@@ -275,57 +302,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
 
         {children}
       </Section>
-
-      <Section id="contact-us" className="pb-16 md:pb-24">
-        <div className="max-w-4xl mx-auto">
-          <Accordion 
-              type="single" 
-              collapsible 
-              className="w-full"
-            >
-              <AccordionItem value="contact" className="border-b-0">
-                  <Card className="shadow-lg w-full">
-                      <AccordionTrigger className="p-6 hover:no-underline">
-                          <div className="flex items-center gap-4 w-full">
-                              <LucideIcons.MessageSquare className="h-10 w-10 text-primary" />
-                              <span className="font-headline text-2xl text-foreground">Sumate y Contactanos</span>
-                          </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-6 pb-6">
-                          <Card className="w-full flex flex-col mt-2">
-                              <CardHeader>
-                                  <CardTitle className="font-headline text-xl">Envianos un Mensaje</CardTitle>
-                                  <CardDescription className="font-body text-sm">
-                                      Completá el formulario para contactarnos.
-                                  </CardDescription>
-                              </CardHeader>
-                              <CardContent className="flex-grow flex flex-col">
-                                  <div className="relative w-full flex-grow h-[400px] rounded-md overflow-hidden border">
-                                      <iframe
-                                          src={googleFormUrl}
-                                          width="100%"
-                                          height="100%"
-                                          frameBorder="0"
-                                          marginHeight={0}
-                                          marginWidth={0}
-                                          className="absolute top-0 left-0"
-                                          title="Formulario de Contacto de Google"
-                                      >
-                                          Cargando...
-                                      </iframe>
-                                  </div>
-                                  <p className="text-xs text-muted-foreground mt-2">
-                                      <span className="font-bold">Nota:</span> Usamos un formulario de Google para gestionar los contactos.
-                                  </p>
-                              </CardContent>
-                          </Card>
-                      </AccordionContent>
-                  </Card>
-              </AccordionItem>
-            </Accordion>
-        </div>
-      </Section>
-
+      
       <Dialog open={!!lightboxData} onOpenChange={(isOpen) => !isOpen && setLightboxData(null)}>
         <DialogContent className="max-w-5xl w-full p-2 bg-transparent border-0 shadow-none">
           {lightboxData && (

@@ -2,6 +2,7 @@
 import HomePageClient from './HomePageClient';
 import { LatestNews } from '@/components/LatestNews';
 import { getBannerSlides, getMosaicTiles, getAccordionItems, getInfoSectionData } from '@/lib/homepage-service';
+import { getCandidates, getOrganization } from '@/lib/dynamic-sections-service';
 import { EventsCarousel } from '@/components/EventsCarousel';
 import { getNewsItems } from '@/lib/news-service';
 import { SocialWidget } from '@/components/SocialWidget';
@@ -18,6 +19,8 @@ export default async function HomePage() {
   const notificationData = await getNotificationData();
   const allItems = await getNewsItems();
   const events = allItems.filter(item => item.type === 'event' && item.published);
+  const candidates = await getCandidates();
+  const organization = await getOrganization();
 
   // Filter out expired slides
   const now = new Date();
@@ -40,6 +43,8 @@ export default async function HomePage() {
         notificationData={notificationData}
         events={<EventsCarousel events={events} />}
         socialWidget={<SocialWidget />}
+        candidates={candidates}
+        organization={organization}
     >
       <LatestNews />
     </HomePageClient>

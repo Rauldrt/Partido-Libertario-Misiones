@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Wrench } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Wrench, Users, Library } from 'lucide-react';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -138,6 +138,40 @@ export default function AdminDashboardPage() {
                         Editar Formularios
                     </Link>
                 </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestionar Candidatos</CardTitle>
+              <CardDescription>Edita la sección de candidatos en la página principal.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Añadí, reordená o eliminá los candidatos que se muestran en la home.
+              </p>
+              <Button asChild>
+                <Link href="/admin/manage-candidates">
+                  <Users className="mr-2 h-4 w-4" />
+                  Editar Candidatos
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Gestionar Organigrama</CardTitle>
+              <CardDescription>Edita el organigrama del partido en la página principal.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Añadí, reordená o eliminá miembros del equipo que se muestran en la home.
+              </p>
+              <Button asChild>
+                <Link href="/admin/manage-organization">
+                  <Library className="mr-2 h-4 w-4" />
+                  Editar Organigrama
+                </Link>
+              </Button>
             </CardContent>
           </Card>
           <Card>

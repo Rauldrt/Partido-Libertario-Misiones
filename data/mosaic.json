@@ -1,12 +1,13 @@
 [
   {
+    "id": "tile-0-1754963520778",
     "layout": "col-span-2 row-span-2",
     "duration": 5000,
     "animation": "animate-fade-in-up",
     "images": [
       {
         "id": "img-mosaic-0-1754618339045-0-1754618339045",
-        "src": "/grupo.webp",
+        "src": "/Ninfa.webp",
         "alt": "Militantes en un evento",
         "hint": "political rally",
         "caption": "Participá en nuestros eventos."
@@ -28,6 +29,7 @@
     ]
   },
   {
+    "id": "tile-1-1754963520778",
     "layout": "col-span-2 row-span-1",
     "duration": 4500,
     "animation": "animate-fade-in-up",
@@ -56,6 +58,7 @@
     ]
   },
   {
+    "id": "tile-2-1754963520778",
     "layout": "col-span-1 row-span-1",
     "duration": 3500,
     "animation": "animate-zoom-in-gentle",
@@ -84,6 +87,7 @@
     ]
   },
   {
+    "id": "tile-3-1754963520778",
     "layout": "col-span-1 row-span-1",
     "duration": 6000,
     "animation": "animate-crossfade-in",
