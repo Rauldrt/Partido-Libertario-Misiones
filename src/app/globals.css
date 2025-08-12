@@ -8,9 +8,9 @@
   }
 
   :root {
-    --background: 260 30% 15%; /* Dark Purple from image */
+    --background: 287 48% 26%; /* Morado Institucional: #572364 */
     --foreground: 210 20% 98%;
-    --card: 260 30% 20%;
+    --card: 287 40% 32%;
     --card-foreground: 210 20% 98%;
     --popover: 260 30% 10%;
     --popover-foreground: 210 20% 98%;
@@ -42,9 +42,9 @@
   }
 
   .dark {
-    --background: 260 30% 15%; /* Dark Purple from image */
+    --background: 287 48% 26%; /* Morado Institucional: #572364 */
     --foreground: 210 20% 98%;
-    --card: 260 30% 20%;
+    --card: 287 40% 32%;
     --card-foreground: 210 20% 98%;
     --popover: 260 30% 10%;
     --popover-foreground: 210 20% 98%;
