@@ -5,21 +5,21 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeManager } from '@/components/layout/ThemeManager';
 import { SocialModalProvider } from '@/context/SocialModalContext';
 import { AuthProvider } from '@/context/AuthContext';
-import { Poppins, PT_Sans } from 'next/font/google'
+import { Poppins, PT_Sans } from 'next/font/google';
 
 const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-poppins',
   weight: ['400', '700', '800']
-})
+});
 
 const ptSans = PT_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-pt-sans',
   weight: ['400', '700']
-})
+});
 
 
 export default function RootLayout({

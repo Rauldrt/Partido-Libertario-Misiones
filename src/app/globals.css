@@ -8,32 +8,32 @@
   }
 
   :root {
-    --background: 210 20% 98%; /* Light Gray: #F0F0F0 */
+    --background: 210 20% 98%;
     --foreground: 210 4% 10%;
     --card: 0 0% 100%;
     --card-foreground: 210 4% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 210 4% 10%;
-    --primary: 197 71% 55%; /* Vibrant Blue: #29ABE2 */
+    --primary: 262.1 83.3% 57.8%; /* Vibrant Purple */
     --primary-foreground: 0 0% 100%;
     --secondary: 210 20% 94%;
     --secondary-foreground: 210 4% 10%;
     --muted: 210 20% 94%;
     --muted-foreground: 210 4% 45%;
-    --accent: 51 100% 50%; /* Bright Yellow: #FFD700 */
+    --accent: 45 93.4% 47.5%; /* Gold/Yellow */
     --accent-foreground: 210 4% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 210 20% 87%;
     --input: 210 20% 87%;
-    --ring: 197 71% 55%;
+    --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
 
     /* Custom Admin Sidebar Colors */
     --sidebar: 220 13% 18%; /* Darker Blue-Gray */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 25%;
-    --sidebar-ring: 197 71% 55%;
+    --sidebar-ring: 262.1 83.3% 57.8%;
     --sidebar-accent: 220 13% 28%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
@@ -45,25 +45,25 @@
     --card-foreground: 0 0% 98%;
     --popover: 220 13% 11%;
     --popover-foreground: 0 0% 98%;
-    --primary: 197 71% 55%;
+    --primary: 262.1 83.3% 57.8%;
     --primary-foreground: 0 0% 100%;
     --secondary: 220 13% 25%;
     --secondary-foreground: 0 0% 98%;
     --muted: 220 13% 25%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 51 100% 50%;
+    --accent: 45 93.4% 47.5%;
     --accent-foreground: 210 4% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 13% 25%;
     --input: 220 13% 25%;
-    --ring: 197 71% 55%;
+    --ring: 262.1 83.3% 57.8%;
     
     /* Sidebar colors for dark mode */
     --sidebar: 220 13% 11%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 18%;
-    --sidebar-ring: 197 71% 55%;
+    --sidebar-ring: 262.1 83.3% 57.8%;
     --sidebar-accent: 220 13% 22%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
