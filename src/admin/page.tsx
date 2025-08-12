@@ -348,5 +348,3 @@ export default function AdminDashboardPage() {
     </TooltipProvider>
   );
 }
-
-    
