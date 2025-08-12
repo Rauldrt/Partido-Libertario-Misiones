@@ -228,15 +228,42 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
 
       {organization && organization.length > 0 && (
           <Section id="organization" className="py-16 md:py-24">
-              <div className="text-center mb-12">
-                  <h2 className="font-headline text-4xl font-bold text-foreground">Organigrama del Partido</h2>
-                  <p className="font-body text-lg text-muted-foreground mt-2">El equipo que trabaja por la libertad en Misiones.</p>
-              </div>
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
-                  {organization.map(member => (
-                      <TeamCard key={member.id} {...member} />
-                  ))}
-              </div>
+            <div className="text-center mb-12">
+                <h2 className="font-headline text-4xl font-bold text-foreground">Organigrama del Partido</h2>
+                <p className="font-body text-lg text-muted-foreground mt-2">El equipo que trabaja por la libertad en Misiones.</p>
+            </div>
+            <div className="max-w-4xl mx-auto">
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                    {organization.map(member => (
+                        <AccordionItem key={member.id} value={member.id} className="border-b-0">
+                            <Card className="shadow-lg w-full bg-card/80 backdrop-blur-sm">
+                                <AccordionTrigger className="p-4 md:p-6 hover:no-underline w-full">
+                                    <div className="flex items-center gap-4 w-full">
+                                        <div className="relative h-16 w-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary">
+                                            <Image 
+                                                src={member.imageUrl} 
+                                                alt={`Foto de ${member.name}`}
+                                                layout="fill"
+                                                objectFit="cover"
+                                                data-ai-hint={member.imageHint}
+                                            />
+                                        </div>
+                                        <div className="text-left">
+                                            <h3 className="font-headline text-xl text-primary">{member.name}</h3>
+                                            {member.role && <p className="font-body text-md text-muted-foreground">{member.role}</p>}
+                                        </div>
+                                    </div>
+                                </AccordionTrigger>
+                                <AccordionContent className="px-6 pb-6">
+                                    <p className="font-body text-lg pl-24 text-muted-foreground">
+                                        {member.description}
+                                    </p>
+                                </AccordionContent>
+                            </Card>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </div>
           </Section>
       )}
       
