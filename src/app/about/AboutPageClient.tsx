@@ -104,18 +104,52 @@ export function AboutPageClient({ headerData }: { headerData: PageHeaderData }) 
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-6">
-                  <div className="grid sm:grid-cols-2 gap-6 pt-4">
-                    {values.map((value) => (
-                      <Card key={value.title} className="text-center shadow-md hover:shadow-lg transition-shadow duration-300 bg-card">
-                        <CardHeader className="items-center pt-6">
-                          {value.icon}
-                          <CardTitle className="font-headline mt-3 text-xl">{value.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="pb-6">
-                          <p className="font-body text-muted-foreground">{value.description}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
+                  <div className="flex flex-wrap justify-center gap-6 pt-4">
+                    <div className="flex w-full justify-center gap-6 flex-wrap">
+                      {values.slice(0, 3).map((value) => (
+                        <div key={value.title} className="w-full md:w-1/4">
+                          <Card className="text-center shadow-md hover:shadow-lg transition-shadow duration-300 bg-card h-full">
+                            <CardHeader className="items-center pt-6">
+                              {value.icon}
+                              <CardTitle className="font-headline mt-3 text-xl">{value.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="pb-6">
+                              <p className="font-body text-muted-foreground">{value.description}</p>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex w-full justify-center gap-6 flex-wrap">
+                      {values.slice(3, 7).map((value) => (
+                         <div key={value.title} className="w-full md:w-1/5">
+                            <Card className="text-center shadow-md hover:shadow-lg transition-shadow duration-300 bg-card h-full">
+                              <CardHeader className="items-center pt-6">
+                                {value.icon}
+                                <CardTitle className="font-headline mt-3 text-xl">{value.title}</CardTitle>
+                              </CardHeader>
+                              <CardContent className="pb-6">
+                                <p className="font-body text-muted-foreground">{value.description}</p>
+                              </CardContent>
+                            </Card>
+                         </div>
+                      ))}
+                    </div>
+                     <div className="flex w-full justify-center gap-6 flex-wrap">
+                      {values.slice(7).map((value) => (
+                         <div key={value.title} className="w-full md:w-1/6">
+                            <Card className="text-center shadow-md hover:shadow-lg transition-shadow duration-300 bg-card h-full">
+                              <CardHeader className="items-center pt-6">
+                                {value.icon}
+                                <CardTitle className="font-headline mt-3 text-xl">{value.title}</CardTitle>
+                              </CardHeader>
+                              <CardContent className="pb-6">
+                                <p className="font-body text-muted-foreground">{value.description}</p>
+                              </CardContent>
+                            </Card>
+                          </div>
+                      ))}
+                    </div>
                   </div>
                 </AccordionContent>
               </Card>
