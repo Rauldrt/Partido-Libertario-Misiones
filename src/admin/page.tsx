@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, MessageSquare, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, Users, Library, Wrench, Newspaper, Brush, Component } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutGrid, Link2, ListChecks, MessageSquare, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, Users, Library, Wrench, Newspaper, Brush, Component } from 'lucide-react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 const SectionTitle = ({ title, icon }: { title: string, icon: React.ReactNode }) => (
