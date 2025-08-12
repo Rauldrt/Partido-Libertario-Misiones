@@ -198,11 +198,31 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                   <h2 className="font-headline text-4xl font-bold text-foreground">Nuestros Candidatos</h2>
                   <p className="font-body text-lg text-muted-foreground mt-2">Conocé a quienes nos representan.</p>
               </div>
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-w-7xl mx-auto">
-                  {candidates.map(candidate => (
-                      <TeamCard key={candidate.id} {...candidate} />
-                  ))}
-              </div>
+              <Carousel
+                  opts={{
+                      align: "start",
+                      loop: true,
+                  }}
+                   plugins={[
+                      Autoplay({
+                          delay: 3000,
+                          stopOnInteraction: true,
+                      }),
+                  ]}
+                  className="w-full max-w-7xl mx-auto"
+              >
+                  <CarouselContent className="-ml-4">
+                      {candidates.map((candidate) => (
+                          <CarouselItem key={candidate.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4">
+                               <div className="p-1 h-full">
+                                  <TeamCard {...candidate} />
+                               </div>
+                          </CarouselItem>
+                      ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="absolute left-[-2rem] top-1/2 -translate-y-1/2 z-10 hidden lg:flex" />
+                  <CarouselNext className="absolute right-[-2rem] top-1/2 -translate-y-1/2 z-10 hidden lg:flex" />
+              </Carousel>
           </Section>
       )}
 
