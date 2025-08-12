@@ -271,7 +271,7 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
               >
                   <CarouselContent className="-ml-4">
                       {candidates.map((candidate) => (
-                          <CarouselItem key={candidate.id} className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4">
+                          <CarouselItem key={candidate.id} className="basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4">
                                <div className="p-1 h-full">
                                   <TeamCard {...candidate} />
                                </div>
@@ -416,5 +416,3 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
     </>
   );
 }
-
-    
