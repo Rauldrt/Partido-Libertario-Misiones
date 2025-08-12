@@ -156,7 +156,7 @@ export function FiscalizacionForm({ formDefinition }: FiscalizacionFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {formDefinition.fields.map(field => renderField(field, form.control))}
         
-        <Button type="submit" className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105" disabled={isSubmitting}>
+        <Button type="submit" className="w-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105" disabled={isSubmitting}>
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -103,13 +103,13 @@ export function Header() {
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <div className="border-l border-white/20 h-8 mx-2"></div>
-                    <Button asChild style={{backgroundColor: '#D22630'}} className="text-primary-foreground hover:bg-destructive/90 shadow-md transition-transform hover:scale-105">
+                    <Button asChild className="rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-md transition-transform hover:scale-105">
                         <Link href="/fiscalizacion">
                             <ShieldCheck className="mr-2 h-5 w-5" />
                             <span>Fiscalizá</span>
                         </Link>
                     </Button>
-                    <Button asChild style={{backgroundColor: '#002F6C'}} className="text-primary-foreground hover:bg-secondary/90 shadow-md transition-transform hover:scale-105">
+                    <Button asChild className="rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-md transition-transform hover:scale-105">
                         <Link href="/afiliacion">
                             <UserPlus className="mr-2 h-5 w-5" />
                             <span>Afiliate</span>
@@ -175,7 +175,7 @@ export function Header() {
             ))}
             <DropdownMenuSeparator className="my-1 bg-white/20" />
             <div className="px-2 py-1.5 space-y-2">
-                <Button asChild className="w-full text-primary-foreground shadow-md" style={{backgroundColor: '#D22630'}}>
+                <Button asChild className="w-full text-primary-foreground shadow-md rounded-full bg-gradient-to-r from-orange-500 to-amber-500">
                     <Link
                         href="/fiscalizacion"
                         onClick={() => setIsMobileMenuOpen(false)}
@@ -184,7 +184,7 @@ export function Header() {
                         <span>Fiscalizá</span>
                     </Link>
                 </Button>
-                <Button asChild className="w-full text-primary-foreground shadow-md" style={{backgroundColor: '#002F6C'}}>
+                <Button asChild className="w-full text-primary-foreground shadow-md rounded-full bg-gradient-to-r from-cyan-500 to-purple-500">
                     <Link
                         href="/afiliacion"
                         onClick={() => setIsMobileMenuOpen(false)}
