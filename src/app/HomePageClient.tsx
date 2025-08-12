@@ -11,7 +11,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import * as LucideIcons from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
@@ -25,6 +24,7 @@ import { DynamicIcon } from '@/components/DynamicIcon';
 import type { NotificationData } from '@/lib/notification-service';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 import { TeamCard } from '@/components/TeamCard';
+import * as LucideIcons from 'lucide-react';
 
 const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (images: MosaicImageData[], startIndex: number) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -75,6 +75,64 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
        </div>
     </div>
   );
+};
+
+const OrganizationTabs = ({ members }: { members: TeamMember[] }) => {
+    const [selectedMember, setSelectedMember] = useState(members[0]);
+    const [contentKey, setContentKey] = useState(0);
+
+    const handleSelectMember = (member: TeamMember) => {
+        setContentKey(prev => prev + 1); // Increment key to force re-render with animation
+        setSelectedMember(member);
+    };
+
+    if (!members || members.length === 0) return null;
+
+    return (
+        <div className="w-full max-w-5xl mx-auto">
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+                {members.map(member => (
+                    <Button
+                        key={member.id}
+                        variant={selectedMember.id === member.id ? 'default' : 'outline'}
+                        onClick={() => handleSelectMember(member)}
+                        className={cn(
+                            "transition-all duration-200",
+                            selectedMember.id !== member.id && "bg-transparent hover:bg-primary/10 border-primary/50 text-primary hover:text-primary"
+                        )}
+                    >
+                        {member.role || member.name}
+                    </Button>
+                ))}
+            </div>
+            
+            {selectedMember && (
+                 <Card 
+                    key={contentKey}
+                    className="w-full shadow-2xl bg-card/80 backdrop-blur-sm animate-fade-in-up duration-500"
+                 >
+                    <div className="grid md:grid-cols-3 items-center">
+                        <div className="relative aspect-square md:aspect-[3/4] h-full rounded-t-lg md:rounded-l-lg md:rounded-tr-none overflow-hidden">
+                             <Image
+                                src={selectedMember.imageUrl}
+                                alt={`Foto de ${selectedMember.name}`}
+                                layout="fill"
+                                objectFit="cover"
+                                data-ai-hint={selectedMember.imageHint}
+                            />
+                        </div>
+                        <div className="md:col-span-2 p-6 md:p-8">
+                            <h3 className="font-headline text-2xl md:text-3xl text-primary">{selectedMember.name}</h3>
+                            {selectedMember.role && <p className="font-body text-lg text-muted-foreground font-semibold mb-4">{selectedMember.role}</p>}
+                            <p className="font-body text-base md:text-lg text-foreground/90">
+                                {selectedMember.description}
+                            </p>
+                        </div>
+                    </div>
+                 </Card>
+            )}
+        </div>
+    );
 };
 
 
@@ -177,13 +235,13 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
         </Carousel>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-row gap-4 w-full max-w-md px-4 sm:px-0 md:hidden">
-            <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
+            <Button asChild size="lg" className="flex-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-primary-foreground hover:from-orange-600 hover:to-amber-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/fiscalizacion">
                   <LucideIcons.ShieldCheck className="mr-2 h-5 w-5" />
                   <span>Fiscalizá</span>
               </Link>
             </Button>
-            <Button asChild size="lg" className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-lg transition-transform hover:scale-105">
+            <Button asChild size="lg" className="flex-1 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-primary-foreground hover:from-cyan-600 hover:to-purple-600 shadow-lg transition-transform hover:scale-105">
               <Link href="/afiliacion">
                   <LucideIcons.UserPlus className="mr-2 h-5 w-5" />
                   <span>Afiliate</span>
@@ -227,44 +285,13 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
       )}
 
       {organization && organization.length > 0 && (
-          <Section id="organization" className="py-16 md:py-24">
+        <Section id="organization" className="py-16 md:py-24">
             <div className="text-center mb-12">
                 <h2 className="font-headline text-4xl font-bold text-foreground">Organigrama del Partido</h2>
                 <p className="font-body text-lg text-muted-foreground mt-2">El equipo que trabaja por la libertad en Misiones.</p>
             </div>
-            <div className="max-w-4xl mx-auto">
-                <Accordion type="single" collapsible className="w-full space-y-4">
-                    {organization.map(member => (
-                        <AccordionItem key={member.id} value={member.id} className="border-b-0">
-                            <Card className="shadow-lg w-full bg-card/80 backdrop-blur-sm">
-                                <AccordionTrigger className="p-4 md:p-6 hover:no-underline w-full">
-                                    <div className="flex items-center gap-4 w-full">
-                                        <div className="relative h-16 w-16 rounded-full overflow-hidden flex-shrink-0 border-2 border-primary">
-                                            <Image 
-                                                src={member.imageUrl} 
-                                                alt={`Foto de ${member.name}`}
-                                                layout="fill"
-                                                objectFit="cover"
-                                                data-ai-hint={member.imageHint}
-                                            />
-                                        </div>
-                                        <div className="text-left">
-                                            <h3 className="font-headline text-xl text-primary">{member.name}</h3>
-                                            {member.role && <p className="font-body text-md text-muted-foreground">{member.role}</p>}
-                                        </div>
-                                    </div>
-                                </AccordionTrigger>
-                                <AccordionContent className="px-6 pb-6">
-                                    <p className="font-body text-lg pl-24 text-muted-foreground">
-                                        {member.description}
-                                    </p>
-                                </AccordionContent>
-                            </Card>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
-            </div>
-          </Section>
+            <OrganizationTabs members={organization} />
+        </Section>
       )}
       
       <Section id="info" className="py-16 md:py-24">
@@ -389,3 +416,5 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
     </>
   );
 }
+
+    
