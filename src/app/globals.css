@@ -8,9 +8,9 @@
   }
 
   :root {
-    --background: 287 48% 22%; /* Morado Institucional más oscuro: #4d1f59 */
+    --background: 273 30% 17%; /* Deep Purple from image */
     --foreground: 210 20% 98%;
-    --card: 287 40% 32%;
+    --card: 273 30% 24%; /* Lighter purple for cards */
     --card-foreground: 210 20% 98%;
     --popover: 260 30% 10%;
     --popover-foreground: 210 20% 98%;
@@ -27,10 +27,10 @@
     --muted-foreground: 210 20% 75%;
     --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
-    --border: 260 30% 30%;
-    --input: 260 30% 30%;
+    --border: 273 30% 30%;
+    --input: 273 30% 30%;
     --ring: 199 98% 48%; /* Azul Cian Ring */
-    --radius: 0.8rem;
+    --radius: 1.5rem; /* Increased radius for cards */
 
     /* Custom Admin Sidebar Colors */
     --sidebar: 220 13% 18%; /* Darker Blue-Gray */
@@ -42,9 +42,9 @@
   }
 
   .dark {
-    --background: 287 48% 22%; /* Morado Institucional más oscuro: #4d1f59 */
+    --background: 273 30% 17%;
     --foreground: 210 20% 98%;
-    --card: 287 40% 32%;
+    --card: 273 30% 24%;
     --card-foreground: 210 20% 98%;
     --popover: 260 30% 10%;
     --popover-foreground: 210 20% 98%;
@@ -61,8 +61,8 @@
 
     --muted: 260 30% 25%;
     --muted-foreground: 210 20% 75%;
-    --border: 260 30% 30%;
-    --input: 260 30% 30%;
+    --border: 273 30% 30%;
+    --input: 273 30% 30%;
     --ring: 199 98% 48%;
     
     /* Sidebar colors for dark mode */
