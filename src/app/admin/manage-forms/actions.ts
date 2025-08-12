@@ -3,12 +3,13 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { FormFieldSchema, saveFormDefinition, getFormDefinition, type FormDefinition } from '@/lib/afiliacion-service';
+import { FormFieldSchema } from '@/lib/form-defs';
+import { saveFormDefinition, getFormDefinition, type FormDefinition } from '@/lib/form-service';
 
 const FormDefinitionUpdateSchema = z.object({
   id: z.string(),
   fields: z.array(FormFieldSchema)
-})
+});
 
 export async function saveFormDefinitionAction(data: FormDefinition) {
   const validation = FormDefinitionUpdateSchema.safeParse(data);
