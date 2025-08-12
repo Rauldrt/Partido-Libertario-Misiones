@@ -188,4 +188,3 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
     </div>
   );
 }
-

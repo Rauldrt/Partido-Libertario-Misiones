@@ -8,7 +8,7 @@ import type { TeamMember } from '@/lib/dynamic-sections-service';
 
 export function TeamCard({ name, role, description, imageUrl, imageHint }: TeamMember) {
   return (
-    <Card className="group flex h-full w-full flex-col items-center overflow-hidden rounded-lg border-2 border-transparent text-center transition-all duration-300 hover:border-primary hover:shadow-2xl">
+    <Card className="group flex h-full w-full flex-col items-center overflow-hidden rounded-lg border-2 border-transparent text-center shadow-lg transition-all duration-300 hover:border-primary hover:shadow-2xl">
       <CardHeader className="w-full p-0">
         <div className="relative aspect-square w-full">
           <Image
@@ -33,4 +33,3 @@ export function TeamCard({ name, role, description, imageUrl, imageHint }: TeamM
     </Card>
   );
 }
-

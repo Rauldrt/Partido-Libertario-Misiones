@@ -5,6 +5,22 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeManager } from '@/components/layout/ThemeManager';
 import { SocialModalProvider } from '@/context/SocialModalContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { Poppins, PT_Sans } from 'next/font/google'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+  weight: ['400', '700', '800']
+})
+
+const ptSans = PT_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-pt-sans',
+  weight: ['400', '700']
+})
+
 
 export default function RootLayout({
   children,
@@ -13,13 +29,10 @@ export default function RootLayout({
 }>) {
   
   return (
-    <html lang="es">
+    <html lang="es" className={`${poppins.variable} ${ptSans.variable}`}>
       <head>
-        <title>Partido Libertario Misiones</title>
+        <title>Misiones Libertad</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background text-foreground">
         <ThemeManager />

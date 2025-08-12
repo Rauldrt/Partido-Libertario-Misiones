@@ -8,63 +8,63 @@
   }
 
   :root {
-    --background: 275 42% 17%; /* Morado Institucional: #572364 */
-    --foreground: 0 0% 98%; /* Blanco */
-    --card: 275 42% 22%;
-    --card-foreground: 0 0% 98%;
-    --popover: 275 42% 17%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 196 100% 44%; /* Azul Cian: #00B5E2 */
+    --background: 210 20% 98%; /* Light Gray: #F0F0F0 */
+    --foreground: 210 4% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 4% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 4% 10%;
+    --primary: 197 71% 55%; /* Vibrant Blue: #29ABE2 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 275 42% 27%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 275 42% 27%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 25 95% 53%; /* Amarillo: #FFB549 */
-    --accent-foreground: 0 0% 3.9%;
-    --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
+    --secondary: 210 20% 94%;
+    --secondary-foreground: 210 4% 10%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 210 4% 45%;
+    --accent: 51 100% 50%; /* Bright Yellow: #FFD700 */
+    --accent-foreground: 210 4% 10%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 275 42% 27%;
-    --input: 275 42% 27%;
-    --ring: 196 100% 44%;
-    --radius: 1.3rem;
-  
-    /* Colores personalizados para el sidebar del admin */
-    --sidebar: 275 42% 17%; /* Morado Institucional: #572364 */
+    --border: 210 20% 87%;
+    --input: 210 20% 87%;
+    --ring: 197 71% 55%;
+    --radius: 0.5rem;
+
+    /* Custom Admin Sidebar Colors */
+    --sidebar: 220 13% 18%; /* Darker Blue-Gray */
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-border: 275 42% 27%;
-    --sidebar-ring: 196 100% 44%;
-    --sidebar-accent: 275 42% 22%;
+    --sidebar-border: 220 13% 25%;
+    --sidebar-ring: 197 71% 55%;
+    --sidebar-accent: 220 13% 28%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
 
   .dark {
-    --background: 275 42% 17%; /* Morado Institucional: #572364 */
+    --background: 220 13% 11%;
     --foreground: 0 0% 98%;
-    --card: 275 42% 22%;
+    --card: 220 13% 18%;
     --card-foreground: 0 0% 98%;
-    --popover: 275 42% 17%;
+    --popover: 220 13% 11%;
     --popover-foreground: 0 0% 98%;
-    --primary: 196 100% 44%;
+    --primary: 197 71% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 275 42% 27%;
+    --secondary: 220 13% 25%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 275 42% 27%;
+    --muted: 220 13% 25%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 3.9%;
+    --accent: 51 100% 50%;
+    --accent-foreground: 210 4% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 275 42% 27%;
-    --input: 275 42% 27%;
-    --ring: 196 100% 44%;
+    --border: 220 13% 25%;
+    --input: 220 13% 25%;
+    --ring: 197 71% 55%;
     
-    /* Mismos colores para el sidebar en modo oscuro */
-    --sidebar: 275 42% 17%;
+    /* Sidebar colors for dark mode */
+    --sidebar: 220 13% 11%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-border: 275 42% 27%;
-    --sidebar-ring: 196 100% 44%;
-    --sidebar-accent: 275 42% 22%;
+    --sidebar-border: 220 13% 18%;
+    --sidebar-ring: 197 71% 55%;
+    --sidebar-accent: 220 13% 22%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
 }
