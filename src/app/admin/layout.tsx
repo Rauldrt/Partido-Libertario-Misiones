@@ -14,8 +14,11 @@ import {
   SidebarInset,
   SidebarTrigger,
   SidebarFooter,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Wrench, Users, Library, Component, Newspaper, Brush } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -66,142 +69,121 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                 </SidebarHeader>
                 <SidebarContent>
                     <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin">
-                            <LayoutDashboard />
-                            Dashboard
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-afiliaciones">
-                            <UserCheck />
-                            Ver Afiliaciones
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-fiscales">
-                            <ShieldCheckIcon />
-                            Ver Fiscales
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-contact">
-                            <MessageSquare />
-                            Ver Contactos
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/ai-assistant">
-                            <Sparkles />
-                            Asistente de IA
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/news-generator">
-                            <FilePlus />
-                            Crear Contenido
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-content">
-                            <ListChecks />
-                            Gestionar Contenido
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-notification">
-                            <Bell />
-                            Gestionar Notificación
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-page-headers">
-                            <Type />
-                            Gestionar Encabezados
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-banner">
-                            <GalleryHorizontal />
-                            Gestionar Banner
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-accordion">
-                            <PanelsTopLeft />
-                            Gestionar Acordeón
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-mosaic">
-                            <LayoutGrid />
-                            Gestionar Mosaico
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-info-section">
-                            <Info />
-                            Gestionar Sección Info
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-referentes">
-                            <Star />
-                            Gestionar Referentes
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-social-widget">
-                            <Rss />
-                            Gestionar Widget Social
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-social-links">
-                            <Link2 />
-                            Gestionar Enlaces Sociales
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild>
-                        <Link href="/admin/manage-hosts">
-                            <Server />
-                            Gestionar Hosts
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild>
+                            <Link href="/admin">
+                                <LayoutDashboard />
+                                Dashboard
+                            </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+
+                        {/* --- Grupo: Formularios y Envíos --- */}
+                        <SidebarMenuItem>
+                             <SidebarMenuButton>
+                                <Wrench />
+                                <span>Formularios</span>
+                            </SidebarMenuButton>
+                            <SidebarMenuSub>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-afiliaciones"><UserCheck/>Afiliaciones</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-fiscales"><ShieldCheckIcon/>Fiscales</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-contact"><MessageSquare/>Contactos</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                 <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-forms"><Component/>Editor de Formularios</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                        </SidebarMenuItem>
+                        
+                        {/* --- Grupo: Contenido y Publicaciones --- */}
+                         <SidebarMenuItem>
+                             <SidebarMenuButton>
+                                <Newspaper />
+                                <span>Contenido</span>
+                            </SidebarMenuButton>
+                            <SidebarMenuSub>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/news-generator"><FilePlus/>Crear Contenido</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-content"><ListChecks/>Gestionar Contenido</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/ai-assistant"><Sparkles/>Asistente IA</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                        </SidebarMenuItem>
+
+                        {/* --- Grupo: Apariencia Home --- */}
+                         <SidebarMenuItem>
+                             <SidebarMenuButton>
+                                <Brush />
+                                <span>Apariencia Home</span>
+                            </SidebarMenuButton>
+                            <SidebarMenuSub>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-banner"><GalleryHorizontal/>Banner</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-accordion"><PanelsTopLeft/>Acordeón</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-mosaic"><LayoutGrid/>Mosaico</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-info-section"><Info/>Sección Info</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-notification"><Bell/>Notificación</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                        </SidebarMenuItem>
+
+                         {/* --- Grupo: Estructura del Partido --- */}
+                         <SidebarMenuItem>
+                             <SidebarMenuButton>
+                                <Library />
+                                <span>Estructura Partido</span>
+                            </SidebarMenuButton>
+                            <SidebarMenuSub>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-candidates"><Users/>Candidatos</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-organization"><Library/>Organigrama</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-referentes"><Star/>Referentes</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                        </SidebarMenuItem>
+                        
+                        {/* --- Grupo: Configuración General --- */}
+                         <SidebarMenuItem>
+                             <SidebarMenuButton>
+                                <Server />
+                                <span>Configuración General</span>
+                            </SidebarMenuButton>
+                            <SidebarMenuSub>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-page-headers"><Type/>Encabezados de Página</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-social-links"><Link2/>Enlaces Sociales</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                 <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-social-widget"><Rss/>Widget Social</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                                <SidebarMenuSubItem>
+                                    <SidebarMenuSubButton asChild><Link href="/admin/manage-hosts"><Server/>Hosts de Imágenes</Link></SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                            </SidebarMenuSub>
+                        </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarContent>
                 <SidebarFooter>
@@ -212,7 +194,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                 </SidebarFooter>
                 </Sidebar>
                 <SidebarInset className="flex-1">
-                <header className="flex h-14 items-center gap-4 border-b bg-purple-950/80 px-6 sticky top-0 z-40 backdrop-blur-md text-primary-foreground">
+                <header className="flex h-14 items-center gap-4 border-b bg-sidebar px-6 sticky top-0 z-40 text-sidebar-foreground backdrop-blur-md">
                     <SidebarTrigger className="md:hidden" />
                     <div className="flex-1">
                         <h1 className="text-lg font-semibold">Panel de Administración</h1>
