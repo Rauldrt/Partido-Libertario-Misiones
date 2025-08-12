@@ -46,7 +46,7 @@ const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick
     <div
       key={tile.id} 
       className={cn(
-        'group relative rounded-lg overflow-hidden shadow-lg cursor-pointer',
+        'group relative rounded-3xl overflow-hidden shadow-lg cursor-pointer',
         tile.layout
       )}
       onClick={() => onImageClick(tile.images, currentIndex)}

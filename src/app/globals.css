@@ -16,11 +16,11 @@
     --popover-foreground: 210 20% 98%;
     
     /* Colores Institucionales */
-    --primary: 193.1 100% 44.3%; /* Azul Cian: #00B5E2 */
-    --primary-foreground: 0 0% 100%;
+    --primary: 199 98% 48%; /* Azul Cian: #00B5E2 */
+    --primary-foreground: 210 20% 98%;
     --secondary: 212 78% 21.2%; /* Azul Marino: #002F6C */
     --secondary-foreground: 0 0% 100%;
-    --accent: 34.1 100% 64.1%; /* Amarillo: #FFB549 */
+    --accent: 45 100% 50%; /* Amarillo: #FFB549 */
     --accent-foreground: 210 4% 10%;
     
     --muted: 260 30% 25%;
@@ -29,14 +29,14 @@
     --destructive-foreground: 0 0% 98%;
     --border: 260 30% 30%;
     --input: 260 30% 30%;
-    --ring: 193.1 100% 44.3%; /* Azul Cian Ring */
+    --ring: 199 98% 48%; /* Azul Cian Ring */
     --radius: 0.8rem;
 
     /* Custom Admin Sidebar Colors */
     --sidebar: 220 13% 18%; /* Darker Blue-Gray */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 25%;
-    --sidebar-ring: 193.1 100% 44.3%;
+    --sidebar-ring: 199 98% 48%;
     --sidebar-accent: 220 13% 28%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
@@ -50,11 +50,11 @@
     --popover-foreground: 210 20% 98%;
 
     /* Colores Institucionales Dark Mode*/
-    --primary: 193.1 100% 44.3%; /* Azul Cian: #00B5E2 */
-    --primary-foreground: 0 0% 100%;
+    --primary: 199 98% 48%; /* Azul Cian: #00B5E2 */
+    --primary-foreground: 210 20% 98%;
     --secondary: 212 78% 31.2%; /* Azul Marino Aclarado */
     --secondary-foreground: 0 0% 98%;
-    --accent: 34.1 100% 64.1%; /* Amarillo: #FFB549 */
+    --accent: 45 100% 50%; /* Amarillo: #FFB549 */
     --accent-foreground: 210 4% 10%;
     --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
@@ -63,13 +63,13 @@
     --muted-foreground: 210 20% 75%;
     --border: 260 30% 30%;
     --input: 260 30% 30%;
-    --ring: 193.1 100% 44.3%;
+    --ring: 199 98% 48%;
     
     /* Sidebar colors for dark mode */
     --sidebar: 220 13% 11%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 18%;
-    --sidebar-ring: 193.1 100% 44.3%;
+    --sidebar-ring: 199 98% 48%;
     --sidebar-accent: 220 13% 22%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
