@@ -1,0 +1,48 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js build output
+/.next/
+/out/
+
+# Production
+/build
+
+# Other
+.DS_Store
+*.pem
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local development environments
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Turborepo
+.turbo
+
+# Vercel
+.vercel
+
+# Misiones-Libertad specific (if any)
+# /data/*.json - Uncomment if you want to keep data local and not in git
+# /public/uploads/ - Uncomment if you create an uploads folder
+
+# IDE configuration
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
