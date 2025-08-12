@@ -19,8 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        headline: ['var(--font-poppins)', 'sans-serif'],
-        body: ['var(--font-pt-sans)', 'sans-serif'],
+        headline: ['var(--font-montserrat)', 'sans-serif'],
+        body: ['var(--font-roboto)', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

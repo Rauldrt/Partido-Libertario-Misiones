@@ -14,26 +14,29 @@
     --card-foreground: 210 4% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 210 4% 10%;
-    --primary: 262.1 83.3% 57.8%; /* Vibrant Purple */
+    
+    /* Colores Institucionales */
+    --primary: 193.1 100% 44.3%; /* Azul Cian: #00B5E2 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 20% 94%;
-    --secondary-foreground: 210 4% 10%;
+    --secondary: 212 78% 21.2%; /* Azul Marino: #002F6C */
+    --secondary-foreground: 0 0% 100%;
+    --accent: 34.1 100% 64.1%; /* Amarillo: #FFB549 */
+    --accent-foreground: 210 4% 10%;
+    
     --muted: 210 20% 94%;
     --muted-foreground: 210 4% 45%;
-    --accent: 45 93.4% 47.5%; /* Gold/Yellow */
-    --accent-foreground: 210 4% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
     --destructive-foreground: 0 0% 98%;
     --border: 210 20% 87%;
     --input: 210 20% 87%;
-    --ring: 262.1 83.3% 57.8%;
+    --ring: 193.1 100% 44.3%; /* Azul Cian Ring */
     --radius: 0.5rem;
 
     /* Custom Admin Sidebar Colors */
     --sidebar: 220 13% 18%; /* Darker Blue-Gray */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 25%;
-    --sidebar-ring: 262.1 83.3% 57.8%;
+    --sidebar-ring: 193.1 100% 44.3%;
     --sidebar-accent: 220 13% 28%;
     --sidebar-accent-foreground: 0 0% 98%;
   }
@@ -45,25 +48,28 @@
     --card-foreground: 0 0% 98%;
     --popover: 220 13% 11%;
     --popover-foreground: 0 0% 98%;
-    --primary: 262.1 83.3% 57.8%;
+
+    /* Colores Institucionales Dark Mode*/
+    --primary: 193.1 100% 44.3%; /* Azul Cian: #00B5E2 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 13% 25%;
+    --secondary: 212 78% 31.2%; /* Azul Marino Aclarado */
     --secondary-foreground: 0 0% 98%;
+    --accent: 34.1 100% 64.1%; /* Amarillo: #FFB549 */
+    --accent-foreground: 210 4% 10%;
+    --destructive: 0 84.2% 60.2%; /* Naranja-Rojo: #D22630 */
+    --destructive-foreground: 0 0% 98%;
+
     --muted: 220 13% 25%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 45 93.4% 47.5%;
-    --accent-foreground: 210 4% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
     --border: 220 13% 25%;
     --input: 220 13% 25%;
-    --ring: 262.1 83.3% 57.8%;
+    --ring: 193.1 100% 44.3%;
     
     /* Sidebar colors for dark mode */
     --sidebar: 220 13% 11%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-border: 220 13% 18%;
-    --sidebar-ring: 262.1 83.3% 57.8%;
+    --sidebar-ring: 193.1 100% 44.3%;
     --sidebar-accent: 220 13% 22%;
     --sidebar-accent-foreground: 0 0% 98%;
   }

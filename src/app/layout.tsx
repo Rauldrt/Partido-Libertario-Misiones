@@ -5,20 +5,20 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeManager } from '@/components/layout/ThemeManager';
 import { SocialModalProvider } from '@/context/SocialModalContext';
 import { AuthProvider } from '@/context/AuthContext';
-import { Poppins, PT_Sans } from 'next/font/google';
+import { Montserrat, Roboto } from 'next/font/google';
 
-const poppins = Poppins({
+const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-poppins',
-  weight: ['400', '700', '800']
+  variable: '--font-montserrat',
+  weight: ['800'] // ExtraBold
 });
 
-const ptSans = PT_Sans({
+const roboto = Roboto({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-pt-sans',
-  weight: ['400', '700']
+  variable: '--font-roboto',
+  weight: ['300', '400', '700'] // Light, Regular, Bold
 });
 
 
@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   
   return (
-    <html lang="es" className={`${poppins.variable} ${ptSans.variable}`}>
+    <html lang="es" className={`${montserrat.variable} ${roboto.variable}`}>
       <head>
         <title>Misiones Libertad</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
