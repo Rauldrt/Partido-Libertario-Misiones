@@ -27,7 +27,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
         
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:col-span-3">
             
             <SectionTitle title="Formularios y Envíos" icon={<Wrench className="h-6 w-6 text-primary" />} />
 
