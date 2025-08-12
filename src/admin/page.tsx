@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Wrench } from 'lucide-react';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -21,6 +21,40 @@ export default function AdminDashboardPage() {
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mt-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Ver Afiliaciones</CardTitle>
+              <CardDescription>Revisá los datos de las personas que se afilian.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Accedé a la lista de nuevos afiliados para contactarlos.
+              </p>
+              <Button asChild>
+                <Link href="/admin/manage-afiliaciones">
+                  <UserCheck className="mr-2 h-4 w-4" />
+                  Ver Afiliados
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Ver Fiscales</CardTitle>
+              <CardDescription>Revisá los datos de los inscriptos para fiscalizar.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Accedé a la lista de voluntarios para la fiscalización electoral.
+              </p>
+              <Button asChild>
+                <Link href="/admin/manage-fiscales">
+                  <ShieldCheckIcon className="mr-2 h-4 w-4" />
+                  Ver Fiscales
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle>Ver Contactos</CardTitle>
@@ -87,6 +121,23 @@ export default function AdminDashboardPage() {
                   Ir al Gestor
                 </Link>
               </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+                <CardTitle>Editor de Formularios</CardTitle>
+                <CardDescription>Personalizá los campos de los formularios públicos.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <p className="mb-4 text-sm text-muted-foreground">
+                    Modificá los formularios de afiliación, fiscalización y contacto.
+                </p>
+                <Button asChild>
+                    <Link href="/admin/manage-forms">
+                        <Wrench className="mr-2 h-4 w-4" />
+                        Editar Formularios
+                    </Link>
+                </Button>
             </CardContent>
           </Card>
           <Card>

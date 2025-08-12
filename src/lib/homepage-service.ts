@@ -110,11 +110,25 @@ async function getHomepageData(useLocal = false): Promise<any> {
 
 async function saveHomepageData(data: any): Promise<void> {
     const docRef = getHomepageDocRef();
-    if (!docRef) {
-      // This error will be shown to the admin user on Vercel if the service key is not set.
-      throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
+    if (docRef) {
+        await setDoc(docRef, data, { merge: true });
+        return;
     }
-    await setDoc(docRef, data, { merge: true });
+
+    console.warn("Admin SDK no inicializado, guardando datos de inicio en archivos locales.");
+    
+    if (data.banner) {
+        await fs.writeFile(path.join(process.cwd(), 'data', 'banner.json'), JSON.stringify(data.banner, null, 2), 'utf-8');
+    }
+    if (data.mosaic) {
+        await fs.writeFile(path.join(process.cwd(), 'data', 'mosaic.json'), JSON.stringify(data.mosaic, null, 2), 'utf-8');
+    }
+    if (data.accordion) {
+        await fs.writeFile(path.join(process.cwd(), 'data', 'accordion.json'), JSON.stringify(data.accordion, null, 2), 'utf-8');
+    }
+     if (data.infoSection) {
+        await fs.writeFile(path.join(process.cwd(), 'data', 'info-section.json'), JSON.stringify(data.infoSection, null, 2), 'utf-8');
+    }
 }
 
 

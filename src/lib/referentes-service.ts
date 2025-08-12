@@ -64,7 +64,9 @@ export async function getReferentes(): Promise<ReferenteData[]> {
 export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
     const docRef = getReferentesDocRef();
     if (!docRef) {
-        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
+        console.warn("Admin SDK no inicializado, guardando referentes en referentes.json.");
+        await fs.writeFile(referentesFilePath, JSON.stringify(referentes, null, 2), 'utf-8');
+        return;
     }
     await setDoc(docRef, { list: referentes });
 }

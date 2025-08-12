@@ -80,10 +80,13 @@ export async function saveAllPageHeaders(data: PageHeadersData): Promise<void> {
         console.error(validation.error.issues);
         throw new Error('Datos de encabezados inválidos.');
     }
+    const dataToSave = validation.data;
 
     if (!docRef) {
-        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
+        console.warn("Admin SDK no inicializado, guardando encabezados en page-headers.json.");
+        await fs.writeFile(pageHeadersFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
+        return;
     }
     
-    await setDoc(docRef, validation.data);
+    await setDoc(docRef, dataToSave);
 }

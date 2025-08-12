@@ -4,6 +4,8 @@
 import { getAdminDb } from './firebase-admin';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 import type { FormDefinition, FormField } from './form-defs';
+import fs from 'fs/promises';
+import path from 'path';
 
 // --- Default Form Definitions ---
 const defaultAfiliacionFields: FormField[] = [
@@ -38,7 +40,7 @@ const defaultFormDefinitions: Record<string, FormDefinition> = {
     contacto: { id: 'contacto', fields: defaultContactoFields },
 };
 
-// --- Firestore Collection References ---
+// Firestore Collection References ---
 const getFormDefCollection = () => {
     const db = getAdminDb();
     if (!db) return null;
@@ -78,10 +80,13 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
     const formDefCollection = getFormDefCollection();
-    if (!formDefCollection) {
-        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. Configure la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY en su entorno de producción.");
-    }
-    const docRef = doc(formDefCollection, formId);
     const dataToSave = { id: formId, fields };
+    
+    if (!formDefCollection) {
+        console.warn(`Admin SDK no inicializado, no se puede guardar la definición del formulario '${formId}' en Firestore. Esta operación no tiene respaldo local.`);
+        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. No hay respaldo local para las definiciones de formularios.");
+    }
+
+    const docRef = doc(formDefCollection, formId);
     await setDoc(docRef, dataToSave);
 }

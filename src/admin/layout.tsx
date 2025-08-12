@@ -15,7 +15,7 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare } from 'lucide-react';
+import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, ListChecks, LogOut, PanelsTopLeft, Rss, Server, Sparkles, Star, Type, Bell, UserCheck, ShieldCheckIcon, MessageSquare, Wrench } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -76,6 +76,22 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild>
+                        <Link href="/admin/manage-afiliaciones">
+                            <UserCheck />
+                            Ver Afiliaciones
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                        <Link href="/admin/manage-fiscales">
+                            <ShieldCheckIcon />
+                            Ver Fiscales
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
                         <Link href="/admin/manage-contact">
                             <MessageSquare />
                             Ver Contactos
@@ -95,6 +111,14 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                         <Link href="/admin/news-generator">
                             <FilePlus />
                             Crear Contenido
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                        <Link href="/admin/manage-forms">
+                            <Wrench />
+                            Editor de Formularios
                         </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
