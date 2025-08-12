@@ -38,5 +38,4 @@ export default async function ManageCandidatesPage() {
     </Card>
   );
 }
-
     

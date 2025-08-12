@@ -96,5 +96,4 @@ export function ImageGallery({ onImageSelect }: ImageGalleryProps) {
     </ScrollArea>
   );
 }
-
     

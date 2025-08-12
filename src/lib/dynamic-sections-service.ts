@@ -101,5 +101,4 @@ export async function getOrganization(): Promise<TeamMember[]> {
 export async function saveOrganization(organization: TeamMember[]): Promise<void> {
     await saveHomepageData({ organization });
 }
-
     
