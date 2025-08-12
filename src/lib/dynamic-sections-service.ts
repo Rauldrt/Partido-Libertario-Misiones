@@ -84,7 +84,7 @@ async function saveHomepageData(data: any): Promise<void> {
 export async function getCandidates(): Promise<TeamMember[]> {
     const data = await getHomepageData();
     const candidates = data.candidates || await readJsonData('candidates.json');
-    return candidates.map((c: any) => ({ ...c, id: c.id || `cand-${Date.now()}` }));
+    return candidates.map((c: any, index: number) => ({ ...c, id: c.id || `cand-${index}-${Date.now()}` }));
 }
 
 export async function saveCandidates(candidates: TeamMember[]): Promise<void> {
@@ -95,7 +95,7 @@ export async function saveCandidates(candidates: TeamMember[]): Promise<void> {
 export async function getOrganization(): Promise<TeamMember[]> {
     const data = await getHomepageData();
     const organization = data.organization || await readJsonData('organization.json');
-    return organization.map((o: any) => ({ ...o, id: o.id || `org-${Date.now()}` }));
+    return organization.map((o: any, index: number) => ({ ...o, id: o.id || `org-${index}-${Date.now()}` }));
 }
 
 export async function saveOrganization(organization: TeamMember[]): Promise<void> {
