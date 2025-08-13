@@ -18,12 +18,12 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
       <div
         className={cn(
           "relative bg-card shadow-lg transition-all duration-500 ease-in-out overflow-hidden",
-          isExpanded ? 'w-full max-w-sm rounded-xl border' : 'w-32 h-32 rounded-full border-0 shadow-none bg-transparent'
+          isExpanded ? 'w-full max-w-sm rounded-xl border' : 'w-32 h-32 md:w-36 md:h-36 rounded-full border-0 shadow-none bg-transparent'
         )}
       >
         <div className={cn(
           "relative w-full transition-all duration-500 ease-in-out",
-          isExpanded ? 'h-40 md:h-64' : 'h-32'
+          isExpanded ? 'h-40 md:h-72' : 'h-full'
         )}>
           <Image
             src={imageUrl}
@@ -53,7 +53,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
       </div>
 
       {/* Texto visible solo en estado colapsado */}
-      <div
+       <div
         className={cn(
           "text-center transition-opacity duration-300 ease-in-out",
            isExpanded ? 'opacity-0 h-0' : 'opacity-100 h-auto'
@@ -69,3 +69,4 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
     </div>
   );
 }
+
