@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${poppins.variable} ${ptSans.variable}`}>
       <head>
-        <title>Misiones Libertad</title>
+        <title>Partido Libertario Misiones</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
         <meta name="theme-color" content="#29ABE2" />
         <link rel="manifest" href="/manifest.json" />

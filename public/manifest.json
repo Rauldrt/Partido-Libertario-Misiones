@@ -1,45 +1,15 @@
 {
-  "name": "Misiones Libertad",
-  "short_name": "Libertad Mnes",
+  "name": "Partido Libertario Misiones",
+  "short_name": "PL Misiones",
+  "description": "Página oficial del Partido Libertario de Misiones. Mantenete al tanto de las últimas novedades y eventos.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F0F0F0",
-  "theme_color": "#29ABE2",
-  "description": "Aplicación oficial del Partido Libertario de Misiones.",
+  "background_color": "#240e30",
+  "theme_color": "#572364",
   "icons": [
-    {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
       "type": "image/png"
     },
     {
