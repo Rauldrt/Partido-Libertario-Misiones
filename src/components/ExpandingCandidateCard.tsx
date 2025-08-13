@@ -37,6 +37,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
             )}
           />
         </div>
+        {/* Contenido expandido */}
         <div className={cn(
           "transition-all duration-300 ease-in-out",
           isExpanded ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
@@ -51,6 +52,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
         </div>
       </div>
 
+      {/* Texto visible solo en estado colapsado */}
       <div
         className={cn(
           "text-center transition-opacity duration-300 ease-in-out",
@@ -64,3 +66,4 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
     </div>
   );
 }
+
