@@ -25,6 +25,7 @@ import type { NotificationData } from '@/lib/notification-service';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 import { TeamCard } from '@/components/TeamCard';
 import * as LucideIcons from 'lucide-react';
+import { ExpandingCandidateCard } from '@/components/ExpandingCandidateCard';
 
 const MosaicTile = ({ tile, onImageClick }: { tile: MosaicTileData, onImageClick: (images: MosaicImageData[], startIndex: number) => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -256,31 +257,11 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                   <h2 className="font-headline text-4xl font-bold text-foreground">Nuestros Candidatos</h2>
                   <p className="font-body text-lg text-muted-foreground mt-2">Conocé a quienes nos representan.</p>
               </div>
-              <Carousel
-                  opts={{
-                      align: "start",
-                      loop: true,
-                  }}
-                   plugins={[
-                      Autoplay({
-                          delay: 3000,
-                          stopOnInteraction: true,
-                      }),
-                  ]}
-                  className="w-full max-w-7xl mx-auto"
-              >
-                  <CarouselContent className="-ml-4">
-                      {candidates.map((candidate) => (
-                          <CarouselItem key={candidate.id} className="basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4">
-                               <div className="p-1 h-full">
-                                  <TeamCard {...candidate} />
-                               </div>
-                          </CarouselItem>
-                      ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="absolute left-[-2rem] top-1/2 -translate-y-1/2 z-10 hidden lg:flex" />
-                  <CarouselNext className="absolute right-[-2rem] top-1/2 -translate-y-1/2 z-10 hidden lg:flex" />
-              </Carousel>
+               <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 justify-items-center">
+                    {candidates.map((candidate) => (
+                        <ExpandingCandidateCard key={candidate.id} {...candidate} />
+                    ))}
+                </div>
           </Section>
       )}
 

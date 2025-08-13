@@ -12,5 +12,26 @@
     "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "leader smiling"
+  },
+  {
+    "id": "new-1755046090121",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755046096153",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755046098203",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
   }
 ]
