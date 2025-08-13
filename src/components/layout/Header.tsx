@@ -151,7 +151,7 @@ export function Header() {
             side="top" 
             align="end" 
             sideOffset={12}
-            className="w-72 bg-destructive/95 text-destructive-foreground backdrop-blur-md shadow-xl rounded-lg p-2 border border-accent/50" 
+            className="w-72 bg-destructive text-destructive-foreground backdrop-blur-md shadow-xl rounded-lg p-2 border border-accent/50" 
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
