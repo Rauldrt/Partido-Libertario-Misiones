@@ -112,7 +112,7 @@ const OrganizationTabs = ({ members }: { members: TeamMember[] }) => {
                     className="w-full shadow-2xl bg-card/80 backdrop-blur-sm animate-fade-in-up duration-500"
                  >
                     <div className="grid md:grid-cols-3 items-center">
-                        <div className="relative aspect-[4/3] md:aspect-square h-full rounded-t-lg md:rounded-l-lg md:rounded-tr-none overflow-hidden">
+                        <div className="relative aspect-[2/1] md:aspect-square h-full rounded-t-lg md:rounded-l-lg md:rounded-tr-none overflow-hidden">
                              <Image
                                 src={selectedMember.imageUrl}
                                 alt={`Foto de ${selectedMember.name}`}
