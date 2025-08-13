@@ -33,6 +33,8 @@ export default function RootLayout({
       <head>
         <title>Partido Libertario Misiones</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#572364" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background text-foreground">
         <ThemeManager />
