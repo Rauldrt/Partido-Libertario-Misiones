@@ -23,13 +23,9 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
             </div>
        </CardHeader>
        <CardContent className="flex-grow flex flex-col justify-start">
-           <CardTitle className="font-headline text-xl text-primary">{name}</CardTitle>
            {role && (
                 <CardDescription className="font-body text-base font-semibold text-muted-foreground mt-1">{role}</CardDescription>
            )}
-           <p className="mt-3 font-body text-sm text-foreground/90 text-center flex-grow">
-            {description}
-           </p>
        </CardContent>
     </Card>
   );
