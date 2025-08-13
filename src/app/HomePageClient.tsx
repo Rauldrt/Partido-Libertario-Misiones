@@ -23,7 +23,6 @@ import { EmbedDisplay } from '@/components/EmbedDisplay';
 import { DynamicIcon } from '@/components/DynamicIcon';
 import type { NotificationData } from '@/lib/notification-service';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
-import { TeamCard } from '@/components/TeamCard';
 import * as LucideIcons from 'lucide-react';
 import { ExpandingCandidateCard } from '@/components/ExpandingCandidateCard';
 
