@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 export function ExpandingCandidateCard({ name, description, imageUrl, imageHint, role }: TeamMember) {
 
   return (
-    <Card className="w-full max-w-sm overflow-hidden text-center shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+    <Card className="w-full max-w-sm overflow-hidden text-center transition-shadow duration-300 h-full flex flex-col bg-transparent border-0 shadow-none">
        <CardHeader className="p-6 items-center">
             <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-primary/20 shadow-md">
                  <Image
