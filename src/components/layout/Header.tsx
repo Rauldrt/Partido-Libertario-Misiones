@@ -79,15 +79,15 @@ export function Header() {
             <div className="hidden md:flex flex-shrink-0 items-center justify-end">
                 <nav className="flex items-center gap-2">
                     {navItems.map((item) => (
-                    <Button key={item.label} variant="ghost" asChild className="border-2 border-transparent hover:border-primary hover:bg-[#4a1d54]">
+                    <Button key={item.label} variant="ghost" asChild className="group hover:text-primary transition-colors duration-200">
                         <Link href={item.href} className="font-body text-base font-medium">
-                        {item.label}
+                            <span className="group-hover:text-primary transition-colors duration-200">{item.label}</span>
                         </Link>
                     </Button>
                     ))}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="border-2 border-transparent hover:border-primary font-body text-base font-medium hover:bg-[#4a1d54]">
+                            <Button variant="ghost" className="group hover:text-primary transition-colors duration-200 font-body text-base font-medium">
                                 Más
                                 <ChevronDown className="relative top-[1px] ml-1 h-4 w-4 transition duration-200 group-data-[state=open]:rotate-180" />
                             </Button>
