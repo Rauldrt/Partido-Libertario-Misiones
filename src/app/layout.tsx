@@ -5,20 +5,20 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeManager } from '@/components/layout/ThemeManager';
 import { SocialModalProvider } from '@/context/SocialModalContext';
 import { AuthProvider } from '@/context/AuthContext';
-import { Montserrat, Roboto } from 'next/font/google';
+import { Poppins, PT_Sans } from 'next/font/google';
 
-const montserrat = Montserrat({
+const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-montserrat',
-  weight: ['800'] // ExtraBold
+  variable: '--font-poppins',
+  weight: ['600', '700'] // Semibold, Bold
 });
 
-const roboto = Roboto({
+const ptSans = PT_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-roboto',
-  weight: ['300', '400', '700'] // Light, Regular, Bold
+  variable: '--font-pt-sans',
+  weight: ['400', '700'] // Regular, Bold
 });
 
 
@@ -29,12 +29,11 @@ export default function RootLayout({
 }>) {
   
   return (
-    <html lang="es" className={`${montserrat.variable} ${roboto.variable}`}>
+    <html lang="es" className={`${poppins.variable} ${ptSans.variable}`}>
       <head>
-        <title>Partido Libertario Misiones</title>
+        <title>Misiones Libertad</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
-        <link rel="manifest" href="/manifest.webmanifest" />
-        <meta name="theme-color" content="#572364" />
+        <meta name="theme-color" content="#29ABE2" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background text-foreground">
         <ThemeManager />
