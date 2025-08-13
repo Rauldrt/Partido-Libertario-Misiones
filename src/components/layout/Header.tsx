@@ -83,7 +83,7 @@ export function Header() {
                         key={item.label} 
                         variant="ghost" 
                         asChild 
-                        className="font-body text-base font-medium transition-all duration-300 hover:text-primary hover:bg-[#4a1d54] hover:shadow-[0_0_8px_hsl(var(--primary)/0.7)]"
+                        className="font-body text-base font-medium transition-all duration-300 hover:scale-105 hover:text-primary hover:bg-[#4a1d54] hover:shadow-[0_0_8px_hsl(var(--primary)/0.7)]"
                     >
                         <Link href={item.href}>
                             {item.label}
@@ -92,7 +92,7 @@ export function Header() {
                     ))}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="font-body text-base font-medium transition-all duration-300 hover:text-primary hover:bg-[#4a1d54] hover:shadow-[0_0_8px_hsl(var(--primary)/0.7)]">
+                            <Button variant="ghost" className="font-body text-base font-medium transition-all duration-300 hover:scale-105 hover:text-primary hover:bg-[#4a1d54] hover:shadow-[0_0_8px_hsl(var(--primary)/0.7)]">
                                 Más
                                 <ChevronDown className="relative top-[1px] ml-1 h-4 w-4 transition duration-200 group-data-[state=open]:rotate-180" />
                             </Button>
