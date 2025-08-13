@@ -6,6 +6,7 @@ import { ThemeManager } from '@/components/layout/ThemeManager';
 import { SocialModalProvider } from '@/context/SocialModalContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { Poppins, PT_Sans } from 'next/font/google';
+import Script from 'next/script';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -34,6 +35,8 @@ export default function RootLayout({
         <title>Misiones Libertad</title>
         <meta name="description" content="Página oficial del Partido Libertario de Misiones." />
         <meta name="theme-color" content="#29ABE2" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png"></link>
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen bg-background text-foreground">
         <ThemeManager />
@@ -49,6 +52,19 @@ export default function RootLayout({
               <Toaster />
             </SocialModalProvider>
          </AuthProvider>
+         <Script id="service-worker-registration">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                  console.log('Service Worker registrado con éxito:', registration);
+                }).catch(error => {
+                  console.log('Error al registrar el Service Worker:', error);
+                });
+              });
+            }
+          `}
+         </Script>
       </body>
     </html>
   );
