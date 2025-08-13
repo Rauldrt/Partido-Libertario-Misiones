@@ -1,57 +1,36 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
+import { cn } from '@/lib/utils';
 
 export function ExpandingCandidateCard({ name, description, imageUrl, imageHint, role }: TeamMember) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div
-        className={cn('expandable-card bg-card text-card-foreground', { 'is-expanded': isExpanded })}
-        onClick={toggleExpand}
-      >
-        <div className="absolute inset-0">
-          <Image
-            src={imageUrl}
-            alt={`Foto de ${name}`}
-            layout="fill"
-            objectFit="cover"
-            className={cn(
-              "transition-all duration-700 ease-in-out",
-              isExpanded ? 'rounded-t-2xl' : 'rounded-full'
-            )}
-            data-ai-hint={imageHint}
-          />
-          <div 
-            className={cn(
-              "absolute bottom-0 right-0 m-2 h-10 w-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center shadow-lg transform-gpu transition-all duration-300 ease-in-out",
-              isExpanded ? 'rotate-45' : 'rotate-0'
-            )}
-          >
-            <Plus className="h-6 w-6" />
-          </div>
-        </div>
-
-        <div className={cn('expandable-card-content', { 'is-visible': isExpanded })}>
-          <div className="p-4 pt-12 text-center">
-              <h3 className="font-headline text-xl text-primary">{name}</h3>
-              <p className="mt-2 font-body text-sm text-muted-foreground">{description}</p>
-          </div>
-        </div>
-      </div>
-      {role && (
-        <span className="font-body text-sm font-semibold text-muted-foreground">{role}</span>
-      )}
-    </div>
+    <Card className="w-full max-w-sm overflow-hidden text-center shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+       <CardHeader className="p-6 items-center">
+            <div className="relative h-32 w-32 rounded-full overflow-hidden border-4 border-primary/20 shadow-md">
+                 <Image
+                    src={imageUrl}
+                    alt={`Foto de ${name}`}
+                    layout="fill"
+                    objectFit="cover"
+                    data-ai-hint={imageHint}
+                />
+            </div>
+       </CardHeader>
+       <CardContent className="flex-grow flex flex-col justify-start">
+           <CardTitle className="font-headline text-xl text-primary">{name}</CardTitle>
+           {role && (
+                <CardDescription className="font-body text-base font-semibold text-muted-foreground mt-1">{role}</CardDescription>
+           )}
+           <p className="mt-3 font-body text-sm text-foreground/90 text-center flex-grow">
+            {description}
+           </p>
+       </CardContent>
+    </Card>
   );
 }
