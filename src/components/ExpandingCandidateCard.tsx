@@ -3,9 +3,10 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 import { cn } from '@/lib/utils';
+import { CardDescription } from './ui/card';
 
 export function ExpandingCandidateCard({ name, description, imageUrl, imageHint, role }: TeamMember) {
   const [isExpanded, setIsExpanded] = useState(false);
