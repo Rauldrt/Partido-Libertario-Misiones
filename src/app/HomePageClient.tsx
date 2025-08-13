@@ -266,8 +266,8 @@ export default function HomePageClient({ children, slides, tiles, accordionItems
                 >
                     <CarouselContent className="-ml-4">
                         {candidates.map((candidate) => (
-                            <CarouselItem key={candidate.id} className="pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 flex justify-center">
-                                <div className="p-1 h-full">
+                            <CarouselItem key={candidate.id} className="pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 flex justify-center">
+                                <div className="p-1 h-full flex items-center justify-center">
                                     <ExpandingCandidateCard {...candidate} />
                                 </div>
                             </CarouselItem>
