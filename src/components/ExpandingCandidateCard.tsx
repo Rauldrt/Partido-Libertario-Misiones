@@ -1,63 +1,52 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 import { cn } from '@/lib/utils';
-import { Button } from './ui/button';
-import { X } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 export function ExpandingCandidateCard({ name, description, imageUrl, imageHint, role }: TeamMember) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpand = () => setIsExpanded(!isExpanded);
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div 
-        className={cn(
-          'expandable-card relative cursor-pointer shadow-lg',
-          isExpanded && 'is-expanded'
-        )}
-        onClick={() => !isExpanded && toggleExpand()}
-      >
-        <Image
-          src={imageUrl}
-          alt={`Foto de ${name}`}
-          layout="fill"
-          objectFit="cover"
-          data-ai-hint={imageHint}
-          className={cn(
-              'rounded-full transition-all duration-500',
-              isExpanded && 'rounded-t-lg rounded-b-none'
-          )}
-        />
-        {isExpanded && (
-          <>
-            <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 h-8 w-8 rounded-full bg-black/50 text-white hover:bg-black/70 hover:text-white z-20"
-                onClick={toggleExpand}
-                aria-label="Cerrar"
-            >
-                <X className="h-5 w-5" />
-            </Button>
-            <div 
-              className={cn(
-                'card-content absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent text-white',
-                isExpanded && 'is-visible'
-              )}
-            >
-               <CardTitle className="text-lg font-bold text-white">{name}</CardTitle>
-               <CardDescription className="text-white/90">{description}</CardDescription>
+    <Dialog>
+        <DialogTrigger asChild>
+            <div className="flex flex-col items-center gap-2 cursor-pointer group">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-110">
+                    <Image
+                        src={imageUrl}
+                        alt={`Foto de ${name}`}
+                        layout="fill"
+                        objectFit="cover"
+                        data-ai-hint={imageHint}
+                    />
+                </div>
+                <p className="font-body text-sm font-semibold text-center text-foreground">{role}</p>
             </div>
-          </>
-        )}
-      </div>
-      <p className="font-body text-sm font-semibold text-center text-foreground -mt-1">{role}</p>
-    </div>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px] p-0 border-0">
+            <Card className="border-0 shadow-none">
+                 <CardHeader className="p-0">
+                    <div className="relative w-full aspect-square rounded-t-lg overflow-hidden">
+                        <Image
+                            src={imageUrl}
+                            alt={`Foto de ${name}`}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-t-lg"
+                        />
+                    </div>
+                </CardHeader>
+                <CardContent className="p-6 text-center">
+                    <CardTitle className="font-headline text-2xl">{name}</CardTitle>
+                    {role && <CardDescription className="font-body text-lg text-primary font-semibold mt-1">{role}</CardDescription>}
+                    <p className="font-body text-base text-muted-foreground mt-4">{description}</p>
+                </CardContent>
+            </Card>
+        </DialogContent>
+    </Dialog>
   );
 }
+
