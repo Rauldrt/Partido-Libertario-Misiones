@@ -23,7 +23,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
       >
         <div className={cn(
           "relative w-full transition-all duration-500 ease-in-out",
-          isExpanded ? 'h-40 md:h-56' : 'h-32'
+          isExpanded ? 'h-40 md:h-60' : 'h-32'
         )}>
           <Image
             src={imageUrl}
@@ -56,11 +56,11 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
       <div
         className={cn(
           "text-center transition-opacity duration-300 ease-in-out",
-          isExpanded ? 'opacity-0 h-0' : 'opacity-100 h-auto'
+           isExpanded ? 'opacity-0 h-0' : 'opacity-100 h-auto'
         )}
       >
         <p className="font-body text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
-          {role}
+          {name}
         </p>
       </div>
     </div>
