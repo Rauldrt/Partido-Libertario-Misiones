@@ -19,8 +19,8 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
         <div 
             id="expandable-card"
             className={cn(
-                "relative bg-card shadow-lg transition-all duration-500 ease-in-out",
-                isExpanded ? 'is-expanded' : 'w-32 h-32 rounded-full overflow-hidden'
+                "relative bg-card shadow-lg",
+                isExpanded && 'is-expanded'
             )}
         >
             {/* Collapsed State View (Just the image) */}
@@ -43,7 +43,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
                 "absolute inset-0 transition-opacity duration-300 delay-200",
                 isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
             )}>
-                 <Card className="w-full h-full bg-card border-0 shadow-none flex flex-col text-center">
+                 <Card className="w-full h-full bg-transparent border-0 shadow-none flex flex-col text-center">
                     <CardHeader className="items-center p-4">
                         <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-md">
                              <Image
