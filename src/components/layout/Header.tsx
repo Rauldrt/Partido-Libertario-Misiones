@@ -151,13 +151,13 @@ export function Header() {
             side="top" 
             align="end" 
             sideOffset={12}
-            className="w-72 bg-sidebar/95 text-sidebar-foreground backdrop-blur-md shadow-xl rounded-lg p-2" 
+            className="w-72 bg-destructive/95 text-destructive-foreground backdrop-blur-md shadow-xl rounded-lg p-2 border border-accent/50" 
           >
             {navItems.map((item) => (
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md" 
+                  className="flex items-center p-4 text-base font-medium text-destructive-foreground hover:bg-white/10 rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}
@@ -170,7 +170,7 @@ export function Header() {
               <DropdownMenuItem key={item.label} asChild className="cursor-pointer">
                 <Link
                   href={item.href}
-                  className="flex items-center p-4 text-base font-medium text-primary-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md" 
+                  className="flex items-center p-4 text-base font-medium text-destructive-foreground hover:bg-white/10 rounded-md" 
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {React.cloneElement(item.icon, { className: "mr-3 h-6 w-6"})}
@@ -205,7 +205,7 @@ export function Header() {
                 <button 
                   key={social.id} 
                   aria-label={social.label}
-                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors p-2 rounded-full hover:bg-white/10"
+                  className="text-destructive-foreground/80 hover:text-destructive-foreground transition-colors p-2 rounded-full hover:bg-white/10"
                   onClick={(e) => handleSocialClick(e, social)}
                 >
                   {iconMap[social.id] || social.label}
