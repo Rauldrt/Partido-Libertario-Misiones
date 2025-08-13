@@ -3,10 +3,9 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 import { cn } from '@/lib/utils';
-import { CardDescription } from './ui/card';
 
 export function ExpandingCandidateCard({ name, description, imageUrl, imageHint, role }: TeamMember) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -16,57 +15,53 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
         className="flex flex-col items-center gap-2 cursor-pointer group"
         onClick={() => setIsExpanded(!isExpanded)}
     >
-        {/* Container for the expanding element */}
         <div 
-            id="expandable-card"
             className={cn(
-                "relative bg-card shadow-lg",
-                isExpanded && 'is-expanded'
+                "relative bg-card shadow-lg transition-all duration-500 ease-in-out overflow-hidden",
+                isExpanded ? 'w-full max-w-sm rounded-xl' : 'w-32 h-32 rounded-full'
             )}
         >
-            {/* Collapsed State View (Just the image) */}
-             <div className={cn(
-                "absolute inset-0 transition-opacity duration-300",
-                isExpanded ? 'opacity-0' : 'opacity-100'
-             )}>
-                <Image
+            <div className={cn(
+                "relative w-full transition-all duration-500 ease-in-out",
+                isExpanded ? 'h-40' : 'h-32'
+            )}>
+                 <Image
                     src={imageUrl}
                     alt={`Foto de ${name}`}
                     layout="fill"
                     objectFit="cover"
-                    className="rounded-full"
                     data-ai-hint={imageHint}
+                    className={cn(
+                        "transition-all duration-500 ease-in-out",
+                         isExpanded ? 'rounded-t-xl' : 'rounded-full'
+                    )}
                 />
             </div>
-
-            {/* Expanded State View (Full Card) */}
             <div className={cn(
-                "absolute inset-0 transition-opacity duration-300 delay-200",
-                isExpanded ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                "transition-all duration-300 ease-in-out",
+                 isExpanded ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
             )}>
-                 <Card className="w-full h-full bg-transparent border-0 shadow-none flex flex-col text-center">
-                    <CardHeader className="items-center p-4">
-                        <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-md">
-                             <Image
-                                src={imageUrl}
-                                alt={`Foto de ${name}`}
-                                layout="fill"
-                                objectFit="cover"
-                            />
-                        </div>
-                        <CardTitle className="font-headline text-lg mt-2">{name}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-4 pb-4 pt-0">
-                        <p className="font-body text-xs text-muted-foreground">{description}</p>
-                    </CardContent>
-                </Card>
+                <CardHeader className="items-center text-center p-4 pt-2">
+                    <CardTitle className="font-headline text-lg mt-2">{name}</CardTitle>
+                    <CardDescription className="text-primary font-semibold">{role}</CardDescription>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 pt-0 text-center">
+                    <p className="font-body text-xs text-muted-foreground">{description}</p>
+                </CardContent>
             </div>
         </div>
 
-        {/* Role text, always visible */}
-        <p className="font-body text-sm font-semibold text-center text-foreground mt-1 group-hover:text-primary transition-colors">
-            {role}
-        </p>
+        <div 
+            className={cn(
+                "text-center transition-opacity duration-300 ease-in-out",
+                isExpanded ? 'opacity-0 h-0' : 'opacity-100 h-auto'
+            )}
+        >
+             <p className="font-body text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                {role}
+            </p>
+        </div>
     </div>
   );
 }
+
