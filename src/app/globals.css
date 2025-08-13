@@ -83,6 +83,11 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  #expandable-card.is-expanded {
+    @apply w-full h-auto rounded-lg;
+    max-height: 24rem; /* 384px */
+  }
 }
 
 @layer utilities {
