@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
+import { CardHeader, CardTitle, CardContent, CardDescription } from './ui/card';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 import { cn } from '@/lib/utils';
 
@@ -18,12 +18,12 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
       <div
         className={cn(
           "relative bg-card shadow-lg transition-all duration-500 ease-in-out overflow-hidden",
-          isExpanded ? 'w-full max-w-sm rounded-xl' : 'w-32 h-32 rounded-full'
+          isExpanded ? 'w-full max-w-sm rounded-xl border' : 'w-32 h-32 rounded-full border-0 shadow-none bg-transparent'
         )}
       >
         <div className={cn(
           "relative w-full transition-all duration-500 ease-in-out",
-          isExpanded ? 'h-40' : 'h-32'
+          isExpanded ? 'h-40 md:h-48' : 'h-32'
         )}>
           <Image
             src={imageUrl}
@@ -66,4 +66,3 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
     </div>
   );
 }
-
