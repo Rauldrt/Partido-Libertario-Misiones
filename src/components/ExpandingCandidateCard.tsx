@@ -23,7 +23,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
       >
         <div className={cn(
           "relative w-full transition-all duration-500 ease-in-out",
-          isExpanded ? 'h-40 md:h-48' : 'h-32'
+          isExpanded ? 'h-40 md:h-56' : 'h-32'
         )}>
           <Image
             src={imageUrl}
@@ -39,7 +39,7 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
         </div>
         {/* Contenido expandido */}
         <div className={cn(
-          "transition-all duration-300 ease-in-out",
+          "transition-all duration-300 ease-in-out overflow-hidden",
           isExpanded ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'
         )}>
           <CardHeader className="items-center text-center p-4 pt-2">
