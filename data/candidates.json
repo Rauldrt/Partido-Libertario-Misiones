@@ -1,21 +1,21 @@
 [
   {
     "id": "cand-1",
-    "name": "Candidato Principal 1",
+    "name": "Candidato Diputado Nac.",
     "description": "Un líder comprometido con la libertad y el progreso de Misiones. ",
     "imageUrl": "/Ninfa y Julio.webp",
     "imageHint": "political portrait"
   },
   {
     "id": "cand-2",
-    "name": "Candidato Principal 2",
+    "name": "Candidato Diputado Nac.",
     "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "leader smiling"
   },
   {
     "id": "new-1755046090121",
-    "name": "Nuevo Candidato",
+    "name": "Candidato Diputado Nac.",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person"
