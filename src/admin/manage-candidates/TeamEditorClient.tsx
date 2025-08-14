@@ -7,7 +7,7 @@ import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { GripVertical, Loader2, Plus, Save, Trash2, Image as ImageIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,8 +16,9 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ImageGallery } from '@/components/ImageGallery';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-const SortableItem = ({ item, setItems, isPending, includeRole }: { item: TeamMember, setItems: React.Dispatch<React.SetStateAction<TeamMember[]>>, isPending: boolean, includeRole: boolean }) => {
+const SortableItem = ({ item, setItems, isPending, includeRole, itemType }: { item: TeamMember, setItems: React.Dispatch<React.SetStateAction<TeamMember[]>>, isPending: boolean, includeRole: boolean, itemType: string }) => {
   const {
     attributes,
     listeners,
@@ -50,58 +51,60 @@ const SortableItem = ({ item, setItems, isPending, includeRole }: { item: TeamMe
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-        <Card className="mb-4 bg-muted/30">
-             <CardHeader className="flex flex-row items-center justify-between p-3">
-                 <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2">
-                        <GripVertical className="h-5 w-5 text-muted-foreground" />
-                    </Button>
-                    <span className="font-semibold truncate">{item.name || 'Nuevo Miembro'}</span>
-                 </div>
-                 <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isPending}>
+        <AccordionItem value={item.id} className="border-b-0 mb-4 bg-muted/30 rounded-lg overflow-hidden">
+             <div className="flex items-center p-2 border-b">
+                 <Button variant="ghost" size="icon" {...listeners} className="cursor-grab p-2">
+                    <GripVertical className="h-5 w-5 text-muted-foreground" />
+                </Button>
+                <AccordionTrigger className="flex-1 p-2 hover:no-underline">
+                    <span className="font-semibold text-left truncate">{item.name || `Nuevo ${itemType}`}</span>
+                </AccordionTrigger>
+                 <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isPending} className="ml-2">
                      <Trash2 className="h-4 w-4" />
                  </Button>
-            </CardHeader>
-            <CardContent className="p-4 pt-0 grid gap-4">
-                 <div className="space-y-2">
-                    <Label htmlFor={`name-${item.id}`}>Nombre</Label>
-                    <Input id={`name-${item.id}`} value={item.name} onChange={(e) => handleInputChange('name', e.target.value)} />
-                </div>
-                 {includeRole && (
-                     <div className="space-y-2">
-                        <Label htmlFor={`role-${item.id}`}>Rol / Cargo</Label>
-                        <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
+            </div>
+            <AccordionContent>
+                <CardContent className="p-4 pt-4 grid gap-4">
+                    <div className="space-y-2">
+                        <Label htmlFor={`name-${item.id}`}>Nombre</Label>
+                        <Input id={`name-${item.id}`} value={item.name} onChange={(e) => handleInputChange('name', e.target.value)} />
                     </div>
-                 )}
-                 <div className="space-y-2">
-                    <Label htmlFor={`description-${item.id}`}>Descripción</Label>
-                    <Textarea id={`description-${item.id}`} value={item.description} onChange={(e) => handleInputChange('description', e.target.value)} rows={3}/>
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor={`imageUrl-${item.id}`}>URL de Imagen</Label>
-                    <div className="flex items-center gap-2">
-                        <Input id={`imageUrl-${item.id}`} value={item.imageUrl} onChange={(e) => handleInputChange('imageUrl', e.target.value)} />
-                        <Dialog open={isGalleryOpen} onOpenChange={setGalleryOpen}>
-                            <DialogTrigger asChild>
-                                <Button size="icon" variant="outline" title="Seleccionar desde la galería">
-                                    <ImageIcon className="h-4 w-4" />
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-4xl w-full h-[90vh]">
-                                <DialogHeader>
-                                    <DialogTitle>Galería de Imágenes</DialogTitle>
-                                </DialogHeader>
-                                <ImageGallery onImageSelect={onImageSelect} />
-                            </DialogContent>
-                        </Dialog>
+                    {includeRole && (
+                        <div className="space-y-2">
+                            <Label htmlFor={`role-${item.id}`}>Rol / Cargo</Label>
+                            <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
+                        </div>
+                    )}
+                    <div className="space-y-2">
+                        <Label htmlFor={`description-${item.id}`}>Descripción</Label>
+                        <Textarea id={`description-${item.id}`} value={item.description} onChange={(e) => handleInputChange('description', e.target.value)} rows={3}/>
                     </div>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor={`imageHint-${item.id}`}>Hint de Imagen (para IA)</Label>
-                    <Input id={`imageHint-${item.id}`} value={item.imageHint} onChange={(e) => handleInputChange('imageHint', e.target.value)} placeholder="political portrait"/>
-                </div>
-            </CardContent>
-        </Card>
+                    <div className="space-y-2">
+                        <Label htmlFor={`imageUrl-${item.id}`}>URL de Imagen</Label>
+                        <div className="flex items-center gap-2">
+                            <Input id={`imageUrl-${item.id}`} value={item.imageUrl} onChange={(e) => handleInputChange('imageUrl', e.target.value)} />
+                            <Dialog open={isGalleryOpen} onOpenChange={setGalleryOpen}>
+                                <DialogTrigger asChild>
+                                    <Button size="icon" variant="outline" title="Seleccionar desde la galería">
+                                        <ImageIcon className="h-4 w-4" />
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-4xl w-full h-[90vh]">
+                                    <DialogHeader>
+                                        <DialogTitle>Galería de Imágenes</DialogTitle>
+                                    </DialogHeader>
+                                    <ImageGallery onImageSelect={onImageSelect} />
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor={`imageHint-${item.id}`}>Hint de Imagen (para IA)</Label>
+                        <Input id={`imageHint-${item.id}`} value={item.imageHint} onChange={(e) => handleInputChange('imageHint', e.target.value)} placeholder="political portrait"/>
+                    </div>
+                </CardContent>
+            </AccordionContent>
+        </AccordionItem>
     </div>
   );
 };
@@ -164,15 +167,18 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
     <div className="space-y-6">
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={items.map(s => s.id)} strategy={verticalListSortingStrategy}>
-                {items.map(item => (
-                    <SortableItem 
-                        key={item.id} 
-                        item={item} 
-                        setItems={setItems} 
-                        isPending={isPending}
-                        includeRole={itemType === 'Miembro'}
-                    />
-                ))}
+                 <Accordion type="multiple" className="w-full space-y-0">
+                    {items.map(item => (
+                        <SortableItem 
+                            key={item.id} 
+                            item={item} 
+                            setItems={setItems} 
+                            isPending={isPending}
+                            includeRole={itemType === 'Miembro'}
+                            itemType={itemType}
+                        />
+                    ))}
+                 </Accordion>
             </SortableContext>
         </DndContext>
         
