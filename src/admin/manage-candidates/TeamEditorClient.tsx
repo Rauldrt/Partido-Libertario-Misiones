@@ -7,7 +7,7 @@ import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { GripVertical, Loader2, Plus, Save, Trash2, Image as ImageIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
