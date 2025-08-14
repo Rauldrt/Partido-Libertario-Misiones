@@ -70,3 +70,4 @@ export function ExpandingCandidateCard({ name, description, imageUrl, imageHint,
   );
 }
 
+

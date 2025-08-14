@@ -18,7 +18,7 @@ import { ImageGallery } from '@/components/ImageGallery';
 import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-const SortableItem = ({ item, setItems, isPending, includeRole, itemType }: { item: TeamMember, setItems: React.Dispatch<React.SetStateAction<TeamMember[]>>, isPending: boolean, includeRole: boolean, itemType: string }) => {
+const SortableItem = ({ item, setItems, isPending, itemType }: { item: TeamMember, setItems: React.Dispatch<React.SetStateAction<TeamMember[]>>, isPending: boolean, itemType: string }) => {
   const {
     attributes,
     listeners,
@@ -69,12 +69,10 @@ const SortableItem = ({ item, setItems, isPending, includeRole, itemType }: { it
                         <Label htmlFor={`name-${item.id}`}>Nombre</Label>
                         <Input id={`name-${item.id}`} value={item.name} onChange={(e) => handleInputChange('name', e.target.value)} />
                     </div>
-                    {includeRole && (
-                        <div className="space-y-2">
-                            <Label htmlFor={`role-${item.id}`}>Rol / Cargo</Label>
-                            <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
-                        </div>
-                    )}
+                    <div className="space-y-2">
+                        <Label htmlFor={`role-${item.id}`}>Cargo / Puesto</Label>
+                        <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
+                    </div>
                     <div className="space-y-2">
                         <Label htmlFor={`description-${item.id}`}>Descripción</Label>
                         <Textarea id={`description-${item.id}`} value={item.description} onChange={(e) => handleInputChange('description', e.target.value)} rows={3}/>
@@ -138,10 +136,8 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
         description: 'Descripción del nuevo miembro.',
         imageUrl: 'https://placehold.co/400x400.png',
         imageHint: 'portrait person',
+        role: `Puesto del ${itemType}`
     };
-    if (itemType === 'Miembro') {
-        newItem.role = 'Nuevo Rol';
-    }
     setItems(prev => [...prev, newItem]);
   };
 
@@ -174,7 +170,6 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
                             item={item} 
                             setItems={setItems} 
                             isPending={isPending}
-                            includeRole={itemType === 'Miembro'}
                             itemType={itemType}
                         />
                     ))}
