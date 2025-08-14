@@ -65,13 +65,15 @@ const SortableItem = ({ item, setItems, isPending, itemType }: { item: TeamMembe
             </div>
             <AccordionContent>
                 <CardContent className="p-4 pt-4 grid gap-4">
-                    <div className="space-y-2">
-                        <Label htmlFor={`name-${item.id}`}>Nombre</Label>
-                        <Input id={`name-${item.id}`} value={item.name} onChange={(e) => handleInputChange('name', e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor={`role-${item.id}`}>Cargo / Puesto</Label>
-                        <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor={`name-${item.id}`}>Nombre</Label>
+                            <Input id={`name-${item.id}`} value={item.name} onChange={(e) => handleInputChange('name', e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor={`role-${item.id}`}>Cargo / Puesto</Label>
+                            <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
+                        </div>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor={`description-${item.id}`}>Descripción</Label>
@@ -193,5 +195,3 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
     </div>
   );
 }
-
-    
