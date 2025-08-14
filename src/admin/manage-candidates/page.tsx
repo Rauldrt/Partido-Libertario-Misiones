@@ -1,7 +1,7 @@
 
 import { getCandidates, saveCandidates } from '@/lib/dynamic-sections-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { TeamEditorClient } from '@/admin/shared/TeamEditorClient';
+import { TeamEditorClient } from '../shared/TeamEditorClient';
 import { revalidatePath } from 'next/cache';
 import type { TeamMember } from '@/lib/dynamic-sections-service';
 
