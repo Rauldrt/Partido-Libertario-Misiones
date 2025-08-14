@@ -15,6 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ImageGallery } from '@/components/ImageGallery';
+import { FirebaseStatus } from '@/components/FirebaseStatus';
 
 const SortableItem = ({ item, setItems, isPending, includeRole }: { item: TeamMember, setItems: React.Dispatch<React.SetStateAction<TeamMember[]>>, isPending: boolean, includeRole: boolean }) => {
   const {
@@ -180,10 +181,13 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
                 <Plus className="mr-2 h-4 w-4" />
                 Añadir {itemType}
             </Button>
-            <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
-                {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                Guardar Cambios
-            </Button>
+            <div className="flex items-center gap-4">
+                <FirebaseStatus />
+                <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
+                    {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                    Guardar Cambios
+                </Button>
+            </div>
         </div>
     </div>
   );

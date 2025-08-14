@@ -1,26 +1,2 @@
-[
-  {
-    "id": "org-1",
-    "name": "Miembro del Partido 1",
-    "role": "Presidente",
-    "description": "Encargado de la dirección estratégica y la representación del partido a nivel provincial y nacional.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "person professional"
-  },
-  {
-    "id": "org-2",
-    "name": "Miembro del Partido 2",
-    "role": "Secretario General",
-    "description": "Coordina las actividades internas, la comunicación y la logística para asegurar el funcionamiento del partido.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "woman portrait"
-  },
-  {
-    "id": "org-3",
-    "name": "Miembro del Partido 3",
-    "role": "Tesorero",
-    "description": "Responsable de la gestión financiera, asegurando la transparencia y el uso adecuado de los recursos.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "man smiling"
-  }
-]
+
+[]

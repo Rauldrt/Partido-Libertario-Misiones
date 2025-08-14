@@ -33,5 +33,12 @@
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755201521799",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
   }
 ]
