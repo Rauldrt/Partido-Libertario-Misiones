@@ -48,48 +48,59 @@ async function getHomepageData(): Promise<any> {
     const loadFromLocal = async () => {
         const candidates = await readJsonData('candidates.json');
         const organization = await readJsonData('organization.json');
+        // Return an object with keys, even if values are null
         return { candidates, organization };
     }
 
     if (!docRef) {
+        console.warn("Firestore Admin SDK not initialized. Falling back to local data files for homepage config.");
         return loadFromLocal();
     }
 
     try {
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            let needsUpdate = false;
-            let dataToSeed = { ...data };
-            
-            const localCandidates = await readJsonData('candidates.json');
-            if (!data.candidates && localCandidates) {
-                console.log("Firestore document 'homepage' is missing 'candidates' field. Seeding from local file...");
-                dataToSeed.candidates = localCandidates;
-                needsUpdate = true;
-            }
-            
-            const localOrganization = await readJsonData('organization.json');
-            if (!data.organization && localOrganization) {
-                console.log("Firestore document 'homepage' is missing 'organization' field. Seeding from local file...");
-                dataToSeed.organization = localOrganization;
-                needsUpdate = true;
-            }
-
-            if(needsUpdate) {
-                 await setDoc(docRef, dataToSeed, { merge: true });
-            }
-            return dataToSeed;
-
-        } else {
+        
+        if (!docSnap.exists()) {
             console.log("Firestore document 'homepage' not found. Seeding from local files...");
             const dataToSeed = await loadFromLocal();
             // Only seed if there is actually data to seed
             if (dataToSeed.candidates || dataToSeed.organization) {
                 await setDoc(docRef, dataToSeed);
+                console.log("Firestore document 'homepage' created and seeded successfully.");
             }
             return dataToSeed;
         }
+        
+        // Document exists, check if any field is missing and needs seeding
+        const firestoreData = docSnap.data();
+        let needsUpdate = false;
+        
+        if (!firestoreData.candidates) {
+            const localCandidates = await readJsonData('candidates.json');
+            if (localCandidates) {
+                console.log("Firestore 'homepage' doc is missing 'candidates' field. Seeding from local file...");
+                firestoreData.candidates = localCandidates;
+                needsUpdate = true;
+            }
+        }
+        
+        if (!firestoreData.organization) {
+            const localOrganization = await readJsonData('organization.json');
+            if (localOrganization) {
+                console.log("Firestore 'homepage' doc is missing 'organization' field. Seeding from local file...");
+                firestoreData.organization = localOrganization;
+                needsUpdate = true;
+            }
+        }
+
+        if(needsUpdate) {
+             console.log("Updating Firestore 'homepage' doc with missing fields...");
+             await setDoc(docRef, firestoreData, { merge: true });
+             console.log("Firestore document updated successfully.");
+        }
+
+        return firestoreData;
+
     } catch (error) {
         console.error("Error fetching homepage data from Firestore, falling back to local files:", error);
         return loadFromLocal();

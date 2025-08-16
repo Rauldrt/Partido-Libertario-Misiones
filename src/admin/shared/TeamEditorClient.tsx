@@ -49,6 +49,8 @@ const SortableItem = ({ item, setItems, isPending, itemType }: { item: TeamMembe
     setGalleryOpen(false);
   }
 
+  const hasRoleField = itemType === 'Miembro';
+
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
         <AccordionItem value={item.id} className="border-b-0 mb-4 bg-muted/30 rounded-lg overflow-hidden">
@@ -70,10 +72,12 @@ const SortableItem = ({ item, setItems, isPending, itemType }: { item: TeamMembe
                             <Label htmlFor={`name-${item.id}`}>Nombre</Label>
                             <Input id={`name-${item.id}`} value={item.name} onChange={(e) => handleInputChange('name', e.target.value)} />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor={`role-${item.id}`}>Cargo / Puesto</Label>
-                            <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
-                        </div>
+                        {hasRoleField && (
+                          <div className="space-y-2">
+                              <Label htmlFor={`role-${item.id}`}>Cargo / Puesto</Label>
+                              <Input id={`role-${item.id}`} value={item.role || ''} onChange={(e) => handleInputChange('role', e.target.value)} />
+                          </div>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor={`description-${item.id}`}>Descripción</Label>

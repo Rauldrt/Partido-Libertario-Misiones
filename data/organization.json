@@ -1,3 +1,4 @@
+
 [
   {
     "id": "org-1",
@@ -22,21 +23,5 @@
     "description": "Coordina las actividades internas, la comunicación y la logística para asegurar el funcionamiento del partido.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "woman portrait"
-  },
-  {
-    "id": "new-1755033835090",
-    "name": "Nuevo Miembro",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person",
-    "role": "Tesorero"
-  },
-  {
-    "id": "new-1755385410509",
-    "name": "Nuevo Miembro",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person",
-    "role": "Carta Organica"
   }
 ]

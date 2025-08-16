@@ -1,44 +1,27 @@
+
 [
   {
     "id": "cand-1",
     "name": "Ninfa Zunilda Alvarenga",
     "description": "Candidato a Diputado Nacional",
     "imageUrl": "/Ninfa y Julio.webp",
-    "imageHint": "political portrait"
+    "imageHint": "political portrait",
+    "role": "Diputada Nacional"
   },
   {
     "id": "cand-2",
-    "name": "Julio Peralta",
+    "name": "Gustavo Villalba",
     "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "leader smiling"
+    "imageHint": "leader smiling",
+    "role": "Candidato"
   },
   {
     "id": "new-1755046090121",
-    "name": "Gustavo Villalba",
+    "name": "Darife Tebecheri",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
-  },
-  {
-    "id": "new-1755046096153",
-    "name": "Nuevo Candidato",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
-  },
-  {
-    "id": "new-1755046098203",
-    "name": "Nuevo Candidato",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
-  },
-  {
-    "id": "new-1755201521799",
-    "name": "Nuevo Candidato",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
+    "imageHint": "portrait person",
+    "role": "Candidata"
   }
 ]
