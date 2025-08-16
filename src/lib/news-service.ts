@@ -173,7 +173,7 @@ export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): P
   
   const newItemData: Partial<NewsCardData> = {
     ...item,
-    id: `${Date.now()}`,
+    id: `news-${Date.now()}`,
     order: newOrder
   };
   
