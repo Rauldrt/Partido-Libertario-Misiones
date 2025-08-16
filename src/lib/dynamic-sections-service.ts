@@ -21,14 +21,18 @@ async function readJsonData(fileName: string): Promise<any> {
     try {
         await fs.access(filePath);
         const fileContent = await fs.readFile(filePath, 'utf-8');
+        // Return null if the file is empty or just an empty array string
+        if (!fileContent.trim() || fileContent.trim() === '[]') {
+            return null;
+        }
         return JSON.parse(fileContent);
     } catch (error) {
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-            console.warn(`File ${fileName} not found. Returning empty array.`);
-            return [];
+            console.warn(`File ${fileName} not found. Returning null.`);
+            return null;
         }
         console.error(`Error reading or parsing ${fileName}:`, error);
-        return [];
+        return null;
     }
 }
 
@@ -57,18 +61,18 @@ async function getHomepageData(): Promise<any> {
             const data = docSnap.data();
             let needsUpdate = false;
             let dataToSeed = { ...data };
-
-            // If the document exists but is missing candidates field, seed it
-            if (!data.candidates) {
+            
+            const localCandidates = await readJsonData('candidates.json');
+            if (!data.candidates && localCandidates) {
                 console.log("Firestore document 'homepage' is missing 'candidates' field. Seeding from local file...");
-                dataToSeed.candidates = await readJsonData('candidates.json');
+                dataToSeed.candidates = localCandidates;
                 needsUpdate = true;
             }
             
-            // If the document exists but is missing organization field, seed it
-            if (!data.organization) {
+            const localOrganization = await readJsonData('organization.json');
+            if (!data.organization && localOrganization) {
                 console.log("Firestore document 'homepage' is missing 'organization' field. Seeding from local file...");
-                dataToSeed.organization = await readJsonData('organization.json');
+                dataToSeed.organization = localOrganization;
                 needsUpdate = true;
             }
 
@@ -78,10 +82,12 @@ async function getHomepageData(): Promise<any> {
             return dataToSeed;
 
         } else {
-             // If the document doesn't exist at all, seed it.
             console.log("Firestore document 'homepage' not found. Seeding from local files...");
             const dataToSeed = await loadFromLocal();
-            await setDoc(docRef, dataToSeed);
+            // Only seed if there is actually data to seed
+            if (dataToSeed.candidates || dataToSeed.organization) {
+                await setDoc(docRef, dataToSeed);
+            }
             return dataToSeed;
         }
     } catch (error) {
@@ -110,7 +116,7 @@ async function saveHomepageData(data: any): Promise<void> {
 // Candidates Functions
 export async function getCandidates(): Promise<TeamMember[]> {
     const data = await getHomepageData();
-    const candidates = data.candidates || [];
+    const candidates = data?.candidates || [];
     return candidates.map((c: any, index: number) => ({ ...c, id: c.id || `cand-${index}-${Date.now()}` }));
 }
 
@@ -121,12 +127,10 @@ export async function saveCandidates(candidates: TeamMember[]): Promise<void> {
 // Organization Functions
 export async function getOrganization(): Promise<TeamMember[]> {
     const data = await getHomepageData();
-    const organization = data.organization || [];
+    const organization = data?.organization || [];
     return organization.map((o: any, index: number) => ({ ...o, id: o.id || `org-${index}-${Date.now()}` }));
 }
 
 export async function saveOrganization(organization: TeamMember[]): Promise<void> {
     await saveHomepageData({ organization });
 }
-
-    
