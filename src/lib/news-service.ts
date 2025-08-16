@@ -40,7 +40,8 @@ async function readNewsJson(): Promise<any[]> {
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
             return [];
         }
-        console.error("Error leyendo news.json:", error);
+        // Log the error for easier debugging but return empty array to prevent crashes
+        console.error("CRITICAL: Error reading or parsing news.json. Check the file for syntax errors.", error);
         return [];
     }
 }
@@ -160,6 +161,9 @@ async function saveNewsItem(item: Partial<NewsCardData>): Promise<NewsCardData> 
         return { ...item, linkUrl: `/news/${item.id}` } as NewsCardData;
     }
     
+    if (!item.id) {
+        throw new Error("El ID del artículo es requerido para guardarlo.");
+    }
     const docRef = doc(newsCollection, item.id);
     await setDoc(docRef, toFirestore(item), { merge: true });
 
@@ -250,3 +254,5 @@ export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
   };
   return addNewsItem(newItemData);
 }
+
+    
