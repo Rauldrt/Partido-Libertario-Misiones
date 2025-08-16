@@ -69,7 +69,7 @@ const SortableRow = ({
             <GripVertical className="h-5 w-5 text-muted-foreground" />
         </TableCell>
         <TableCell>
-            {item.imageUrl ? (
+            {item.imageUrl && item.imageUrl.trim() !== '' ? (
                 <img src={item.imageUrl} alt={item.title} width={64} height={36} className="rounded-sm object-cover aspect-video" />
             ) : (
                 <div className="w-16 h-9 bg-muted rounded-sm flex items-center justify-center">
