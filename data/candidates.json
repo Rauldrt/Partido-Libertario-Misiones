@@ -1,19 +1,44 @@
-
 [
   {
     "id": "cand-1",
-    "name": "Ninfa Alvarenga",
-    "role": "Diputada Nacional",
-    "description": "Principal referente del Partido Libertario en Misiones, defendiendo los intereses de la provincia a nivel nacional.",
+    "name": "Ninfa Zunilda Alvarenga",
+    "description": "Candidato a Diputado Nacional",
     "imageUrl": "/Ninfa y Julio.webp",
     "imageHint": "political portrait"
   },
   {
     "id": "cand-2",
     "name": "Julio Peralta",
-    "role": "Candidato a Diputado",
-    "description": "Comprometido con la transparencia y la reducción del gasto público para el beneficio de todos los misioneros.",
+    "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "leader smiling"
+  },
+  {
+    "id": "new-1755046090121",
+    "name": "Gustavo Villalba",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755046096153",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755046098203",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755201521799",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
   }
 ]
