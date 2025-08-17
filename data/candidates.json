@@ -3,25 +3,15 @@
   {
     "id": "cand-1",
     "name": "Ninfa Zunilda Alvarenga",
-    "description": "Candidato a Diputado Nacional",
+    "description": "Candidata a Diputada Nacional. Defensora de la libertad y la propiedad privada.",
     "imageUrl": "/Ninfa y Julio.webp",
-    "imageHint": "political portrait",
-    "role": "Diputada Nacional"
+    "imageHint": "political portrait"
   },
   {
     "id": "cand-2",
-    "name": "Gustavo Villalba",
-    "description": "Experiencia y dedicación al servicio de los ciudadanos.",
+    "name": "Julio César Peralta",
+    "description": "Candidato a Diputado Nacional. Comprometido con un gobierno limitado y transparente.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "leader smiling",
-    "role": "Candidato"
-  },
-  {
-    "id": "new-1755046090121",
-    "name": "Darife Tebecheri",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person",
-    "role": "Candidata"
+    "imageHint": "leader smiling"
   }
 ]

@@ -9,16 +9,16 @@
     "imageHint": "person professional"
   },
   {
-    "id": "new-1755035066452",
-    "name": "Nuevo Miembro",
-    "description": "Descripción del nuevo miembro.",
-    "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person",
-    "role": "Vicepresidente"
-  },
-  {
     "id": "org-2",
     "name": "Miembro del Partido 2",
+    "role": "Vicepresidente",
+    "description": "Apoyo en la dirección y coordinación de las actividades del partido.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "org-3",
+    "name": "Miembro del Partido 3",
     "role": "Secretario General",
     "description": "Coordina las actividades internas, la comunicación y la logística para asegurar el funcionamiento del partido.",
     "imageUrl": "https://placehold.co/400x400.png",
