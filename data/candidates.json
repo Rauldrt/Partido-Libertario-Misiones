@@ -1,18 +1,44 @@
 [
   {
     "id": "cand-1",
-    "name": "Ninfa Zunilda Alvarenga",
-    "description": "Candidata a Diputada Nacional. Defensora de la libertad y la propiedad privada.",
+    "name": "Candidato Diputado Nac.",
+    "description": "Un líder comprometido con la libertad y el progreso de Misiones. ",
     "imageUrl": "/Ninfa y Julio.webp",
-    "imageHint": "political portrait",
-    "order": 0
+    "imageHint": "political portrait"
   },
   {
     "id": "cand-2",
-    "name": "Julio César Peralta",
-    "description": "Candidato a Diputado Nacional. Comprometido con un gobierno limitado y transparente.",
+    "name": "Candidato Diputado Nac.",
+    "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "leader smiling",
-    "order": 1
+    "imageHint": "leader smiling"
+  },
+  {
+    "id": "new-1755046090121",
+    "name": "Candidato Diputado Nac.",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755046096153",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755046098203",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
+  },
+  {
+    "id": "new-1755201521799",
+    "name": "Nuevo Candidato",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person"
   }
 ]

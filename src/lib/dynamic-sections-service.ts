@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, doc, getDocs, writeBatch, query, orderBy, deleteDoc, getCountFromServer } from 'firebase/firestore';
+import { collection, doc, getDocs, writeBatch, query, orderBy, getCountFromServer, deleteDoc } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -84,19 +84,16 @@ async function getCollectionData(
     }
 
     try {
-        const snapshot = await getCountFromServer(collectionRef);
-        const localData = await localDataPromise;
+        const snapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
         
-        // Force sync if counts don't match
-        if (snapshot.data().count !== localData.length && localData.length > 0) {
+        if (snapshot.empty) {
+            console.log(`Collection ${collectionRef.id} is empty. Seeding from ${localFileName}.`);
             await syncCollectionFromLocal(collectionRef, localFileName);
             const newSnapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
-             return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
+            return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
         }
 
-        const q = query(collectionRef, orderBy("order", "asc"));
-        const finalSnapshot = await getDocs(q);
-        return finalSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
     } catch (error) {
         console.error(`Error fetching collection ${collectionRef.id} from Firestore, falling back to local file.`, error);
         const localData = await readJsonData(localFileName);
@@ -126,12 +123,17 @@ async function saveCollectionData(
         const batch = writeBatch(collectionRef.firestore);
         const snapshot = await getDocs(collectionRef);
         
-        snapshot.docs.forEach(doc => {
-            if (!items.some(item => item.id === doc.id)) {
-                batch.delete(doc.ref);
+        const currentIdsInDb = new Set(snapshot.docs.map(doc => doc.id));
+        const newIds = new Set(items.map(item => item.id));
+
+        // Delete documents that are no longer in the list
+        currentIdsInDb.forEach(id => {
+            if (!newIds.has(id)) {
+                batch.delete(doc(collectionRef, id));
             }
         });
 
+        // Set (create or update) all current items
         items.forEach((item, index) => {
             const docRef = doc(collectionRef, item.id);
             batch.set(docRef, { ...item, order: index });
@@ -166,8 +168,3 @@ export async function saveOrganization(organization: TeamMember[]): Promise<{ me
     const collectionRef = getOrganizationCollectionRef();
     return saveCollectionData(collectionRef, 'organization.json', organization);
 }
-
-// Deprecated functions - no longer used
-async function getHomepageDocRef() { return null; }
-async function getHomepageData() { return {}; }
-async function saveHomepageData(data: any) {}
