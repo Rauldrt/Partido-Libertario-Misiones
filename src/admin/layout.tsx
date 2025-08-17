@@ -22,9 +22,9 @@ import { FilePlus, GalleryHorizontal, Info, LayoutDashboard, LayoutGrid, Link2, 
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { FirebaseStatus } from '@/components/FirebaseStatus';
 import { usePathname, useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+import { AdminSdkStatus } from '@/components/AdminSdkStatus';
 
 
 export default function AdminLayout({ children }: PropsWithChildren) {
@@ -199,7 +199,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                     <div className="flex-1">
                         <h1 className="text-lg font-semibold">Panel de Administración</h1>
                     </div>
-                    <FirebaseStatus />
+                    <AdminSdkStatus />
                 </header>
                 <div className="p-4 sm:p-6">{children}</div>
                 </SidebarInset>
