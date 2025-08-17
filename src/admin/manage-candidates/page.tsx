@@ -1,21 +1,8 @@
 
-import { getCandidates, saveCandidates } from '@/lib/dynamic-sections-service';
+import { getCandidates } from '@/lib/dynamic-sections-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TeamEditorClient } from '../shared/TeamEditorClient';
-import { revalidatePath } from 'next/cache';
-import type { TeamMember } from '@/lib/dynamic-sections-service';
-
-async function saveCandidatesAction(items: TeamMember[]) {
-    'use server';
-    try {
-        const { message } = await saveCandidates(items);
-        revalidatePath('/');
-        return { success: true, message };
-    } catch (e) {
-        const error = e as Error;
-        return { success: false, message: error.message };
-    }
-}
+import { saveCandidatesAction } from './actions';
 
 export default async function ManageCandidatesPage() {
   const items = await getCandidates();
@@ -38,5 +25,4 @@ export default async function ManageCandidatesPage() {
     </Card>
   );
 }
-
     
