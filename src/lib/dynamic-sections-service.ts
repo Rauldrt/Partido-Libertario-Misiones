@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, writeBatch, query, orderBy } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -13,6 +13,7 @@ export interface TeamMember {
     imageUrl: string;
     imageHint: string;
     role?: string; // Optional for candidates
+    order?: number; // For ordering
 }
 
 // Helper to read local JSON files
@@ -21,127 +22,131 @@ async function readJsonData(fileName: string): Promise<any> {
     try {
         await fs.access(filePath);
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        // Return null if the file is empty or just an empty array string
-        if (!fileContent.trim() || fileContent.trim() === '[]') {
-            return null;
-        }
-        return JSON.parse(fileContent);
+        return fileContent.trim() ? JSON.parse(fileContent) : [];
     } catch (error) {
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-            console.warn(`File ${fileName} not found. Returning null.`);
-            return null;
-        }
-        console.error(`Error reading or parsing ${fileName}:`, error);
-        return null;
+        console.warn(`Could not read ${fileName}, returning empty array. Error:`, error);
+        return [];
     }
 }
 
-const getHomepageDocRef = () => {
+const getCandidatesCollectionRef = () => {
     const db = getAdminDb();
     if (!db) return null;
-    return doc(db, 'site-config', 'homepage');
+    return collection(db, 'candidates');
 };
 
-async function getHomepageData(): Promise<any> {
-    const docRef = getHomepageDocRef();
+const getOrganizationCollectionRef = () => {
+    const db = getAdminDb();
+    if (!db) return null;
+    return collection(db, 'organization');
+}
 
-    const loadFromLocal = async () => {
-        const candidates = await readJsonData('candidates.json');
-        const organization = await readJsonData('organization.json');
-        // Return an object with keys, even if values are null
-        return { candidates, organization };
+// Generic function to seed a collection from a local file if it's empty
+async function seedCollectionIfEmpty(
+    collectionRef: ReturnType<typeof getCandidatesCollectionRef>,
+    localFileName: string
+) {
+    if (!collectionRef) return;
+
+    const snapshot = await getDocs(query(collectionRef));
+    if (snapshot.empty) {
+        console.log(`Collection '${collectionRef.id}' is empty in Firestore. Seeding from '${localFileName}'...`);
+        const localData = await readJsonData(localFileName);
+        
+        if (localData && localData.length > 0) {
+            const batch = writeBatch(collectionRef.firestore);
+            localData.forEach((item: any, index: number) => {
+                const id = item.id || `${collectionRef.id.slice(0, -1)}-${index}-${Date.now()}`;
+                const docRef = doc(collectionRef, id);
+                batch.set(docRef, { ...item, id, order: item.order ?? index });
+            });
+            await batch.commit();
+            console.log(`Seeded ${localData.length} documents into '${collectionRef.id}'.`);
+        }
     }
+}
 
-    if (!docRef) {
-        console.warn("Firestore Admin SDK not initialized. Falling back to local data files for homepage config.");
-        return loadFromLocal();
+async function getCollectionData(
+    collectionRef: ReturnType<typeof getCandidatesCollectionRef>,
+    localFileName: string
+): Promise<TeamMember[]> {
+    if (!collectionRef) {
+        console.warn(`Admin SDK not initialized. Reading from local file: ${localFileName}`);
+        const localData = await readJsonData(localFileName);
+        return localData.map((item: any, index: number) => ({ ...item, id: item.id || `local-${index}`, order: item.order ?? index}));
     }
 
     try {
-        const docSnap = await getDoc(docRef);
-        
-        if (!docSnap.exists()) {
-            console.log("Firestore document 'homepage' not found. Seeding from local files...");
-            const dataToSeed = await loadFromLocal();
-            // Only seed if there is actually data to seed
-            if (dataToSeed.candidates || dataToSeed.organization) {
-                await setDoc(docRef, dataToSeed);
-                console.log("Firestore document 'homepage' created and seeded successfully.");
-            }
-            return dataToSeed;
-        }
-        
-        // Document exists, check if any field is missing and needs seeding
-        const firestoreData = docSnap.data();
-        let needsUpdate = false;
-        
-        if (!firestoreData.candidates) {
-            const localCandidates = await readJsonData('candidates.json');
-            if (localCandidates) {
-                console.log("Firestore 'homepage' doc is missing 'candidates' field. Seeding from local file...");
-                firestoreData.candidates = localCandidates;
-                needsUpdate = true;
-            }
-        }
-        
-        if (!firestoreData.organization) {
-            const localOrganization = await readJsonData('organization.json');
-            if (localOrganization) {
-                console.log("Firestore 'homepage' doc is missing 'organization' field. Seeding from local file...");
-                firestoreData.organization = localOrganization;
-                needsUpdate = true;
-            }
-        }
-
-        if(needsUpdate) {
-             console.log("Updating Firestore 'homepage' doc with missing fields...");
-             await setDoc(docRef, firestoreData, { merge: true });
-             console.log("Firestore document updated successfully.");
-        }
-
-        return firestoreData;
-
+        await seedCollectionIfEmpty(collectionRef, localFileName);
+        const q = query(collectionRef, orderBy("order", "asc"));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
     } catch (error) {
-        console.error("Error fetching homepage data from Firestore, falling back to local files:", error);
-        return loadFromLocal();
+        console.error(`Error fetching collection ${collectionRef.id} from Firestore, falling back to local file.`, error);
+        const localData = await readJsonData(localFileName);
+        return localData.map((item: any, index: number) => ({ ...item, id: item.id || `fallback-${index}`, order: item.order ?? index }));
     }
 }
 
-async function saveHomepageData(data: any): Promise<void> {
-    const docRef = getHomepageDocRef();
-    if (docRef) {
-        await setDoc(docRef, data, { merge: true });
+async function saveCollectionData(
+    collectionRef: ReturnType<typeof getCandidatesCollectionRef>,
+    localFileName: string,
+    items: TeamMember[]
+): Promise<void> {
+    
+    // Always write to local file as a backup
+    const dataToSave = items.map(({ ...rest }) => rest);
+    await fs.writeFile(path.join(process.cwd(), 'data', localFileName), JSON.stringify(dataToSave, null, 2), 'utf-8');
+
+    if (!collectionRef) {
+        console.warn(`Admin SDK not initialized, changes saved only to ${localFileName}.`);
         return;
     }
-
-    console.warn("Admin SDK not initialized, saving data to local files.");
     
-    if (data.candidates) {
-        await fs.writeFile(path.join(process.cwd(), 'data', 'candidates.json'), JSON.stringify(data.candidates, null, 2), 'utf-8');
-    }
-    if (data.organization) {
-        await fs.writeFile(path.join(process.cwd(), 'data', 'organization.json'), JSON.stringify(data.organization, null, 2), 'utf-8');
-    }
+    const batch = writeBatch(collectionRef.firestore);
+    const snapshot = await getDocs(collectionRef);
+    
+    // Delete documents that are no longer in the list
+    snapshot.docs.forEach(doc => {
+        if (!items.some(item => item.id === doc.id)) {
+            batch.delete(doc.ref);
+        }
+    });
+
+    // Set (create or update) all current items
+    items.forEach((item, index) => {
+        const docRef = doc(collectionRef, item.id);
+        batch.set(docRef, { ...item, order: index });
+    });
+    
+    await batch.commit();
 }
+
 
 // Candidates Functions
 export async function getCandidates(): Promise<TeamMember[]> {
-    const data = await getHomepageData();
-    const candidates = data?.candidates || [];
-    return candidates.map((c: any, index: number) => ({ ...c, id: c.id || `cand-${index}-${Date.now()}` }));
+    const collectionRef = getCandidatesCollectionRef();
+    return getCollectionData(collectionRef, 'candidates.json');
 }
 
 export async function saveCandidates(candidates: TeamMember[]): Promise<void> {
-    await saveHomepageData({ candidates });
+    const collectionRef = getCandidatesCollectionRef();
+    await saveCollectionData(collectionRef, 'candidates.json', candidates);
 }
 
 // Organization Functions
 export async function getOrganization(): Promise<TeamMember[]> {
-    const data = await getHomepageData();
-    const organization = data?.organization || [];
-    return organization.map((o: any, index: number) => ({ ...o, id: o.id || `org-${index}-${Date.now()}` }));
+    const collectionRef = getOrganizationCollectionRef();
+    return getCollectionData(collectionRef, 'organization.json');
 }
 
 export async function saveOrganization(organization: TeamMember[]): Promise<void> {
-    await saveHomepageData({ organization });
+    const collectionRef = getOrganizationCollectionRef();
+    await saveCollectionData(collectionRef, 'organization.json', organization);
 }
+
+// Functions below are deprecated or no longer used for candidates/org
+async function getHomepageDocRef() { return null; }
+async function getHomepageData() { return {}; }
+async function saveHomepageData(data: any) {}
+
