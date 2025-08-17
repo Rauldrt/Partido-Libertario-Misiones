@@ -5,7 +5,8 @@
     "role": "Presidente",
     "description": "Encargada de la dirección estratégica y la representación del partido a nivel provincial y nacional.",
     "imageUrl": "/Ninfa.webp",
-    "imageHint": "person professional"
+    "imageHint": "person professional",
+    "order": 0
   },
   {
     "id": "org-2",
@@ -13,6 +14,7 @@
     "role": "Secretario General",
     "description": "Coordina las actividades internas, la comunicación y la logística para asegurar el funcionamiento del partido.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "woman portrait"
+    "imageHint": "woman portrait",
+    "order": 1
   }
 ]

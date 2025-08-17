@@ -8,9 +8,9 @@ import type { TeamMember } from '@/lib/dynamic-sections-service';
 async function saveOrganizationAction(items: TeamMember[]) {
     'use server';
     try {
-        await saveOrganization(items);
+        const { message } = await saveOrganization(items);
         revalidatePath('/');
-        return { success: true, message: 'Organigrama guardado con éxito.' };
+        return { success: true, message };
     } catch (e) {
         const error = e as Error;
         return { success: false, message: error.message };

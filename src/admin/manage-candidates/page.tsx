@@ -8,9 +8,9 @@ import type { TeamMember } from '@/lib/dynamic-sections-service';
 async function saveCandidatesAction(items: TeamMember[]) {
     'use server';
     try {
-        await saveCandidates(items);
+        const { message } = await saveCandidates(items);
         revalidatePath('/');
-        return { success: true, message: 'Candidatos guardados con éxito.' };
+        return { success: true, message };
     } catch (e) {
         const error = e as Error;
         return { success: false, message: error.message };

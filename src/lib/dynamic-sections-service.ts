@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, doc, getDocs, writeBatch, query, orderBy, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, writeBatch, query, orderBy, deleteDoc, getCountFromServer } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -84,11 +84,11 @@ async function getCollectionData(
     }
 
     try {
-        const snapshot = await getDocs(query(collectionRef));
+        const snapshot = await getCountFromServer(collectionRef);
         const localData = await localDataPromise;
         
-        // Force sync if counts don't match or Firestore is empty
-        if (snapshot.size !== localData.length) {
+        // Force sync if counts don't match
+        if (snapshot.data().count !== localData.length && localData.length > 0) {
             await syncCollectionFromLocal(collectionRef, localFileName);
             const newSnapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
              return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
@@ -108,31 +108,42 @@ async function saveCollectionData(
     collectionRef: ReturnType<typeof getCandidatesCollectionRef>,
     localFileName: string,
     items: TeamMember[]
-): Promise<void> {
+): Promise<{ message: string }> {
     
     const dataToSave = items.map(({ ...rest }) => rest);
-    await fs.writeFile(path.join(process.cwd(), 'data', localFileName), JSON.stringify(dataToSave, null, 2), 'utf-8');
+    let saveLocationMessages = [];
 
-    if (!collectionRef) {
-        console.warn(`Admin SDK not initialized, changes saved only to ${localFileName}.`);
-        return;
+    // Always save to local file as a backup
+    try {
+        await fs.writeFile(path.join(process.cwd(), 'data', localFileName), JSON.stringify(dataToSave, null, 2), 'utf-8');
+        saveLocationMessages.push(`el archivo local (${localFileName})`);
+    } catch (e) {
+        console.error(`Error guardando en archivo local ${localFileName}:`, e);
+        throw new Error(`No se pudo guardar en el archivo local: ${(e as Error).message}`);
     }
-    
-    const batch = writeBatch(collectionRef.firestore);
-    const snapshot = await getDocs(collectionRef);
-    
-    snapshot.docs.forEach(doc => {
-        if (!items.some(item => item.id === doc.id)) {
-            batch.delete(doc.ref);
-        }
-    });
 
-    items.forEach((item, index) => {
-        const docRef = doc(collectionRef, item.id);
-        batch.set(docRef, { ...item, order: index });
-    });
-    
-    await batch.commit();
+    if (collectionRef) {
+        const batch = writeBatch(collectionRef.firestore);
+        const snapshot = await getDocs(collectionRef);
+        
+        snapshot.docs.forEach(doc => {
+            if (!items.some(item => item.id === doc.id)) {
+                batch.delete(doc.ref);
+            }
+        });
+
+        items.forEach((item, index) => {
+            const docRef = doc(collectionRef, item.id);
+            batch.set(docRef, { ...item, order: index });
+        });
+        
+        await batch.commit();
+        saveLocationMessages.push('Firestore');
+    } else {
+        console.warn(`Admin SDK no inicializado, cambios guardados solo en ${localFileName}.`);
+    }
+
+    return { message: `Datos guardados con éxito en ${saveLocationMessages.join(' y ')}.` };
 }
 
 
@@ -141,9 +152,9 @@ export async function getCandidates(): Promise<TeamMember[]> {
     return getCollectionData(collectionRef, 'candidates.json');
 }
 
-export async function saveCandidates(candidates: TeamMember[]): Promise<void> {
+export async function saveCandidates(candidates: TeamMember[]): Promise<{ message: string }> {
     const collectionRef = getCandidatesCollectionRef();
-    await saveCollectionData(collectionRef, 'candidates.json', candidates);
+    return saveCollectionData(collectionRef, 'candidates.json', candidates);
 }
 
 export async function getOrganization(): Promise<TeamMember[]> {
@@ -151,9 +162,9 @@ export async function getOrganization(): Promise<TeamMember[]> {
     return getCollectionData(collectionRef, 'organization.json');
 }
 
-export async function saveOrganization(organization: TeamMember[]): Promise<void> {
+export async function saveOrganization(organization: TeamMember[]): Promise<{ message: string }> {
     const collectionRef = getOrganizationCollectionRef();
-    await saveCollectionData(collectionRef, 'organization.json', organization);
+    return saveCollectionData(collectionRef, 'organization.json', organization);
 }
 
 // Deprecated functions - no longer used
