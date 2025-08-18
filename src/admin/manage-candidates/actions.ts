@@ -13,6 +13,7 @@ export async function saveCandidatesAction(items: TeamMember[]) {
         return { success: true, message };
     } catch (e) {
         const error = e as Error;
+        console.error("Error in saveCandidatesAction:", error.message);
         return { success: false, message: error.message };
     }
 }
