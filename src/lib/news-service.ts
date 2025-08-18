@@ -68,11 +68,9 @@ async function getNewsFromLocalJson(): Promise<NewsCardData[]> {
 }
 
 // Firestore collection reference
-function getNewsCollection(): CollectionReference {
-  const db = getAdminDb();
-    if (!db) {
-        throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
-    }
+async function getNewsCollection(): Promise<CollectionReference | null> {
+  const db = await getAdminDb();
+  if (!db) return null;
   return collection(db, 'news');
 };
 
@@ -94,14 +92,13 @@ const toFirestore = (item: Partial<NewsCardData>): any => {
 };
 
 export async function getNewsItems(): Promise<NewsCardData[]> {
-  const db = getAdminDb();
-  if(!db) {
-    console.warn("Firestore Admin SDK not initialized. Falling back to local file: news.json");
-    return getNewsFromLocalJson();
-  }
-
   try {
-    const newsCollection = getNewsCollection();
+    const newsCollection = await getNewsCollection();
+    if (!newsCollection) {
+      console.warn("Admin SDK not initialized. Falling back to local file: news.json");
+      return getNewsFromLocalJson();
+    }
+
     const q = query(newsCollection, orderBy("order", "asc"));
     const snapshot = await getDocs(q);
     
@@ -127,14 +124,13 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
 }
 
 export async function getNewsItemById(id: string): Promise<NewsCardData | undefined> {
-  const db = getAdminDb();
-  if (!db) {
-    const allItems = await getNewsFromLocalJson();
-    return allItems.find(item => item.id === id);
-  }
-  
   try {
-    const newsCollection = getNewsCollection();
+    const newsCollection = await getNewsCollection();
+    if (!newsCollection) {
+      const allItems = await getNewsFromLocalJson();
+      return allItems.find(item => item.id === id);
+    }
+    
     const docRef = doc(newsCollection, id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -148,10 +144,11 @@ export async function getNewsItemById(id: string): Promise<NewsCardData | undefi
   return allItems.find(item => item.id === id);
 }
 
-// Base function for adding/updating an item. Throws error if DB not available.
+// Base function for adding/updating an item.
 async function saveNewsItem(item: Partial<NewsCardData>): Promise<NewsCardData> {
-    const db = getAdminDb();
-    if (!db) {
+    const newsCollection = await getNewsCollection();
+
+    if (!newsCollection) {
         console.warn("Error guardando noticia en Firestore, guardando en news.json:");
         const allItems = await getNewsFromLocalJson();
         const existingIndex = allItems.findIndex(i => i.id === item.id);
@@ -168,7 +165,6 @@ async function saveNewsItem(item: Partial<NewsCardData>): Promise<NewsCardData> 
         throw new Error("El ID del artículo es requerido para guardarlo.");
     }
     
-    const newsCollection = getNewsCollection();
     const docRef = doc(newsCollection, item.id);
     await setDoc(docRef, toFirestore(item), { merge: true });
 
@@ -195,9 +191,9 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
 }
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
-  const db = getAdminDb();
-  if(!db) {
-    try {
+  try {
+    const newsCollection = await getNewsCollection();
+    if(!newsCollection) {
       console.warn(`Intentando eliminar artículo ${id} de news.json como respaldo.`);
       const allItems = await getNewsFromLocalJson();
       const filteredItems = allItems.filter(item => item.id !== id);
@@ -206,26 +202,20 @@ export async function deleteNewsItem(id: string): Promise<{ success: boolean }> 
       }
       await writeNewsJson(filteredItems);
       return { success: true };
-    } catch (localError) {
-      console.error(`Error eliminando artículo de news.json`, localError);
-      return { success: false };
     }
-  }
 
-  try {
-    const newsCollection = getNewsCollection();
     const docRef = doc(newsCollection, id);
     await deleteDoc(docRef);
     return { success: true };
   } catch (error) {
-     console.error(`Error eliminando el artículo ${id} de Firestore.`, error);
+     console.error(`Error eliminando el artículo ${id}.`, error);
      return { success: false };
   }
 }
 
 export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
-    const db = getAdminDb();
-    if(!db) {
+    const newsCollection = await getNewsCollection();
+    if(!newsCollection) {
        console.warn("Error reordenando en Firestore, intentando en news.json:");
        const allItems = await getNewsFromLocalJson();
        const reordered = orderedIds.map((id, index) => {
@@ -239,11 +229,10 @@ export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
        return;
     }
     
-    const newsCollection = getNewsCollection();
-    const batch = writeBatch(db);
+    const batch = writeBatch(newsCollection.firestore);
     
     orderedIds.forEach((id, index) => {
-        const docRef = doc(db, 'news', id);
+        const docRef = doc(newsCollection.firestore, 'news', id);
         batch.update(docRef, { order: index });
     });
 

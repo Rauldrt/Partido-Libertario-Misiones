@@ -30,18 +30,19 @@ async function readJsonData(fileName: string): Promise<any> {
 
 
 async function getCollectionData(collectionName: 'candidates' | 'organization', localFileName: string): Promise<TeamMember[]> {
-    const db = getAdminDb();
-
-    // If Firestore is not available, fall back to local JSON
-    if (!db) {
-        console.warn(`Firestore Admin SDK not initialized. Falling back to local file: ${localFileName}`);
+    const fallbackToLocal = async () => {
+        console.warn(`Firestore Admin SDK not initialized or errored. Falling back to local file: ${localFileName}`);
         const localData = await readJsonData(localFileName);
         return localData.map((item: any, index: number) => ({ ...item, id: item.id || `fallback-${index}`, order: item.order ?? index }));
-    }
-    
-    const collectionRef = collection(db, collectionName);
-    
+    };
+
     try {
+        const db = await getAdminDb();
+        if (!db) {
+            return fallbackToLocal();
+        }
+        
+        const collectionRef = collection(db, collectionName);
         const countSnapshot = await getCountFromServer(collectionRef);
         
         if (countSnapshot.data().count === 0) {
@@ -64,14 +65,13 @@ async function getCollectionData(collectionName: 'candidates' | 'organization', 
 
     } catch (error) {
         console.error(`Error fetching collection ${collectionName}, falling back to local file. Error:`, error);
-        const localData = await readJsonData(localFileName);
-        return localData.map((item: any, index: number) => ({ ...item, id: item.id || `fallback-${index}`, order: item.order ?? index }));
+        return fallbackToLocal();
     }
 }
 
 
 async function saveCollectionData(collectionName: 'candidates' | 'organization', items: TeamMember[]): Promise<{ message: string }> {
-    const db = getAdminDb();
+    const db = await getAdminDb();
     if (!db) {
          throw new Error(`Error al guardar en Firestore: La base de datos de administrador no está inicializada.`);
     }

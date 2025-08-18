@@ -69,38 +69,41 @@ export interface InfoSectionData {
 }
 
 // Firestore document reference for homepage data
-const getHomepageDocRef = () => {
-    const db = getAdminDb();
+const getHomepageDocRef = async () => {
+    const db = await getAdminDb();
     if (!db) return null;
     return doc(db, 'site-config', 'homepage');
 };
 
 async function getHomepageData(useLocal = false): Promise<any> {
-    const docRef = getHomepageDocRef();
-    
     const loadFromLocal = async () => {
         const banner = await readJsonData('banner.json');
         const mosaic = await readJsonData('mosaic.json');
         const accordion = await readJsonData('accordion.json');
         const infoSection = await readJsonData('info-section.json');
         return { banner, mosaic, accordion, infoSection };
-    }
+    };
 
-    if (!docRef || useLocal) {
-        return loadFromLocal();
-    }
+    if (useLocal) return loadFromLocal();
 
     try {
+        const docRef = await getHomepageDocRef();
+        if (!docRef) {
+            console.warn("Admin SDK no inicializado, usando datos locales como respaldo.");
+            return loadFromLocal();
+        }
+        
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             return docSnap.data();
         }
-        // If the document doesn't exist in Firestore, seed it from local files.
+        
         console.log("Documento de configuración de inicio no encontrado en Firestore. Sembrando desde archivos JSON locales...");
         const seededData = await loadFromLocal();
         await setDoc(docRef, seededData);
         console.log("Datos de inicio sembrados en Firestore correctamente.");
         return seededData;
+
     } catch (error) {
         console.error("Error al obtener datos de inicio de Firestore, usando respaldo local:", error);
         return loadFromLocal();
@@ -109,7 +112,7 @@ async function getHomepageData(useLocal = false): Promise<any> {
 
 
 async function saveHomepageData(data: any): Promise<void> {
-    const docRef = getHomepageDocRef();
+    const docRef = await getHomepageDocRef();
     if (docRef) {
         await setDoc(docRef, data, { merge: true });
         return;
