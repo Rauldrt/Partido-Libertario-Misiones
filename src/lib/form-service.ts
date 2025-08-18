@@ -43,7 +43,9 @@ const defaultFormDefinitions: Record<string, FormDefinition> = {
 // Firestore Collection References ---
 const getFormDefCollection = () => {
     const db = getAdminDb();
-    if (!db) return null;
+    if (!db) {
+        throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
+    }
     return collection(db, 'form-definitions');
 };
 
@@ -51,15 +53,9 @@ const getFormDefCollection = () => {
 // --- Public Service Functions ---
 
 export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
-    const formDefCollection = getFormDefCollection();
     const defaults = defaultFormDefinitions[formId];
-    
-    if (!formDefCollection) {
-        console.warn(`Admin SDK no inicializado, usando definición de formulario por defecto para '${formId}'.`);
-        return defaults;
-    }
-    
     try {
+        const formDefCollection = getFormDefCollection();
         const docRef = doc(formDefCollection, formId);
         const docSnap = await getDoc(docRef);
 
@@ -73,20 +69,14 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
             return defaults;
         }
     } catch (error) {
-        console.error(`Error obteniendo la definición del formulario '${formId}' de Firestore, usando respaldo local:`, error);
+        console.error(`Error obteniendo la definición del formulario '${formId}', usando respaldo local:`, error);
         return defaults;
     }
 }
 
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
-    const formDefCollection = getFormDefCollection();
     const dataToSave = { id: formId, fields };
-    
-    if (!formDefCollection) {
-        console.warn(`Admin SDK no inicializado, no se puede guardar la definición del formulario '${formId}' en Firestore. Esta operación no tiene respaldo local.`);
-        throw new Error("No se puede guardar: El SDK de administrador de Firebase no está inicializado. No hay respaldo local para las definiciones de formularios.");
-    }
-
+    const formDefCollection = getFormDefCollection();
     const docRef = doc(formDefCollection, formId);
     await setDoc(docRef, dataToSave);
 }

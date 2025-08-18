@@ -11,7 +11,9 @@ import path from 'path';
 // --- Firestore Collection References ---
 const getFiscalizacionCollection = () => {
   const db = getAdminDb();
-  if (!db) return null;
+    if (!db) {
+        throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
+    }
   return collection(db, 'fiscalizaciones');
 };
 
@@ -29,9 +31,6 @@ const fromFirestore = (doc: any): FormSubmission => {
 // --- Public Service Functions ---
 export async function addFiscalizacionSubmission(submission: Record<string, any>): Promise<void> {
     const fiscalizacionCollection = getFiscalizacionCollection();
-    if (!fiscalizacionCollection) {
-        throw new Error('La base de datos no está disponible.');
-    }
     await addDoc(fiscalizacionCollection, {
         ...submission,
         createdAt: serverTimestamp(),
@@ -39,29 +38,25 @@ export async function addFiscalizacionSubmission(submission: Record<string, any>
 }
 
 export async function getFiscalizacionSubmissions(): Promise<FormSubmission[]> {
-    const fiscalizacionCollection = getFiscalizacionCollection();
-    
-    if (!fiscalizacionCollection) {
-         console.warn('Firebase Admin SDK not initialized. Reading fiscalizacion submissions from local JSON file.');
-         return [];
-    }
+    try {
+        const fiscalizacionCollection = getFiscalizacionCollection();
+        const q = query(fiscalizacionCollection, orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
 
-    const q = query(fiscalizacionCollection, orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(q);
-
-    if (snapshot.empty) {
+        if (snapshot.empty) {
+            return [];
+        }
+        
+        return snapshot.docs.map(fromFirestore);
+    } catch (error) {
+        console.error("Error al obtener las fiscalizaciones:", error);
         return [];
     }
-    
-    return snapshot.docs.map(fromFirestore);
 }
 
 export async function updateFiscalizacionSubmission(id: string, data: Record<string, any>): Promise<{ success: boolean; message: string; }> {
-    const fiscalizacionCollection = getFiscalizacionCollection();
-    if (!fiscalizacionCollection) {
-        return { success: false, message: "La base de datos no está disponible." };
-    }
     try {
+        const fiscalizacionCollection = getFiscalizacionCollection();
         const docRef = doc(fiscalizacionCollection, id);
         await updateDoc(docRef, data);
         return { success: true, message: "Inscripción actualizada con éxito." };
@@ -72,11 +67,8 @@ export async function updateFiscalizacionSubmission(id: string, data: Record<str
 }
 
 export async function deleteFiscalizacionSubmission(id: string): Promise<{ success: boolean; message: string; }> {
-    const fiscalizacionCollection = getFiscalizacionCollection();
-    if (!fiscalizacionCollection) {
-        return { success: false, message: "La base de datos no está disponible." };
-    }
     try {
+        const fiscalizacionCollection = getFiscalizacionCollection();
         await deleteDoc(doc(fiscalizacionCollection, id));
         return { success: true, message: "Inscripción eliminada con éxito." };
     } catch (error) {
