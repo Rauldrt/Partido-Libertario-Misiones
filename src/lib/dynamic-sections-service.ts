@@ -30,7 +30,7 @@ async function readJsonData(fileName: string): Promise<any> {
 
 
 async function getCollectionData(collectionName: 'candidates' | 'organization', localFileName: string): Promise<TeamMember[]> {
-    const db = await getAdminDb();
+    const db = getAdminDb();
 
     // If Firestore is not available, fall back to local JSON
     if (!db) {
@@ -71,7 +71,7 @@ async function getCollectionData(collectionName: 'candidates' | 'organization', 
 
 
 async function saveCollectionData(collectionName: 'candidates' | 'organization', items: TeamMember[]): Promise<{ message: string }> {
-    const db = await getAdminDb();
+    const db = getAdminDb();
     if (!db) {
          throw new Error(`Error al guardar en Firestore: La base de datos de administrador no está inicializada.`);
     }
