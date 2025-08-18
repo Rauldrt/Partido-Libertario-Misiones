@@ -16,6 +16,7 @@ export interface TeamMember {
     order?: number;
 }
 
+// Helper para leer archivos JSON locales como respaldo
 async function readJsonData(fileName: string): Promise<any> {
     const filePath = path.join(process.cwd(), 'data', fileName);
     try {
@@ -23,32 +24,40 @@ async function readJsonData(fileName: string): Promise<any> {
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return fileContent.trim() ? JSON.parse(fileContent) : [];
     } catch (error) {
-        console.warn(`Could not read ${fileName}, returning empty array. Error:`, error);
+        console.warn(`No se pudo leer el archivo local ${fileName}, se devolverá un array vacío. Error:`, error);
         return [];
     }
 }
 
 
+// Función unificada y robusta para obtener datos de una colección
 async function getCollectionData(collectionName: 'candidates' | 'organization', localFileName: string): Promise<TeamMember[]> {
     const fallbackToLocal = async () => {
-        console.warn(`Firestore Admin SDK not initialized or errored. Falling back to local file: ${localFileName}`);
+        console.warn(`Error al conectar con Firestore en la colección '${collectionName}'. Usando el archivo de respaldo local: ${localFileName}`);
         const localData = await readJsonData(localFileName);
-        return localData.map((item: any, index: number) => ({ ...item, id: item.id || `fallback-${index}`, order: item.order ?? index }));
+        // Asegura que cada item tenga un ID y un orden para evitar errores en el cliente
+        return localData.map((item: any, index: number) => ({
+            ...item,
+            id: item.id || `local-${collectionName}-${index}`,
+            order: item.order ?? index,
+        }));
     };
 
     try {
         const db = await getAdminDb();
         if (!db) {
-            throw new Error("Admin SDK no inicializado.");
+            // Este caso ocurre si el SDK de admin falla en su inicialización.
+            throw new Error("El SDK de Administrador no está inicializado.");
         }
         
         const collectionRef = collection(db, collectionName);
-        const countSnapshot = await getCountFromServer(collectionRef);
         
+        // Verifica si la colección existe o está vacía para sembrarla si es necesario
+        const countSnapshot = await getCountFromServer(collectionRef);
         if (countSnapshot.data().count === 0) {
             const localData = await readJsonData(localFileName);
             if (localData.length > 0) {
-                console.log(`Collection ${collectionName} is empty in Firestore. Seeding from ${localFileName}.`);
+                console.log(`Colección '${collectionName}' vacía. Sembrando datos desde ${localFileName}.`);
                 const batch = writeBatch(db);
                 localData.forEach((item: any, index: number) => {
                     const id = item.id || `${collectionName.slice(0, -1)}-${index}-${Date.now()}`;
@@ -56,24 +65,26 @@ async function getCollectionData(collectionName: 'candidates' | 'organization', 
                     batch.set(docRef, { ...item, id, order: item.order ?? index });
                 });
                 await batch.commit();
-                console.log(`Synced ${localData.length} documents into '${collectionName}'.`);
+                console.log(`Se sincronizaron ${localData.length} documentos en '${collectionName}'.`);
             }
         }
 
+        // Obtiene y ordena los datos de Firestore
         const snapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
 
     } catch (error) {
-        console.error(`Error fetching collection ${collectionName}, falling back to local file. Error:`, error);
+        // Captura cualquier error (de conexión, permisos, etc.) y usa el respaldo local
         return fallbackToLocal();
     }
 }
 
 
+// Función unificada para guardar datos en una colección
 async function saveCollectionData(collectionName: 'candidates' | 'organization', items: TeamMember[]): Promise<{ message: string }> {
     const db = await getAdminDb();
     if (!db) {
-         throw new Error(`Error al guardar en Firestore: La base de datos de administrador no está inicializada.`);
+         throw new Error(`No se pudo guardar: La base de datos de administrador no está inicializada.`);
     }
 
     const collectionRef = collection(db, collectionName);
@@ -85,12 +96,14 @@ async function saveCollectionData(collectionName: 'candidates' | 'organization',
         const currentIdsInDb = new Set(snapshot.docs.map(doc => doc.id));
         const newIds = new Set(items.map(item => item.id));
 
+        // Elimina los documentos que ya no están en la lista
         currentIdsInDb.forEach(id => {
             if (!newIds.has(id)) {
                 batch.delete(doc(collectionRef, id));
             }
         });
 
+        // Actualiza o crea los nuevos documentos con el orden correcto
         items.forEach((item, index) => {
             const docRef = doc(collectionRef, item.id);
             batch.set(docRef, { ...item, order: index });
@@ -99,11 +112,12 @@ async function saveCollectionData(collectionName: 'candidates' | 'organization',
         await batch.commit();
         return { message: `Datos guardados con éxito en Firestore.` };
     } catch (e) {
-         console.error(`No se pudo guardar en Firestore en la colección ${collectionName}:`, e);
+         console.error(`Error al guardar la colección '${collectionName}' en Firestore:`, e);
          throw new Error(`Error al guardar en Firestore: ${(e as Error).message}`);
     }
 }
 
+// --- Funciones Públicas Exportadas ---
 
 export async function getCandidates(): Promise<TeamMember[]> {
     return getCollectionData('candidates', 'candidates.json');
@@ -120,4 +134,3 @@ export async function getOrganization(): Promise<TeamMember[]> {
 export async function saveOrganization(organization: TeamMember[]): Promise<{ message: string }> {
     return saveCollectionData('organization', organization);
 }
-

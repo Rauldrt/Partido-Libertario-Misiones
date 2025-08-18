@@ -136,7 +136,7 @@ const OrganizationTabs = ({ members }: { members: TeamMember[] }) => {
 };
 
 
-export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget, infoSectionData, notificationData, candidates, organization }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode, infoSectionData: InfoSectionData, notificationData: NotificationData, candidates: TeamMember[], organization: TeamMember[] }>) {
+export default function HomePageClient({ children, slides, tiles, accordionItems, events, socialWidget, infoSectionData, notificationData, candidates = [], organization = [] }: PropsWithChildren<{ slides: BannerSlideData[], tiles: MosaicTileData[], accordionItems: AccordionItemData[], events: React.ReactNode, socialWidget: React.ReactNode, infoSectionData: InfoSectionData, notificationData: NotificationData, candidates?: TeamMember[], organization?: TeamMember[] }>) {
   const [lightboxData, setLightboxData] = useState<{ images: MosaicImageData[], startIndex: number } | null>(null);
   const [openAccordionItem, setOpenAccordionItem] = useState('');
   const [notificationClicked, setNotificationClicked] = useState(false);
