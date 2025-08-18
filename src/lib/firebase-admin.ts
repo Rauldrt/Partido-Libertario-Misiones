@@ -25,24 +25,24 @@ function initializeAdminApp() {
         const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
         if (!serviceAccountKey || serviceAccountKey.includes('PEGA_AQUI_TU_LLAVE')) {
-            throw new Error("La variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY no está definida en el archivo .env.local. Por favor, añada la llave de servicio.");
+            throw new Error("La variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY no está definida en el archivo .env.local. Por favor, añada la llave de servicio y reinicie el servidor.");
         }
         
-        // Limpiar la llave de posibles problemas de formato (espacios, saltos de línea)
+        // Limpiar la llave de posibles problemas de formato
         const cleanedServiceAccountKey = serviceAccountKey.trim();
 
         const serviceAccount: ServiceAccount = JSON.parse(cleanedServiceAccountKey);
 
         adminApp = initializeApp({
             credential: cert(serviceAccount),
-        }, 'adminApp'); // Damos un nombre único a la app de admin
+        }, 'adminApp');
         
         adminDb = getFirestore(adminApp);
-        console.log("Firebase Admin SDK inicializado correctamente.");
+        console.log("✅ Firebase Admin SDK inicializado correctamente.");
 
     } catch (e: any) {
         console.error("************************************************************");
-        console.error("ERROR CRÍTICO: No se pudo inicializar el SDK de Administrador de Firebase.");
+        console.error("❌ ERROR CRÍTICO: No se pudo inicializar el SDK de Administrador de Firebase.");
         if (e.message.includes('JSON')) {
             console.error("Causa probable: El valor de FIREBASE_SERVICE_ACCOUNT_KEY en el archivo .env.local no es un JSON válido.");
             console.error("Asegúrate de copiar y pegar el contenido COMPLETO del archivo de la cuenta de servicio, incluyendo las llaves de apertura y cierre {}.")
