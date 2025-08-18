@@ -55,7 +55,7 @@ async function syncCollectionFromLocal(
     console.log(`Syncing collection '${collectionRef.id}' from '${localFileName}'...`);
     const batch = writeBatch(collectionRef.firestore);
 
-    // Clear existing collection to ensure a clean sync
+    // This is a destructive sync. It's good for ensuring the DB matches the local seed file exactly.
     const existingDocs = await getDocs(collectionRef);
     existingDocs.forEach(doc => batch.delete(doc.ref));
     
@@ -87,8 +87,10 @@ async function getCollectionData(
         const countSnapshot = await getCountFromServer(collectionRef);
         const docCount = countSnapshot.data().count;
 
+        // If the collection is empty, force a sync from the local file.
+        // This is a robust way to handle the initial seeding.
         if (docCount === 0) {
-            console.log(`Collection ${collectionRef.id} is empty. Seeding from ${localFileName}.`);
+            console.log(`Collection ${collectionRef.id} is empty in Firestore. Seeding from ${localFileName}.`);
             await syncCollectionFromLocal(collectionRef, localFileName);
         }
 
@@ -107,12 +109,13 @@ async function saveCollectionData(
     items: TeamMember[]
 ): Promise<{ message: string }> {
     
-    const dataToSave = items.map(({ ...rest }) => rest);
+    // Strip id from local data to avoid redundant storage, but keep it for Firestore document IDs
+    const dataToSaveLocally = items.map(({ id, ...rest }) => rest);
     let saveLocationMessages = [];
 
     // Always save to local file as a backup
     try {
-        await fs.writeFile(path.join(process.cwd(), 'data', localFileName), JSON.stringify(dataToSave, null, 2), 'utf-8');
+        await fs.writeFile(path.join(process.cwd(), 'data', localFileName), JSON.stringify(dataToSaveLocally, null, 2), 'utf-8');
         saveLocationMessages.push(`el archivo local (${localFileName})`);
     } catch (e) {
         console.error(`Error guardando en archivo local ${localFileName}:`, e);

@@ -1,12 +1,19 @@
 [
   {
     "id": "org-1",
-    "name": "Ninfa Alvarenga",
+    "name": "Miembro del Partido 1",
     "role": "Presidente",
-    "description": "Encargada de la dirección estratégica y la representación del partido a nivel provincial y nacional.",
+    "description": "Encargado de la dirección estratégica y la representación del partido a nivel provincial y nacional.",
     "imageUrl": "/Ninfa.webp",
-    "imageHint": "person professional",
-    "order": 0
+    "imageHint": "person professional"
+  },
+  {
+    "id": "new-1755035066452",
+    "name": "Nuevo Miembro",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person",
+    "role": "Vicepresidente"
   },
   {
     "id": "org-2",
@@ -14,7 +21,22 @@
     "role": "Secretario General",
     "description": "Coordina las actividades internas, la comunicación y la logística para asegurar el funcionamiento del partido.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "woman portrait",
-    "order": 1
+    "imageHint": "woman portrait"
+  },
+  {
+    "id": "new-1755033835090",
+    "name": "Nuevo Miembro",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person",
+    "role": "Tesorero"
+  },
+  {
+    "id": "new-1755385410509",
+    "name": "Nuevo Miembro",
+    "description": "Descripción del nuevo miembro.",
+    "imageUrl": "https://placehold.co/400x400.png",
+    "imageHint": "portrait person",
+    "role": "Carta Organica"
   }
 ]
