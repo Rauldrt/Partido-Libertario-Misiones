@@ -1,9 +1,12 @@
 
-import { initializeApp, getApps, cert, type App } from 'firebase-admin/app';
+'use server';
+
+import { initializeApp, getApps, cert, type App, type ServiceAccount } from 'firebase-admin/app';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 
-let adminApp: App | null = null;
-let adminDb: Firestore | null = null;
+let adminApp: App | undefined;
+let adminDb: Firestore | undefined;
+let initializationError: Error | null = null;
 let isInitialized = false;
 
 function initializeAdminApp() {
@@ -12,30 +15,57 @@ function initializeAdminApp() {
     }
     isInitialized = true;
 
-    // Check if the app is already initialized to prevent errors during hot-reloads
-    if (getApps().some(app => app.name === 'firebase-admin-app')) {
-        adminApp = getApps().find(app => app.name === 'firebase-admin-app')!;
-    } else {
-        try {
-            // When running in a Google Cloud environment, the SDK can auto-discover credentials.
-            // For local development, you would set the GOOGLE_APPLICATION_CREDENTIALS env var.
-            // This approach is more robust than parsing a key from an environment variable.
-            adminApp = initializeApp(undefined, 'firebase-admin-app');
-        } catch (e) {
-            console.error("Firebase Admin: Error al inicializar la app.", e);
-            return;
+    try {
+        const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+
+        if (!serviceAccountKey) {
+            throw new Error("La variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY no está definida. El SDK de Administrador no puede autenticarse.");
         }
-    }
-    
-    if (adminApp) {
-        adminDb = getFirestore(adminApp);
-        console.log("Firebase Admin SDK inicializado correctamente.");
+
+        const serviceAccount: ServiceAccount = JSON.parse(serviceAccountKey);
+
+        const appName = 'firebase-admin-app';
+        if (!getApps().some(app => app.name === appName)) {
+            adminApp = initializeApp({
+                credential: cert(serviceAccount),
+                databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+            }, appName);
+            console.log("Firebase Admin SDK inicializado correctamente.");
+        } else {
+            adminApp = getApps().find(app => app.name === appName);
+        }
+
+        if (adminApp) {
+            adminDb = getFirestore(adminApp);
+        } else {
+             throw new Error("La aplicación de administrador de Firebase no se pudo inicializar.");
+        }
+
+    } catch (e) {
+        initializationError = e as Error;
+        console.error("************************************************************");
+        console.error("ERROR CRÍTICO: No se pudo inicializar el SDK de Administrador de Firebase.");
+        console.error(initializationError.message);
+        console.error("Asegúrese de que FIREBASE_SERVICE_ACCOUNT_KEY esté correctamente configurada en las variables de entorno del servidor.");
+        console.error("************************************************************");
+        adminApp = undefined;
+        adminDb = undefined;
     }
 }
 
 // Initialize on module load
 initializeAdminApp();
 
-export const getAdminDb = (): Firestore | null => {
-  return adminDb;
+/**
+ * Obtiene la instancia de Firestore Admin.
+ * Lanza un error si la inicialización ha fallado previamente.
+ * @returns La instancia de Firestore o null si no se pudo inicializar.
+ */
+export const getAdminDb = async (): Promise<Firestore | null> => {
+  if (initializationError) {
+    // Si ya hubo un error en la inicialización, no intentes devolver la bd.
+    // Los servicios que llaman a esta función deben estar preparados para manejar null.
+    return null;
+  }
+  return adminDb || null;
 };
