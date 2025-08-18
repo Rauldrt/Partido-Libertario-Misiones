@@ -1,4 +1,3 @@
-
 import HomePageClient from './HomePageClient';
 import { LatestNews } from '@/components/LatestNews';
 import { getBannerSlides, getMosaicTiles, getAccordionItems, getInfoSectionData } from '@/lib/homepage-service';
@@ -12,15 +11,28 @@ export const revalidate = 60; // Revalidate data every 60 seconds
 
 // This is a Server Component by default
 export default async function HomePage() {
-  const allSlides = await getBannerSlides();
-  const tiles = await getMosaicTiles();
-  const accordionItems = await getAccordionItems();
-  const infoSectionData = await getInfoSectionData();
-  const notificationData = await getNotificationData();
-  const allItems = await getNewsItems();
+  // Fetch all data in parallel to improve initial load time
+  const [
+    allSlides,
+    tiles,
+    accordionItems,
+    infoSectionData,
+    notificationData,
+    allItems,
+    candidates,
+    organization
+  ] = await Promise.all([
+    getBannerSlides(),
+    getMosaicTiles(),
+    getAccordionItems(),
+    getInfoSectionData(),
+    getNotificationData(),
+    getNewsItems(),
+    getCandidates(),
+    getOrganization()
+  ]);
+
   const events = allItems.filter(item => item.type === 'event' && item.published);
-  const candidates = await getCandidates();
-  const organization = await getOrganization();
 
   // Filter out expired slides
   const now = new Date();
@@ -50,5 +62,3 @@ export default async function HomePage() {
     </HomePageClient>
   );
 }
-
-    
