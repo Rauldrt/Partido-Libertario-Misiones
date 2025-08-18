@@ -10,25 +10,19 @@ function initializeAdminApp() {
     if (isInitialized) {
         return;
     }
-    isInitialized = true; // Attempt initialization only once
+    isInitialized = true;
 
-    const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-    if (!serviceAccountKey) {
-        console.warn("Firebase Admin: FIREBASE_SERVICE_ACCOUNT_KEY no está configurada. El SDK de administrador no se inicializará. Se usarán los datos locales como respaldo.");
-        return;
-    }
-    
     // Check if the app is already initialized to prevent errors during hot-reloads
     if (getApps().some(app => app.name === 'firebase-admin-app')) {
         adminApp = getApps().find(app => app.name === 'firebase-admin-app')!;
     } else {
         try {
-            const serviceAccount = JSON.parse(serviceAccountKey);
-            adminApp = initializeApp({
-                credential: cert(serviceAccount)
-            }, 'firebase-admin-app');
+            // When running in a Google Cloud environment, the SDK can auto-discover credentials.
+            // For local development, you would set the GOOGLE_APPLICATION_CREDENTIALS env var.
+            // This approach is more robust than parsing a key from an environment variable.
+            adminApp = initializeApp(undefined, 'firebase-admin-app');
         } catch (e) {
-            console.error("Firebase Admin: Error al analizar FIREBASE_SERVICE_ACCOUNT_KEY o al inicializar la app.", e);
+            console.error("Firebase Admin: Error al inicializar la app.", e);
             return;
         }
     }

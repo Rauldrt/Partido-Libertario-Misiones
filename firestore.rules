@@ -3,33 +3,14 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper function to check if a user is an admin.
-    // Implement your own admin logic here (e.g., check a custom claim).
-    // For now, we'll assume any authenticated user is an admin for the backend.
-    function isAdmin() {
-      return request.auth != null;
-    }
-
-    // Allow admins to read and write any document
-    match /{document=**} {
-      allow read, write: if isAdmin();
-    }
     
-    // Allow public write access for form submissions
-    match /afiliaciones/{submissionId} {
-      allow create: if true;
-      allow read, update, delete: if isAdmin();
-    }
-
-    match /fiscalizaciones/{submissionId} {
-      allow create: if true;
-      allow read, update, delete: if isAdmin();
-    }
-
-    match /contactSubmissions/{submissionId} {
-        allow create: if true;
-        allow read, update, delete: if isAdmin();
+    // Allow read/write access to all users under all conditions
+    // Warning: This is not secure. You should secure your database
+    // before deploying to production.
+    // DANGER: ANYONE WITH YOUR PROJECT ID CAN READ, WRITE, AND DELETE
+    // YOUR DATA.
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }

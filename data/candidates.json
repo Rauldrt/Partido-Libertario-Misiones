@@ -1,41 +1,35 @@
 [
   {
-    "id": "cand-1",
     "name": "Ninfa Zunilda Alvarenga",
     "description": "Candidato a Diputado Nacional",
     "imageUrl": "/Ninfa y Julio.webp",
     "imageHint": "political portrait"
   },
   {
-    "id": "cand-2",
     "name": "Candidato Diputado Nac.",
     "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "leader smiling"
   },
   {
-    "id": "new-1755046090121",
     "name": "Candidato Diputado Nac.",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person"
   },
   {
-    "id": "new-1755046096153",
     "name": "Nuevo Candidato",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person"
   },
   {
-    "id": "new-1755046098203",
     "name": "Nuevo Candidato",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person"
   },
   {
-    "id": "new-1755201521799",
     "name": "Nuevo Candidato",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
