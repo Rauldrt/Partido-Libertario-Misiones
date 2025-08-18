@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch, query, orderBy, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, setDoc, deleteDoc, writeBatch, query, orderBy, getDoc, type CollectionReference } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -68,8 +68,8 @@ async function getNewsFromLocalJson(): Promise<NewsCardData[]> {
 }
 
 // Firestore collection reference
-const getNewsCollection = () => {
-  const db = getAdminDb();
+const getNewsCollection = async (): Promise<CollectionReference> => {
+  const db = await getAdminDb();
     if (!db) {
         throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
     }
@@ -95,7 +95,7 @@ const toFirestore = (item: Partial<NewsCardData>): any => {
 
 export async function getNewsItems(): Promise<NewsCardData[]> {
   try {
-    const newsCollection = getNewsCollection();
+    const newsCollection = await getNewsCollection();
     const q = query(newsCollection, orderBy("order", "asc"));
     const snapshot = await getDocs(q);
     
@@ -122,7 +122,7 @@ export async function getNewsItems(): Promise<NewsCardData[]> {
 
 export async function getNewsItemById(id: string): Promise<NewsCardData | undefined> {
   try {
-    const newsCollection = getNewsCollection();
+    const newsCollection = await getNewsCollection();
     const docRef = doc(newsCollection, id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -144,7 +144,7 @@ async function saveNewsItem(item: Partial<NewsCardData>): Promise<NewsCardData> 
     }
 
     try {
-        const newsCollection = getNewsCollection();
+        const newsCollection = await getNewsCollection();
         const docRef = doc(newsCollection, item.id);
         await setDoc(docRef, toFirestore(item), { merge: true });
 
@@ -185,7 +185,7 @@ export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardD
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
   try {
-    const newsCollection = getNewsCollection();
+    const newsCollection = await getNewsCollection();
     const docRef = doc(newsCollection, id);
     await deleteDoc(docRef);
     return { success: true };
@@ -209,7 +209,7 @@ export async function deleteNewsItem(id: string): Promise<{ success: boolean }> 
 
 export async function reorderNewsItems(orderedIds: string[]): Promise<void> {
     try {
-        const newsCollection = getNewsCollection();
+        const newsCollection = await getNewsCollection();
         const db = newsCollection.firestore;
         const batch = writeBatch(db);
         

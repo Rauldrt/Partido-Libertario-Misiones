@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, type CollectionReference } from 'firebase/firestore';
 import type { FormDefinition, FormField } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
@@ -41,8 +41,8 @@ const defaultFormDefinitions: Record<string, FormDefinition> = {
 };
 
 // Firestore Collection References ---
-const getFormDefCollection = () => {
-    const db = getAdminDb();
+const getFormDefCollection = async (): Promise<CollectionReference> => {
+    const db = await getAdminDb();
     if (!db) {
         throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
     }
@@ -55,7 +55,7 @@ const getFormDefCollection = () => {
 export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
     const defaults = defaultFormDefinitions[formId];
     try {
-        const formDefCollection = getFormDefCollection();
+        const formDefCollection = await getFormDefCollection();
         const docRef = doc(formDefCollection, formId);
         const docSnap = await getDoc(docRef);
 
@@ -76,7 +76,7 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
     const dataToSave = { id: formId, fields };
-    const formDefCollection = getFormDefCollection();
+    const formDefCollection = await getFormDefCollection();
     const docRef = doc(formDefCollection, formId);
     await setDoc(docRef, dataToSave);
 }

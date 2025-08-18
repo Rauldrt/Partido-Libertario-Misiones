@@ -2,12 +2,12 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, addDoc, query, orderBy, serverTimestamp, updateDoc, deleteDoc, type CollectionReference } from 'firebase/firestore';
 import type { FormSubmission, ContactFormValues } from './form-defs';
 
 
-const getContactCollection = () => {
-  const db = getAdminDb();
+const getContactCollection = async (): Promise<CollectionReference> => {
+  const db = await getAdminDb();
     if (!db) {
         throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
     }
@@ -24,7 +24,7 @@ const fromFirestore = (doc: any): FormSubmission => {
 };
 
 export async function addContactSubmission(submission: ContactFormValues): Promise<void> {
-    const contactCollection = getContactCollection();
+    const contactCollection = await getContactCollection();
     await addDoc(contactCollection, {
         ...submission,
         createdAt: serverTimestamp(),
@@ -33,7 +33,7 @@ export async function addContactSubmission(submission: ContactFormValues): Promi
 
 export async function getContactSubmissions(): Promise<FormSubmission[]> {
     try {
-        const contactCollection = getContactCollection();
+        const contactCollection = await getContactCollection();
         const q = query(contactCollection, orderBy("createdAt", "desc"));
         const snapshot = await getDocs(q);
 
@@ -50,7 +50,7 @@ export async function getContactSubmissions(): Promise<FormSubmission[]> {
 
 export async function updateContactSubmission(id: string, data: Record<string, any>): Promise<{ success: boolean; message: string; }> {
     try {
-        const contactCollection = getContactCollection();
+        const contactCollection = await getContactCollection();
         const docRef = doc(contactCollection, id);
         await updateDoc(docRef, data);
         return { success: true, message: "Mensaje actualizado con éxito." };
@@ -62,7 +62,7 @@ export async function updateContactSubmission(id: string, data: Record<string, a
 
 export async function deleteContactSubmission(id: string): Promise<{ success: boolean; message: string; }> {
     try {
-        const contactCollection = getContactCollection();
+        const contactCollection = await getContactCollection();
         await deleteDoc(doc(contactCollection, id));
         return { success: true, message: "Mensaje eliminado con éxito." };
     } catch (error) {

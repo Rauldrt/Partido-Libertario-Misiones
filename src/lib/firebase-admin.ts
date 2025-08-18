@@ -24,11 +24,11 @@ function initializeAdminApp() {
 
         const serviceAccount: ServiceAccount = JSON.parse(serviceAccountKey);
 
-        const appName = 'firebase-admin-app';
+        const appName = 'firebase-admin-app-server'; // Use a unique name
         if (!getApps().some(app => app.name === appName)) {
             adminApp = initializeApp({
                 credential: cert(serviceAccount),
-                databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+                databaseURL: `https://${serviceAccount.projectId}.firebaseio.com`
             }, appName);
             console.log("Firebase Admin SDK inicializado correctamente.");
         } else {
@@ -56,15 +56,9 @@ function initializeAdminApp() {
 // Initialize on module load
 initializeAdminApp();
 
-/**
- * Obtiene la instancia de Firestore Admin.
- * Lanza un error si la inicialización ha fallado previamente.
- * @returns La instancia de Firestore o null si no se pudo inicializar.
- */
-export const getAdminDb = async (): Promise<Firestore | null> => {
+
+export async function getAdminDb(): Promise<Firestore | null> {
   if (initializationError) {
-    // Si ya hubo un error en la inicialización, no intentes devolver la bd.
-    // Los servicios que llaman a esta función deben estar preparados para manejar null.
     return null;
   }
   return adminDb || null;
