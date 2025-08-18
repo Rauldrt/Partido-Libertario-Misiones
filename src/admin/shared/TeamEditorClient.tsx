@@ -16,7 +16,6 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ImageGallery } from '@/components/ImageGallery';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { AdminSdkStatus } from '@/components/AdminSdkStatus';
 
 const SortableItem = ({ item, setItems, isPending, itemType }: { item: TeamMember, setItems: React.Dispatch<React.SetStateAction<TeamMember[]>>, isPending: boolean, itemType: string }) => {
   const {
@@ -189,7 +188,6 @@ export function TeamEditorClient({ initialItems, saveAction, itemType }: TeamEdi
                 Añadir {itemType}
             </Button>
             <div className="flex items-center gap-4">
-                <AdminSdkStatus />
                 <Button onClick={handleSaveChanges} disabled={isPending} size="lg">
                     {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                     Guardar Cambios

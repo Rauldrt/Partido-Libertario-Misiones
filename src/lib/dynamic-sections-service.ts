@@ -44,38 +44,6 @@ const getOrganizationCollectionRef = () => {
     return collection(db, 'organization');
 }
 
-async function syncCollectionFromLocal(
-    collectionRef: ReturnType<typeof getCandidatesCollectionRef>,
-    localFileName: string
-) {
-    if (!collectionRef) return;
-
-    const localData = await readJsonData(localFileName);
-    if (!localData || localData.length === 0) {
-        console.log(`No local data found in ${localFileName}. Skipping sync.`);
-        return;
-    }
-    
-    console.log(`Syncing collection '${collectionRef.id}' from '${localFileName}'...`);
-    const batch = writeBatch(collectionRef.firestore);
-
-    const existingDocs = await getDocs(collectionRef);
-    if(existingDocs.docs.length > 0) {
-        console.log(`Deleting ${existingDocs.docs.length} existing documents before syncing.`);
-        existingDocs.forEach(doc => batch.delete(doc.ref));
-    }
-    
-    localData.forEach((item: any, index: number) => {
-        const id = item.id || `${collectionRef.id.slice(0, -1)}-${index}-${Date.now()}`;
-        const docRef = doc(collectionRef, id);
-        batch.set(docRef, { ...item, id, order: item.order ?? index });
-    });
-
-    await batch.commit();
-    console.log(`Synced ${localData.length} documents into '${collectionRef.id}'.`);
-}
-
-
 async function getCollectionData(
     getCollectionRef: () => ReturnType<typeof getCandidatesCollectionRef>,
     localFileName: string
@@ -86,11 +54,20 @@ async function getCollectionData(
         const collectionRef = getCollectionRef();
         const countSnapshot = await getCountFromServer(collectionRef);
         const docCount = countSnapshot.data().count;
-        const localData = await localDataPromise;
 
-        if (docCount === 0 && localData.length > 0) {
-            console.log(`Collection ${collectionRef.id} is empty in Firestore. Seeding from ${localFileName}.`);
-            await syncCollectionFromLocal(collectionRef, localFileName);
+        if (docCount === 0) {
+            const localData = await localDataPromise;
+            if (localData.length > 0) {
+                console.log(`Collection ${collectionRef.id} is empty in Firestore. Seeding from ${localFileName}.`);
+                const batch = writeBatch(collectionRef.firestore);
+                localData.forEach((item: any, index: number) => {
+                    const id = item.id || `${collectionRef.id.slice(0, -1)}-${index}-${Date.now()}`;
+                    const docRef = doc(collectionRef, id);
+                    batch.set(docRef, { ...item, id, order: item.order ?? index });
+                });
+                await batch.commit();
+                console.log(`Synced ${localData.length} documents into '${collectionRef.id}'.`);
+            }
         }
 
         const snapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
@@ -104,20 +81,10 @@ async function getCollectionData(
 
 async function saveCollectionData(
     getCollectionRef: () => ReturnType<typeof getCandidatesCollectionRef>,
-    localFileName: string,
     items: TeamMember[]
 ): Promise<{ message: string }> {
     
-    const dataToSaveLocally = items.map(({ id, ...rest }) => rest);
     let saveLocationMessages = [];
-
-    try {
-        await fs.writeFile(path.join(process.cwd(), 'data', localFileName), JSON.stringify(dataToSaveLocally, null, 2), 'utf-8');
-        saveLocationMessages.push(`el archivo local (${localFileName})`);
-    } catch (e) {
-        console.error(`Error guardando en archivo local ${localFileName}:`, e);
-        throw new Error(`No se pudo guardar en el archivo local: ${(e as Error).message}`);
-    }
 
     try {
         const collectionRef = getCollectionRef();
@@ -141,7 +108,8 @@ async function saveCollectionData(
         await batch.commit();
         saveLocationMessages.push('Firestore');
     } catch (e) {
-         console.warn(`No se pudo guardar en Firestore, cambios guardados solo en ${localFileName}. Error:`, e);
+         console.error(`No se pudo guardar en Firestore:`, e);
+         throw new Error(`Error al guardar en Firestore: ${(e as Error).message}`);
     }
 
 
@@ -154,7 +122,7 @@ export async function getCandidates(): Promise<TeamMember[]> {
 }
 
 export async function saveCandidates(candidates: TeamMember[]): Promise<{ message: string }> {
-    return saveCollectionData(getCandidatesCollectionRef, 'candidates.json', candidates);
+    return saveCollectionData(getCandidatesCollectionRef, candidates);
 }
 
 export async function getOrganization(): Promise<TeamMember[]> {
@@ -162,5 +130,5 @@ export async function getOrganization(): Promise<TeamMember[]> {
 }
 
 export async function saveOrganization(organization: TeamMember[]): Promise<{ message: string }> {
-    return saveCollectionData(getOrganizationCollectionRef, 'organization.json', organization);
+    return saveCollectionData(getOrganizationCollectionRef, organization);
 }
