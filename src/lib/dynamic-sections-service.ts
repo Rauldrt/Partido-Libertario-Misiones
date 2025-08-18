@@ -2,7 +2,7 @@
 'use server';
 
 import { getAdminDb } from './firebase-admin';
-import { collection, doc, getDocs, writeBatch, query, orderBy, getCountFromServer, deleteDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, writeBatch, query, orderBy, getCountFromServer } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -55,7 +55,7 @@ async function syncCollectionFromLocal(
     console.log(`Syncing collection '${collectionRef.id}' from '${localFileName}'...`);
     const batch = writeBatch(collectionRef.firestore);
 
-    // Clear existing collection
+    // Clear existing collection to ensure a clean sync
     const existingDocs = await getDocs(collectionRef);
     existingDocs.forEach(doc => batch.delete(doc.ref));
     
@@ -84,15 +84,15 @@ async function getCollectionData(
     }
 
     try {
-        const snapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
-        
-        if (snapshot.empty) {
+        const countSnapshot = await getCountFromServer(collectionRef);
+        const docCount = countSnapshot.data().count;
+
+        if (docCount === 0) {
             console.log(`Collection ${collectionRef.id} is empty. Seeding from ${localFileName}.`);
             await syncCollectionFromLocal(collectionRef, localFileName);
-            const newSnapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
-            return newSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
         }
 
+        const snapshot = await getDocs(query(collectionRef, orderBy("order", "asc")));
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
     } catch (error) {
         console.error(`Error fetching collection ${collectionRef.id} from Firestore, falling back to local file.`, error);
