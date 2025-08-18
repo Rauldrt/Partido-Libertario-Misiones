@@ -5,7 +5,8 @@
     "role": "Presidente",
     "description": "Encargado de la dirección estratégica y la representación del partido a nivel provincial y nacional.",
     "imageUrl": "/Ninfa.webp",
-    "imageHint": "person professional"
+    "imageHint": "person professional",
+    "order": 0
   },
   {
     "id": "new-1755035066452",
@@ -13,7 +14,8 @@
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person",
-    "role": "Vicepresidente"
+    "role": "Vicepresidente",
+    "order": 1
   },
   {
     "id": "org-2",
@@ -21,7 +23,8 @@
     "role": "Secretario General",
     "description": "Coordina las actividades internas, la comunicación y la logística para asegurar el funcionamiento del partido.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "woman portrait"
+    "imageHint": "woman portrait",
+    "order": 2
   },
   {
     "id": "new-1755033835090",
@@ -29,7 +32,8 @@
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person",
-    "role": "Tesorero"
+    "role": "Tesorero",
+    "order": 3
   },
   {
     "id": "new-1755385410509",
@@ -37,6 +41,7 @@
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
     "imageHint": "portrait person",
-    "role": "Carta Organica"
+    "role": "Carta Organica",
+    "order": 4
   }
 ]

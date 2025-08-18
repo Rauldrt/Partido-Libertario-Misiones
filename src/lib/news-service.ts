@@ -33,7 +33,7 @@ async function readNewsJson(): Promise<any[]> {
     try {
         await fs.access(newsFilePath);
         const fileContent = await fs.readFile(newsFilePath, 'utf-8');
-        return JSON.parse(fileContent);
+        return fileContent.trim() ? JSON.parse(fileContent) : [];
     } catch (error) {
         if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
             return [];
@@ -71,38 +71,33 @@ export async function getNewsItemById(id: string): Promise<NewsCardData | undefi
     return allItems.find(item => item.id === id);
 }
 
-// Base function for adding/updating an item, now directly writing to JSON.
-async function saveNewsItem(item: Partial<NewsCardData>): Promise<NewsCardData> {
-    if (!item.id) {
-        throw new Error("El ID del artículo es requerido para guardarlo.");
-    }
-    const allItems = await getNewsItems();
-    const existingIndex = allItems.findIndex(i => i.id === item.id);
-    if (existingIndex > -1) {
-        allItems[existingIndex] = { ...allItems[existingIndex], ...item } as NewsCardData;
-    } else {
-        allItems.push(item as NewsCardData);
-    }
-    await writeNewsJson(allItems);
-    return { ...item, linkUrl: `/news/${item.id}` } as NewsCardData;
-}
-
 export async function addNewsItem(item: Omit<NewsCardData, 'id' | 'linkUrl'>): Promise<NewsCardData> {
     const allItems = await getNewsItems();
     const newOrder = allItems.length > 0 ? Math.min(...allItems.map(i => i.order)) - 1 : 0;
   
-    const newItemData: Partial<NewsCardData> = {
+    const newItem: NewsCardData = {
         ...item,
         id: `news-${Date.now()}`,
-        order: newOrder
+        order: newOrder,
+        linkUrl: `/news/news-${Date.now()}` // This will be consistent now
     };
+    newItem.linkUrl = `/news/${newItem.id}`; // Correctly set the linkUrl using the new ID.
   
-    return saveNewsItem(newItemData);
+    allItems.unshift(newItem);
+    await writeNewsJson(allItems);
+    return newItem;
 }
 
 export async function updateNewsItem(id: string, updates: Partial<Omit<NewsCardData, 'id' | 'linkUrl'>>): Promise<NewsCardData> {
-    const itemToUpdate = { id, ...updates };
-    return saveNewsItem(itemToUpdate);
+    const allItems = await getNewsItems();
+    const existingIndex = allItems.findIndex(i => i.id === id);
+    if (existingIndex > -1) {
+        allItems[existingIndex] = { ...allItems[existingIndex], ...updates } as NewsCardData;
+    } else {
+        throw new Error(`No se encontró un artículo con ID ${id} para actualizar.`);
+    }
+    await writeNewsJson(allItems);
+    return allItems[existingIndex];
 }
 
 export async function deleteNewsItem(id: string): Promise<{ success: boolean }> {
@@ -138,5 +133,5 @@ export async function duplicateNewsItem(id: string): Promise<NewsCardData> {
         title: `(Copia) ${originalItem.title}`,
         published: false,
     };
-    return addNewsItem(newItemData);
+    return addNewsItem(newItemData as Omit<NewsCardData, 'id' | 'linkUrl'>);
 }

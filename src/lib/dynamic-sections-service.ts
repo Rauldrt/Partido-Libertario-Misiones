@@ -20,6 +20,7 @@ const organizationFilePath = path.join(process.cwd(), 'data', 'organization.json
 // Helper to read local JSON files
 async function readJsonData(filePath: string): Promise<any[]> {
     try {
+        await fs.access(filePath);
         const fileContent = await fs.readFile(filePath, 'utf-8');
         return fileContent.trim() ? JSON.parse(fileContent) : [];
     } catch (error) {

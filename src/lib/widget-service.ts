@@ -1,12 +1,9 @@
 
 'use server';
 
-import { getAdminDb } from './firebase-admin';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
-
+import { z } from 'zod';
 
 export interface SocialWidgetData {
     embedCode: string;
@@ -34,47 +31,13 @@ async function readWidgetJson(): Promise<SocialWidgetData> {
 }
 
 export async function getSocialWidgetData(): Promise<SocialWidgetData> {
-    const getFromLocal = readWidgetJson;
-    
-    try {
-        const db = await getAdminDb();
-        if (!db) {
-            throw new Error("Admin SDK no inicializado.");
-        }
-        const docRef = doc(db, 'site-config', 'socialWidget');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const parsed = SocialWidgetSchema.safeParse(docSnap.data());
-            if(parsed.success) {
-                return parsed.data;
-            }
-        }
-        console.log("Sembrando datos del widget social desde JSON local a Firestore.");
-        const localData = await getFromLocal();
-        await setDoc(docRef, localData);
-        return localData;
-    } catch (error) {
-        console.error("Error obteniendo widget de Firestore, usando respaldo local:", error);
-        return getFromLocal();
-    }
+    return readWidgetJson();
 }
 
-
 export async function saveSocialWidgetData(data: SocialWidgetData): Promise<void> {
-    const db = await getAdminDb();
     const validation = SocialWidgetSchema.safeParse(data);
     if (!validation.success) {
         throw new Error('Datos de widget inválidos.');
     }
-    const dataToSave = validation.data;
-
-    if (!db) {
-        console.warn("Admin SDK no inicializado, guardando widget social en social-widget.json.");
-        await fs.writeFile(widgetFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
-        return;
-    }
-    
-    const docRef = doc(db, 'site-config', 'socialWidget');
-    await setDoc(docRef, dataToSave);
+    await fs.writeFile(widgetFilePath, JSON.stringify(validation.data, null, 2), 'utf-8');
 }
-

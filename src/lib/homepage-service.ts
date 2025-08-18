@@ -1,8 +1,6 @@
 
 'use server';
 
-import { getAdminDb } from './firebase-admin';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -11,12 +9,23 @@ async function readJsonData(fileName: string): Promise<any> {
     const filePath = path.join(process.cwd(), 'data', fileName);
     try {
         const fileContent = await fs.readFile(filePath, 'utf-8');
-        return JSON.parse(fileContent);
+        return fileContent.trim() ? JSON.parse(fileContent) : null;
     } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+            console.warn(`Archivo de datos no encontrado: ${fileName}. Se devolverá null.`);
+            return null; 
+        }
         console.error(`Error al leer o analizar ${fileName}:`, error);
-        return [];
+        return null;
     }
 }
+
+// Helper to write to local JSON files
+async function writeJsonData(fileName: string, data: any): Promise<void> {
+    const filePath = path.join(process.cwd(), 'data', fileName);
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
 
 // Types for Banner Slides
 export interface BannerCtaData {
@@ -69,83 +78,21 @@ export interface InfoSectionData {
 }
 
 
-async function getHomepageData(): Promise<any> {
-    const loadFromLocal = async () => {
-        const banner = await readJsonData('banner.json');
-        const mosaic = await readJsonData('mosaic.json');
-        const accordion = await readJsonData('accordion.json');
-        const infoSection = await readJsonData('info-section.json');
-        return { banner, mosaic, accordion, infoSection };
-    };
-
-    try {
-        const db = await getAdminDb();
-        if (!db) {
-             throw new Error("Admin SDK no inicializado.");
-        }
-        
-        const docRef = doc(db, 'site-config', 'homepage');
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            return docSnap.data();
-        }
-        
-        console.log("Documento de configuración de inicio no encontrado en Firestore. Sembrando desde archivos JSON locales...");
-        const seededData = await loadFromLocal();
-        await setDoc(docRef, seededData);
-        console.log("Datos de inicio sembrados en Firestore correctamente.");
-        return seededData;
-
-    } catch (error) {
-        console.error("Error al obtener datos de inicio de Firestore, usando respaldo local:", error);
-        return loadFromLocal();
-    }
-}
-
-
-async function saveHomepageData(data: any): Promise<void> {
-    const db = await getAdminDb();
-    if (db) {
-        const docRef = doc(db, 'site-config', 'homepage');
-        await setDoc(docRef, data, { merge: true });
-        return;
-    }
-
-    console.warn("Admin SDK no inicializado, guardando datos de inicio en archivos locales.");
-    
-    if (data.banner) {
-        await fs.writeFile(path.join(process.cwd(), 'data', 'banner.json'), JSON.stringify(data.banner, null, 2), 'utf-8');
-    }
-    if (data.mosaic) {
-        await fs.writeFile(path.join(process.cwd(), 'data', 'mosaic.json'), JSON.stringify(data.mosaic, null, 2), 'utf-8');
-    }
-    if (data.accordion) {
-        await fs.writeFile(path.join(process.cwd(), 'data', 'accordion.json'), JSON.stringify(data.accordion, null, 2), 'utf-8');
-    }
-     if (data.infoSection) {
-        await fs.writeFile(path.join(process.cwd(), 'data', 'info-section.json'), JSON.stringify(data.infoSection, null, 2), 'utf-8');
-    }
-}
-
-
 // Banner Functions
 export async function getBannerSlides(): Promise<BannerSlideData[]> {
-    const data = await getHomepageData();
-    // Ensure every slide has a unique ID for client-side rendering.
-    // The || operator and Date.now() ensures that even slides without a pre-existing id get one.
-    return (data.banner || []).map((slide: any, index: number) => ({...slide, id: slide.id || `banner-${index}-${Date.now()}`}));
+    const data = await readJsonData('banner.json');
+    return (data || []).map((slide: any, index: number) => ({...slide, id: slide.id || `banner-${index}-${Date.now()}`}));
 }
 
 export async function saveBannerSlides(slides: BannerSlideData[]): Promise<void> {
-    await saveHomepageData({ banner: slides });
+    await writeJsonData('banner.json', slides);
 }
 
 
 // Mosaic Functions
 export async function getMosaicTiles(): Promise<MosaicTileData[]> {
-    const data = await getHomepageData();
-    return (data.mosaic || []).map((tile: any, index: number) => ({
+    const data = await readJsonData('mosaic.json');
+    return (data || []).map((tile: any, index: number) => ({
       ...tile,
       id: tile.id || `tile-${index}-${Date.now()}`,
       images: (tile.images || []).map((img: any, imgIndex: number) => ({
@@ -156,14 +103,13 @@ export async function getMosaicTiles(): Promise<MosaicTileData[]> {
 }
 
 export async function saveMosaicTiles(tiles: MosaicTileData[]): Promise<void> {
-    await saveHomepageData({ mosaic: tiles });
+    await writeJsonData('mosaic.json', tiles);
 }
 
 // Accordion Functions
 export async function getAccordionItems(): Promise<AccordionItemData[]> {
-    const data = await getHomepageData();
-    const items = data.accordion || [];
-    return items.map((item: any, index: number) => ({
+    const data = await readJsonData('accordion.json');
+    return (data || []).map((item: any, index: number) => ({
       ...item,
       id: item.id || `accordion-${index}-${Date.now()}`,
       value: item.title.toLowerCase().replace(/\s+/g, '-').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -173,16 +119,15 @@ export async function getAccordionItems(): Promise<AccordionItemData[]> {
 export async function saveAccordionItems(items: AccordionItemData[]): Promise<void> {
     // The 'value' property is client-side only for the accordion state, so we strip it before saving.
     const dataToSave = items.map(({ value, ...rest }) => rest);
-    await saveHomepageData({ accordion: dataToSave });
+    await writeJsonData('accordion.json', dataToSave);
 }
 
 // Info Section Functions
 export async function getInfoSectionData(): Promise<InfoSectionData> {
-    const data = await getHomepageData();
-    return data.infoSection || { title: '', description: '' };
+    const data = await readJsonData('info-section.json');
+    return data || { title: 'Título por Defecto', description: 'Descripción por defecto.' };
 }
 
 export async function saveInfoSectionData(data: InfoSectionData): Promise<void> {
-    await saveHomepageData({ infoSection: data });
+    await writeJsonData('info-section.json', data);
 }
-

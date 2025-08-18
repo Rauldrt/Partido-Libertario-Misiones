@@ -3,36 +3,48 @@
     "name": "Ninfa Zunilda Alvarenga",
     "description": "Candidato a Diputado Nacional",
     "imageUrl": "/Ninfa y Julio.webp",
-    "imageHint": "political portrait"
+    "imageHint": "political portrait",
+    "id": "cand-0-1755552872363",
+    "order": 0
   },
   {
     "name": "Candidato Diputado Nac.",
     "description": "Experiencia y dedicación al servicio de los ciudadanos.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "leader smiling"
+    "imageHint": "leader smiling",
+    "id": "cand-1-1755552872363",
+    "order": 1
   },
   {
     "name": "Candidato Diputado Nac.",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
+    "imageHint": "portrait person",
+    "id": "cand-2-1755552872363",
+    "order": 2
   },
   {
     "name": "Nuevo Candidato",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
+    "imageHint": "portrait person",
+    "id": "cand-3-1755552872363",
+    "order": 3
   },
   {
     "name": "Nuevo Candidato",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
+    "imageHint": "portrait person",
+    "id": "cand-4-1755552872363",
+    "order": 4
   },
   {
     "name": "Nuevo Candidato",
     "description": "Descripción del nuevo miembro.",
     "imageUrl": "https://placehold.co/400x400.png",
-    "imageHint": "portrait person"
+    "imageHint": "portrait person",
+    "id": "cand-5-1755552872363",
+    "order": 5
   }
 ]

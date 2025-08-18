@@ -1,11 +1,9 @@
 
 'use server';
 
-import { getAdminDb } from './firebase-admin';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
+import { z } from 'zod';
 
 const socialLinksFilePath = path.join(process.cwd(), 'data', 'social-links.json');
 
@@ -32,43 +30,13 @@ async function readSocialLinksJson(): Promise<SocialLink[]> {
 }
 
 export async function getSocialLinks(): Promise<SocialLink[]> {
-    const getFromLocal = readSocialLinksJson;
-
-    try {
-        const db = await getAdminDb();
-        if (!db) {
-            throw new Error("Admin SDK no inicializado.");
-        }
-        const docRef = doc(db, 'site-config', 'socialLinks');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().links) {
-            return docSnap.data().links;
-        }
-        console.log("Sembrando datos de enlaces sociales desde JSON local a Firestore.");
-        const localData = await getFromLocal();
-        await setDoc(docRef, { links: localData });
-        return localData;
-    } catch (error) {
-        console.error("Error obteniendo enlaces sociales de Firestore, usando respaldo local:", error);
-        return getFromLocal();
-    }
+    return readSocialLinksJson();
 }
 
 export async function saveSocialLinks(data: SocialLink[]): Promise<void> {
-    const db = await getAdminDb();
     const validation = SocialLinksSchema.safeParse(data);
     if (!validation.success) {
         throw new Error('Datos de enlaces sociales inválidos.');
     }
-    const dataToSave = validation.data;
-
-    if (!db) {
-        console.warn("Admin SDK no inicializado, guardando enlaces sociales en social-links.json.");
-        await fs.writeFile(socialLinksFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
-        return;
-    }
-    
-    const docRef = doc(db, 'site-config', 'socialLinks');
-    await setDoc(docRef, { links: dataToSave });
+    await fs.writeFile(socialLinksFilePath, JSON.stringify(validation.data, null, 2), 'utf-8');
 }
-

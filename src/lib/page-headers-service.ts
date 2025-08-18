@@ -1,15 +1,13 @@
 
 'use server';
 
-import { getAdminDb } from './firebase-admin';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
+import { z } from 'zod';
 
 const pageHeadersFilePath = path.join(process.cwd(), 'data', 'page-headers.json');
 
-// Helper to read local JSON file for seeding
+// Helper to read local JSON file
 async function readPageHeadersJson(): Promise<any> {
     try {
         const fileContent = await fs.readFile(pageHeadersFilePath, 'utf-8');
@@ -37,30 +35,8 @@ export type PageHeadersData = { [key: string]: PageHeaderData; };
 const PageHeadersSchema = z.record(z.string(), PageHeaderSchema);
 
 export async function getAllPageHeaders(): Promise<PageHeadersData> {
-    const getFromLocal = readPageHeadersJson;
-
-    try {
-        const db = await getAdminDb();
-        if (!db) {
-            throw new Error("Admin SDK no inicializado.");
-        }
-        const docRef = doc(db, 'site-config', 'pageHeaders');
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const parsed = PageHeadersSchema.safeParse(docSnap.data());
-            if (parsed.success) {
-                return parsed.data;
-            }
-        }
-        // If doc doesn't exist or is invalid, seed from JSON
-        console.log("Sembrando datos de encabezados desde JSON local a Firestore.");
-        const localData = await getFromLocal();
-        await setDoc(docRef, localData);
-        return localData;
-    } catch (error) {
-        console.error("Error obteniendo encabezados de Firestore, usando respaldo local:", error);
-        return getFromLocal();
-    }
+    const localData = await readPageHeadersJson();
+    return PageHeadersSchema.parse(localData);
 }
 
 export async function getPageHeaderData(pageKey: string): Promise<PageHeaderData | undefined> {
@@ -69,21 +45,10 @@ export async function getPageHeaderData(pageKey: string): Promise<PageHeaderData
 }
 
 export async function saveAllPageHeaders(data: PageHeadersData): Promise<void> {
-    const db = await getAdminDb();
     const validation = PageHeadersSchema.safeParse(data);
     if (!validation.success) {
         console.error(validation.error.issues);
         throw new Error('Datos de encabezados inválidos.');
     }
-    const dataToSave = validation.data;
-
-    if (!db) {
-        console.warn("Admin SDK no inicializado, guardando encabezados en page-headers.json.");
-        await fs.writeFile(pageHeadersFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
-        return;
-    }
-    
-    const docRef = doc(db, 'site-config', 'pageHeaders');
-    await setDoc(docRef, dataToSave);
+    await fs.writeFile(pageHeadersFilePath, JSON.stringify(validation.data, null, 2), 'utf-8');
 }
-
