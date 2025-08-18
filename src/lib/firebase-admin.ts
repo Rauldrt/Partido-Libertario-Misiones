@@ -12,9 +12,8 @@ let adminDb: Firestore | undefined;
  * This is a "lazy" initialization, meaning it only runs when the DB is first requested.
  */
 function initializeAdminApp() {
-    if (getApps().length > 0) {
-        adminApp = getApps()[0];
-        adminDb = getFirestore(adminApp);
+    // Si ya tenemos una app inicializada, no hacemos nada.
+    if (getApps().length > 0 && adminApp && adminDb) {
         return;
     }
     
@@ -25,11 +24,12 @@ function initializeAdminApp() {
             throw new Error("La variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY no está definida. Por favor, añádala al archivo .env.local.");
         }
 
+        // Intenta analizar el JSON. Si falla, el bloque catch lo manejará.
         const serviceAccount: ServiceAccount = JSON.parse(serviceAccountKey);
 
         adminApp = initializeApp({
             credential: cert(serviceAccount),
-        });
+        }, 'adminApp'); // Damos un nombre único a la app de admin
         
         adminDb = getFirestore(adminApp);
         console.log("Firebase Admin SDK inicializado correctamente.");
@@ -38,13 +38,13 @@ function initializeAdminApp() {
         console.error("************************************************************");
         console.error("ERROR CRÍTICO: No se pudo inicializar el SDK de Administrador de Firebase.");
         if (e.message.includes('JSON')) {
-            console.error("El valor de FIREBASE_SERVICE_ACCOUNT_KEY en .env.local no parece ser un JSON válido.");
+            console.error("Causa probable: El valor de FIREBASE_SERVICE_ACCOUNT_KEY en el archivo .env.local no es un JSON válido.");
+            console.error("Asegúrate de copiar y pegar el contenido COMPLETO del archivo de la cuenta de servicio, incluyendo las llaves de apertura y cierre {}.")
         } else {
-            console.error(e.message);
+            console.error("Detalle del error:", e.message);
         }
-        console.error("Asegúrese de que FIREBASE_SERVICE_ACCOUNT_KEY esté correctamente configurada en el archivo .env.local.");
         console.error("************************************************************");
-        // Deja adminDb como undefined para que getAdminDb lo maneje.
+        // Dejamos adminDb como undefined para que getAdminDb lo maneje.
     }
 }
 
@@ -55,15 +55,16 @@ function initializeAdminApp() {
  * Lanza un error si la inicialización falla.
  */
 export const getAdminDb = async (): Promise<Firestore> => {
-  // Si adminDb no está definido, intenta inicializar la app.
+  // Siempre intenta inicializar en caso de que aún no se haya hecho o haya fallado antes.
   if (!adminDb) {
     initializeAdminApp();
   }
   
-  // Después de intentar inicializar, comprueba de nuevo.
+  // Después de intentar inicializar, comprueba de nuevo si adminDb está disponible.
   if (!adminDb) {
-    throw new Error("El SDK de Administrador de Firebase no se ha inicializado correctamente. Revisa los logs del servidor para más detalles.");
+    throw new Error("El SDK de Administrador de Firebase no se ha inicializado correctamente. Revisa los logs del servidor para ver el error crítico.");
   }
   
   return adminDb;
 };
+
