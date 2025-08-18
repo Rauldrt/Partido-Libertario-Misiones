@@ -68,14 +68,8 @@ export interface InfoSectionData {
     description: string;
 }
 
-// Firestore document reference for homepage data
-const getHomepageDocRef = async () => {
-    const db = await getAdminDb();
-    if (!db) return null;
-    return doc(db, 'site-config', 'homepage');
-};
 
-async function getHomepageData(useLocal = false): Promise<any> {
+async function getHomepageData(): Promise<any> {
     const loadFromLocal = async () => {
         const banner = await readJsonData('banner.json');
         const mosaic = await readJsonData('mosaic.json');
@@ -84,16 +78,15 @@ async function getHomepageData(useLocal = false): Promise<any> {
         return { banner, mosaic, accordion, infoSection };
     };
 
-    if (useLocal) return loadFromLocal();
-
     try {
-        const docRef = await getHomepageDocRef();
-        if (!docRef) {
-            console.warn("Admin SDK no inicializado, usando datos locales como respaldo.");
-            return loadFromLocal();
+        const db = await getAdminDb();
+        if (!db) {
+             throw new Error("Admin SDK no inicializado.");
         }
         
+        const docRef = doc(db, 'site-config', 'homepage');
         const docSnap = await getDoc(docRef);
+
         if (docSnap.exists()) {
             return docSnap.data();
         }
@@ -112,8 +105,9 @@ async function getHomepageData(useLocal = false): Promise<any> {
 
 
 async function saveHomepageData(data: any): Promise<void> {
-    const docRef = await getHomepageDocRef();
-    if (docRef) {
+    const db = await getAdminDb();
+    if (db) {
+        const docRef = doc(db, 'site-config', 'homepage');
         await setDoc(docRef, data, { merge: true });
         return;
     }
@@ -191,3 +185,4 @@ export async function getInfoSectionData(): Promise<InfoSectionData> {
 export async function saveInfoSectionData(data: InfoSectionData): Promise<void> {
     await saveHomepageData({ infoSection: data });
 }
+

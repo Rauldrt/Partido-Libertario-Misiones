@@ -33,20 +33,15 @@ async function readWidgetJson(): Promise<SocialWidgetData> {
     }
 }
 
-const getWidgetDocRef = () => {
-    const db = getAdminDb();
-    if (!db) return null;
-    return doc(db, 'site-config', 'socialWidget');
-};
-
 export async function getSocialWidgetData(): Promise<SocialWidgetData> {
-    const docRef = getWidgetDocRef();
-    if (!docRef) {
-        console.warn("Admin SDK no inicializado, usando social-widget.json como respaldo.");
-        return readWidgetJson();
-    }
-
+    const getFromLocal = readWidgetJson;
+    
     try {
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error("Admin SDK no inicializado.");
+        }
+        const docRef = doc(db, 'site-config', 'socialWidget');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             const parsed = SocialWidgetSchema.safeParse(docSnap.data());
@@ -55,29 +50,31 @@ export async function getSocialWidgetData(): Promise<SocialWidgetData> {
             }
         }
         console.log("Sembrando datos del widget social desde JSON local a Firestore.");
-        const localData = await readWidgetJson();
+        const localData = await getFromLocal();
         await setDoc(docRef, localData);
         return localData;
     } catch (error) {
         console.error("Error obteniendo widget de Firestore, usando respaldo local:", error);
-        return readWidgetJson();
+        return getFromLocal();
     }
 }
 
 
 export async function saveSocialWidgetData(data: SocialWidgetData): Promise<void> {
-    const docRef = getWidgetDocRef();
+    const db = await getAdminDb();
     const validation = SocialWidgetSchema.safeParse(data);
     if (!validation.success) {
         throw new Error('Datos de widget inválidos.');
     }
     const dataToSave = validation.data;
 
-    if (!docRef) {
+    if (!db) {
         console.warn("Admin SDK no inicializado, guardando widget social en social-widget.json.");
         await fs.writeFile(widgetFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
         return;
     }
-
+    
+    const docRef = doc(db, 'site-config', 'socialWidget');
     await setDoc(docRef, dataToSave);
 }
+

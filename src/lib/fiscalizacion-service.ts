@@ -7,17 +7,6 @@ import type { FormSubmission } from './form-defs';
 import fs from 'fs/promises';
 import path from 'path';
 
-
-// --- Firestore Collection References ---
-const getFiscalizacionCollection = async (): Promise<CollectionReference> => {
-  const db = await getAdminDb();
-    if (!db) {
-        throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
-    }
-  return collection(db, 'fiscalizaciones');
-};
-
-
 // --- Helper Functions ---
 const fromFirestore = (doc: any): FormSubmission => {
     const data = doc.data();
@@ -30,7 +19,11 @@ const fromFirestore = (doc: any): FormSubmission => {
 
 // --- Public Service Functions ---
 export async function addFiscalizacionSubmission(submission: Record<string, any>): Promise<void> {
-    const fiscalizacionCollection = await getFiscalizacionCollection();
+    const db = await getAdminDb();
+    if (!db) {
+        throw new Error("No se pudo enviar la inscripción: La base de datos de administrador no está inicializada.");
+    }
+    const fiscalizacionCollection = collection(db, 'fiscalizaciones');
     await addDoc(fiscalizacionCollection, {
         ...submission,
         createdAt: serverTimestamp(),
@@ -39,7 +32,11 @@ export async function addFiscalizacionSubmission(submission: Record<string, any>
 
 export async function getFiscalizacionSubmissions(): Promise<FormSubmission[]> {
     try {
-        const fiscalizacionCollection = await getFiscalizacionCollection();
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error('La base de datos de administrador no está inicializada.');
+        }
+        const fiscalizacionCollection = collection(db, 'fiscalizaciones');
         const q = query(fiscalizacionCollection, orderBy("createdAt", "desc"));
         const snapshot = await getDocs(q);
 
@@ -56,7 +53,11 @@ export async function getFiscalizacionSubmissions(): Promise<FormSubmission[]> {
 
 export async function updateFiscalizacionSubmission(id: string, data: Record<string, any>): Promise<{ success: boolean; message: string; }> {
     try {
-        const fiscalizacionCollection = await getFiscalizacionCollection();
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error('La base de datos de administrador no está inicializada.');
+        }
+        const fiscalizacionCollection = collection(db, 'fiscalizaciones');
         const docRef = doc(fiscalizacionCollection, id);
         await updateDoc(docRef, data);
         return { success: true, message: "Inscripción actualizada con éxito." };
@@ -68,7 +69,11 @@ export async function updateFiscalizacionSubmission(id: string, data: Record<str
 
 export async function deleteFiscalizacionSubmission(id: string): Promise<{ success: boolean; message: string; }> {
     try {
-        const fiscalizacionCollection = await getFiscalizacionCollection();
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error('La base de datos de administrador no está inicializada.');
+        }
+        const fiscalizacionCollection = collection(db, 'fiscalizaciones');
         await deleteDoc(doc(fiscalizacionCollection, id));
         return { success: true, message: "Inscripción eliminada con éxito." };
     } catch (error) {

@@ -31,47 +31,44 @@ async function readSocialLinksJson(): Promise<SocialLink[]> {
     }
 }
 
-const getSocialLinksDocRef = () => {
-    const db = getAdminDb();
-    if (!db) return null;
-    return doc(db, 'site-config', 'socialLinks');
-};
-
 export async function getSocialLinks(): Promise<SocialLink[]> {
-    const docRef = getSocialLinksDocRef();
-    if (!docRef) {
-        console.warn("Admin SDK no inicializado, usando social-links.json como respaldo.");
-        return readSocialLinksJson();
-    }
+    const getFromLocal = readSocialLinksJson;
 
     try {
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error("Admin SDK no inicializado.");
+        }
+        const docRef = doc(db, 'site-config', 'socialLinks');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists() && docSnap.data().links) {
             return docSnap.data().links;
         }
         console.log("Sembrando datos de enlaces sociales desde JSON local a Firestore.");
-        const localData = await readSocialLinksJson();
+        const localData = await getFromLocal();
         await setDoc(docRef, { links: localData });
         return localData;
     } catch (error) {
         console.error("Error obteniendo enlaces sociales de Firestore, usando respaldo local:", error);
-        return readSocialLinksJson();
+        return getFromLocal();
     }
 }
 
 export async function saveSocialLinks(data: SocialLink[]): Promise<void> {
-    const docRef = getSocialLinksDocRef();
+    const db = await getAdminDb();
     const validation = SocialLinksSchema.safeParse(data);
     if (!validation.success) {
         throw new Error('Datos de enlaces sociales inválidos.');
     }
     const dataToSave = validation.data;
 
-    if (!docRef) {
+    if (!db) {
         console.warn("Admin SDK no inicializado, guardando enlaces sociales en social-links.json.");
         await fs.writeFile(socialLinksFilePath, JSON.stringify(dataToSave, null, 2), 'utf-8');
         return;
     }
     
+    const docRef = doc(db, 'site-config', 'socialLinks');
     await setDoc(docRef, { links: dataToSave });
 }
+

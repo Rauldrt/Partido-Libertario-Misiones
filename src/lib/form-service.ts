@@ -40,22 +40,16 @@ const defaultFormDefinitions: Record<string, FormDefinition> = {
     contacto: { id: 'contacto', fields: defaultContactoFields },
 };
 
-// Firestore Collection References ---
-const getFormDefCollection = async (): Promise<CollectionReference> => {
-    const db = await getAdminDb();
-    if (!db) {
-        throw new Error('La base de datos de administrador no está inicializada. Revisa la configuración del servidor.');
-    }
-    return collection(db, 'form-definitions');
-};
-
-
 // --- Public Service Functions ---
 
 export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' | 'contacto'): Promise<FormDefinition> {
     const defaults = defaultFormDefinitions[formId];
     try {
-        const formDefCollection = await getFormDefCollection();
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error("Admin SDK no inicializado.");
+        }
+        const formDefCollection = collection(db, 'form-definitions');
         const docRef = doc(formDefCollection, formId);
         const docSnap = await getDoc(docRef);
 
@@ -75,8 +69,12 @@ export async function getFormDefinition(formId: 'afiliacion' | 'fiscalizacion' |
 }
 
 export async function saveFormDefinition(formId: string, fields: FormField[]): Promise<void> {
+    const db = await getAdminDb();
+    if (!db) {
+        throw new Error("No se puede guardar la definición del formulario: El SDK de Administrador no está inicializado.");
+    }
     const dataToSave = { id: formId, fields };
-    const formDefCollection = await getFormDefCollection();
+    const formDefCollection = collection(db, 'form-definitions');
     const docRef = doc(formDefCollection, formId);
     await setDoc(docRef, dataToSave);
 }

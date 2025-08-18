@@ -39,7 +39,7 @@ async function getCollectionData(collectionName: 'candidates' | 'organization', 
     try {
         const db = await getAdminDb();
         if (!db) {
-            return fallbackToLocal();
+            throw new Error("Admin SDK no inicializado.");
         }
         
         const collectionRef = collection(db, collectionName);
@@ -120,3 +120,4 @@ export async function getOrganization(): Promise<TeamMember[]> {
 export async function saveOrganization(organization: TeamMember[]): Promise<{ message: string }> {
     return saveCollectionData('organization', organization);
 }
+

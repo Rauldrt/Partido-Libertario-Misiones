@@ -28,31 +28,24 @@ async function readReferentesJson(): Promise<any[]> {
     }
 }
 
-const getReferentesDocRef = () => {
-    const db = getAdminDb();
-    if (!db) return null;
-    return doc(db, 'site-config', 'referentes');
-};
-
 export async function getReferentes(): Promise<ReferenteData[]> {
-    const docRef = getReferentesDocRef();
     const getFromLocal = async () => {
         const localData = await readReferentesJson();
         return localData.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
     };
 
-    if (!docRef) {
-        console.warn("Admin SDK no inicializado, usando referentes.json como respaldo.");
-        return getFromLocal();
-    }
-    
     try {
+        const db = await getAdminDb();
+        if (!db) {
+            throw new Error("Admin SDK no inicializado.");
+        }
+        const docRef = doc(db, 'site-config', 'referentes');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists() && docSnap.data().list) {
             return docSnap.data().list.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
         }
         console.log("Sembrando datos de referentes desde JSON local a Firestore.");
-        const localData = await readReferentesJson();
+        const localData = await getFromLocal();
         await setDoc(docRef, { list: localData });
         return localData.map((item: any, index: number) => ({ id: `ref-${index}-${Date.now()}`, ...item }));
     } catch (error) {
@@ -62,11 +55,13 @@ export async function getReferentes(): Promise<ReferenteData[]> {
 }
 
 export async function saveReferentes(referentes: Omit<ReferenteData, 'id'>[]): Promise<void> {
-    const docRef = getReferentesDocRef();
-    if (!docRef) {
+    const db = await getAdminDb();
+    if (!db) {
         console.warn("Admin SDK no inicializado, guardando referentes en referentes.json.");
         await fs.writeFile(referentesFilePath, JSON.stringify(referentes, null, 2), 'utf-8');
         return;
     }
+    const docRef = doc(db, 'site-config', 'referentes');
     await setDoc(docRef, { list: referentes });
 }
+
