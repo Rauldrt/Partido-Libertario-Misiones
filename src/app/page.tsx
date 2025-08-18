@@ -1,3 +1,4 @@
+
 import HomePageClient from './HomePageClient';
 import { LatestNews } from '@/components/LatestNews';
 import { getBannerSlides, getMosaicTiles, getAccordionItems, getInfoSectionData } from '@/lib/homepage-service';
